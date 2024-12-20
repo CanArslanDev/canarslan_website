@@ -5,10 +5,15 @@ class _VsCode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/images/vscode template.png',
-      fit: BoxFit.fitWidth,
-      width: 35.w,
+    return Stack(
+      children: [
+        Image.asset(
+          'assets/images/vscode template.png',
+          fit: BoxFit.fitWidth,
+          width: 30.w,
+        ),
+        const Positioned.fill(child: _IntroText()),
+      ],
     );
   }
 }

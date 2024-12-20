@@ -1,0 +1,75 @@
+part of '../../home_page.dart';
+
+class _IntroText extends GetView<HomePageController> {
+  const _IntroText();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: AppPadding(
+        tPadding: 6.h,
+        lPadding: 1.w,
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              lines,
+              animationText,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get lines => AppPadding(
+        rPadding: 1.w,
+        child: Text(
+          controller.vsCodeLines.value,
+          textAlign: TextAlign.right,
+          style: AppTextStyles.codingTitle
+              .copyWith(fontSize: 11.sp, color: AppColors.vsCodeLine),
+        ),
+      );
+
+  Widget get animationText {
+    return Obx(() => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: List.generate(
+            controller.vsCodeText.length,
+            textAnimation,
+          ),
+        ));
+  }
+
+  Widget textAnimation(int index) {
+    return Stack(
+      children: [
+        Obx(() => Text(
+              controller.vsCodeText[index].value,
+              style: AppTextStyles.codingTitle.copyWith(fontSize: 11.sp),
+            )),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Obx(
+              () => Opacity(
+                opacity: controller.vsCodeText.length - 1 == index &&
+                        controller.vsCodeText.last.value != '' &&
+                        controller.cursorOpacity.value
+                    ? 1
+                    : 0,
+                child: Container(
+                  color: AppColors.white,
+                  width: 2,
+                  height: 20,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
