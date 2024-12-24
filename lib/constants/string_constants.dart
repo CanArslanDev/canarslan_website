@@ -1,7 +1,6 @@
 abstract class StringConstants {
-  static const vsCode = '''
-Hi, I am Can Arslan
-Language: Dart
-Framework: Flutter
-Age: 18''';
+  static const name = 'Can Arslan';
+  static const lang = 'Dart';
+  static const framework = 'Flutter';
+  static const age = '18';
 }

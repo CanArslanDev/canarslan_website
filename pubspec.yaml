@@ -13,6 +13,7 @@ dependencies:
   pubspec_dependency_sorter: '^1.0.5'
   responsive_sizer: '^3.3.1'
   very_good_analysis: '^6.0.0'
+  widget_mask: ^1.0.0+0
 dev_dependencies:
   flutter_lints: '^4.0.0'
   flutter_test:

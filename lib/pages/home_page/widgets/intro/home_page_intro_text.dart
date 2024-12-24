@@ -46,10 +46,7 @@ class _IntroText extends GetView<HomePageController> {
   Widget textAnimation(int index) {
     return Stack(
       children: [
-        Obx(() => Text(
-              controller.vsCodeText[index].value,
-              style: AppTextStyles.codingTitle.copyWith(fontSize: 11.sp),
-            )),
+        text(index),
         Positioned.fill(
           child: Align(
             alignment: Alignment.centerRight,
@@ -71,5 +68,36 @@ class _IntroText extends GetView<HomePageController> {
         ),
       ],
     );
+  }
+
+  Widget text(int index) {
+    if (index == 0) {
+      return Row(
+        children: [
+          Text(
+            controller.vsCodeText[index].value.nameSyntaxCheck(),
+            style: AppTextStyles.codingTitle.copyWith(fontSize: 11.sp),
+          ),
+          MeasureSize(
+            onChange: (size) {
+              controller.nameTextSize = Size(
+                size.width,
+                size.height,
+              ).obs;
+            },
+            child: Text(
+              controller.vsCodeText[index].value.nameCheck(),
+              key: controller.textWidgetKey,
+              style: AppTextStyles.title.copyWith(fontSize: 11.sp),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Text(
+        controller.vsCodeText[index].value,
+        style: AppTextStyles.codingTitle.copyWith(fontSize: 11.sp),
+      );
+    }
   }
 }
