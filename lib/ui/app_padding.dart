@@ -1,13 +1,14 @@
 import 'package:flutter/widgets.dart';
 
 class AppPadding extends StatelessWidget {
-  const AppPadding(
-      {super.key,
-      this.tPadding,
-      this.rPadding,
-      this.bPadding,
-      this.lPadding,
-      this.child});
+  const AppPadding({
+    super.key,
+    this.tPadding,
+    this.rPadding,
+    this.bPadding,
+    this.lPadding,
+    this.child,
+  });
   final double? tPadding;
   final double? rPadding;
   final double? bPadding;

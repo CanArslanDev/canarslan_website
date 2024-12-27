@@ -1,7 +1,7 @@
 part of '../home_page.dart';
 
 class _GradientBackgroundAnimation extends StatefulWidget {
-  const _GradientBackgroundAnimation({super.key});
+  const _GradientBackgroundAnimation();
 
   @override
   _GradientBackgroundAnimationState createState() =>
@@ -21,7 +21,7 @@ class _GradientBackgroundAnimationState
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
 
     _radiusXAnimation = Tween<double>(begin: 0.1, end: 10).animate(
@@ -53,7 +53,9 @@ class _GradientBackgroundAnimationState
         return Obx(() {
           if (controller.wallpaperAnimation.value) {
             Timer(
-                const Duration(milliseconds: 100), () => _controller.forward());
+              const Duration(milliseconds: 100),
+              () => _controller.forward(),
+            );
           }
           return body;
         });
@@ -68,18 +70,17 @@ class _GradientBackgroundAnimationState
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
                 return RadialGradient(
-                  center: Alignment.center,
                   radius: _radiusXAnimation.value,
                   focalRadius: _radiusYAnimation.value,
-                  colors: [
+                  colors: const [
                     Colors.black,
                     Colors.transparent,
                   ],
-                  stops: [0.1, 1.0],
+                  stops: const [0.1, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,
-              child: Container(
+              child: SizedBox(
                 width: Get.width,
                 height: Get.height,
                 child: mainWallpaper,

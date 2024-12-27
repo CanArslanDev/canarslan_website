@@ -34,13 +34,15 @@ class _IntroText extends GetView<HomePageController> {
       );
 
   Widget get animationText {
-    return Obx(() => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(
-            controller.vsCodeText.length,
-            textAnimation,
-          ),
-        ));
+    return Obx(
+      () => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(
+          controller.vsCodeText.length,
+          textAnimation,
+        ),
+      ),
+    );
   }
 
   Widget textAnimation(int index) {

@@ -14,32 +14,47 @@ class HomePageController extends BaseController
   RxBool cursorOpacity = true.obs;
   RxBool forceQuitCursorAnimation = false.obs;
   final GlobalKey textWidgetKey = GlobalKey();
-  Rx<Position> widgetPosition = Position.empty.obs;
+  final GlobalKey mainTextWidgetKey = GlobalKey();
+  Rx<Position> introNameTextPosition = Position.empty.obs;
+  Rx<Position> mainNameTextPosition = Position.empty.obs;
   RxBool textFirstAnimation = false.obs;
   Rx<Size?> nameTextSize = Size.zero.obs;
+  Rx<Size?> mainTextSize = Size.zero.obs;
   RxBool wallpaperAnimation = false.obs;
+  Rx<int> textAnimation = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
     setVsCodeLines(vsCodeLines);
     startAnimationWithNewLines(vsCodeText, forceQuitCursorAnimation);
     startAnimationCursorOpacity(cursorOpacity, forceQuitCursorAnimation);
-    findWidgetPosition();
+    findIntroNameTextPosition();
     falseVisibility(visibility);
     openTextFirstAnimation(visibility);
+    openTextSecondAnimation(textAnimation);
     openMainWallpaperAnimation(wallpaperAnimation);
+    findMainNameTextPosition();
   }
 
-  void findWidgetPosition() {
+  void findIntroNameTextPosition() {
     Timer(const Duration(seconds: 5), () {
       final renderBox =
           textWidgetKey.currentContext!.findRenderObject()! as RenderBox;
       final position = renderBox.localToGlobal(Offset.zero);
-      widgetPosition.value = Position(position.dx, position.dy);
+      introNameTextPosition.value = Position(position.dx, position.dy);
     });
   }
 
-  // ignore: use_setters_to_change_properties
+  void findMainNameTextPosition() {
+    Timer(const Duration(seconds: 7), () {
+      final renderBox =
+          mainTextWidgetKey.currentContext!.findRenderObject()! as RenderBox;
+      final position = renderBox.localToGlobal(Offset.zero);
+      mainNameTextPosition.value = Position(position.dx, position.dy);
+    });
+  }
+
   void setTextWidgetSize(Rx<Size> size) {
     nameTextSize = size;
   }

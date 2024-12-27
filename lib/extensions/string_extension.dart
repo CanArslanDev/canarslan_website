@@ -9,7 +9,8 @@ extension StringExtension on String {
   String nameCheck() {
     if (startsWith('Hi, I am ')) {
       return replaceFirst('Hi, I am ', '');
-    } else
+    } else {
       return '';
+    }
   }
 }

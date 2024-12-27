@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _VsCode extends StatelessWidget {
-  const _VsCode({super.key});
+  const _VsCode();
 
   @override
   Widget build(BuildContext context) {

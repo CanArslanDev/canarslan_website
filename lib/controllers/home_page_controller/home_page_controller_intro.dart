@@ -29,7 +29,8 @@ Age: ${StringConstants.age}''';
       } else {
         currentLine.value += text[i];
         await Future<void>.delayed(
-            Duration(milliseconds: i < text.indexOf('\n') + 1 ? 85 : 60));
+          Duration(milliseconds: i < text.indexOf('\n') + 1 ? 85 : 60),
+        );
       }
     }
     await Future<void>.delayed(const Duration(seconds: 1));
@@ -37,7 +38,9 @@ Age: ${StringConstants.age}''';
   }
 
   Future<void> startAnimationCursorOpacity(
-      RxBool cursorOpacity, RxBool forceQuitCursorAnimation) async {
+    RxBool cursorOpacity,
+    RxBool forceQuitCursorAnimation,
+  ) async {
     while (true) {
       await Future<void>.delayed(const Duration(milliseconds: 300));
       if (forceQuitCursorAnimation.value) {
@@ -56,6 +59,14 @@ Age: ${StringConstants.age}''';
   Future<void> openTextFirstAnimation(RxBool visibility) async {
     await Future<void>.delayed(const Duration(milliseconds: 7500));
     visibility.value = false;
+  }
+
+  Future<void> openTextSecondAnimation(Rx<int> count) async {
+    await Future<void>.delayed(const Duration(milliseconds: 8500));
+    count.value = 1;
+
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+    count.value = 2;
   }
 
   Future<void> openMainWallpaperAnimation(RxBool wallpaperAnimation) async {

@@ -17,7 +17,10 @@ part 'widgets/intro/home_page_intro_body.dart';
 part 'widgets/intro/home_page_intro_vscode.dart';
 part 'widgets/intro/home_page_intro_text.dart';
 part 'widgets/intro/home_page_intro_positioned_text.dart';
+part 'widgets/intro/home_page_intro_animation_text.dart';
+part 'widgets/intro/home_page_intro_positioned_im_text.dart';
 part 'widgets/home_page_animated_gradient_background.dart';
+part 'widgets/home_page_infinite_scroll_image.dart';
 
 class HomePage extends GetView<HomePageController> {
   const HomePage({super.key});

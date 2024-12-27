@@ -6,38 +6,98 @@ class _PositionedIntroText extends GetView<HomePageController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => controller.widgetPosition.value != Position.empty
+      () => controller.introNameTextPosition.value != Position.empty
           ? Positioned(
-              top: controller.widgetPosition.value.y - 30.h,
-              left: controller.widgetPosition.value.x,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 2000),
-                curve: Curves.fastLinearToSlowEaseIn,
-                padding: EdgeInsets.only(
-                    left: controller.visibility.value ? 0 : 5.w),
-                width: 50.w,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: AnimatedContainer(
+              top: controller.introNameTextPosition.value.y - 30.h,
+              left: controller.introNameTextPosition.value.x,
+              child: Stack(
+                children: [
+                  _coloredFitText,
+                  AnimatedContainer(
                     duration: const Duration(milliseconds: 2000),
                     curve: Curves.fastLinearToSlowEaseIn,
-                    width: _width,
-                    height: _height,
-                    child: _fitText,
+                    padding: EdgeInsets.only(
+                      left: controller.visibility.value ? 0 : 5.w,
+                    ),
+                    width: 50.w,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 2000),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        width: _width,
+                        height: _height,
+                        child: _fitText,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             )
           : const SizedBox.shrink(),
     );
   }
 
-  Widget get _fitText => FittedBox(
-        alignment: Alignment.bottomRight,
-        child: Text(
-          'Can Arslan',
-          style: AppTextStyles.title.copyWith(
-            fontSize: 11.sp,
+  Widget get _coloredFitText => AnimatedContainer(
+        duration: const Duration(milliseconds: 2000),
+        curve: Curves.fastLinearToSlowEaseIn,
+        padding: EdgeInsets.only(left: controller.visibility.value ? 0 : 5.w),
+        width: 50.w,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 2000),
+            curve: Curves.fastLinearToSlowEaseIn,
+            width: _width,
+            height: _height,
+            child: AnimatedOpacity(
+              curve: Curves.easeInOut,
+              duration: const Duration(milliseconds: 2000),
+              opacity: controller.textAnimation.value < 2 ? 0 : 1,
+              child: FittedBox(
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  children: [
+                    Text(
+                      'Can Arslan',
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 11.sp,
+                        color: AppColors.blue,
+                        shadows: [
+                          const BoxShadow(
+                            color: AppColors.blue,
+                            blurRadius: 20,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+  Widget get _fitText => Obx(
+        () => AnimatedOpacity(
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 2000),
+          opacity: controller.textAnimation.value < 2 ? 1 : 0,
+          child: FittedBox(
+            alignment: Alignment.bottomRight,
+            child: Stack(
+              children: [
+                Text(
+                  'Can Arslan',
+                  key: controller.mainTextWidgetKey,
+                  style: AppTextStyles.title.copyWith(
+                    fontSize: 11.sp,
+                  ),
+                ),
+                const _AnimationText(),
+              ],
+            ),
           ),
         ),
       );
