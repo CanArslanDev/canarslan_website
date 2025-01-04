@@ -34,6 +34,7 @@ migrate_working_dir/
 /windows/
 /macos/
 /linux/
+pubspec.lock
 
 # Symbolication related
 app.*.symbols

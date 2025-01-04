@@ -66,8 +66,8 @@ class _AnimationTextState extends State<_AnimationText>
                   curve: Curves.easeInOut,
                   duration: const Duration(milliseconds: 1000),
                   opacity: !value ? 0 : 1,
-                  child: Text(
-                    'Can Arslan',
+                  child: SelectableText(
+                    StringConstants.name,
                     style: AppTextStyles.title.copyWith(
                       fontSize: 11.sp,
                       color: Colors.blue,
@@ -80,8 +80,8 @@ class _AnimationTextState extends State<_AnimationText>
                     ),
                   ),
                 ),
-                Text(
-                  'Can Arslan',
+                SelectableText(
+                  StringConstants.name,
                   style: AppTextStyles.title.copyWith(
                     fontSize: 11.sp,
                     color: Colors.blue,

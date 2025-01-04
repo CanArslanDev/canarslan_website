@@ -13,4 +13,20 @@ extension StringExtension on String {
       return '';
     }
   }
+
+  String get linkedinTag {
+    return replaceAll('linkedin.com/', '');
+  }
+
+  String get xTag {
+    return replaceAll('x.com/', '');
+  }
+
+  String get instagramTag {
+    return replaceAll('instagram.com/', '');
+  }
+
+  String get toGithubRepo {
+    return '$this?tab=repositories';
+  }
 }

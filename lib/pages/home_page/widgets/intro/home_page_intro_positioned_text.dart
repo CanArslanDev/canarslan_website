@@ -17,7 +17,7 @@ class _PositionedIntroText extends GetView<HomePageController> {
                     duration: const Duration(milliseconds: 2000),
                     curve: Curves.fastLinearToSlowEaseIn,
                     padding: EdgeInsets.only(
-                      left: controller.visibility.value ? 0 : 5.w,
+                      left: controller.visibility.value ? 0 : 2.w,
                     ),
                     width: 50.w,
                     child: Align(
@@ -41,7 +41,7 @@ class _PositionedIntroText extends GetView<HomePageController> {
   Widget get _coloredFitText => AnimatedContainer(
         duration: const Duration(milliseconds: 2000),
         curve: Curves.fastLinearToSlowEaseIn,
-        padding: EdgeInsets.only(left: controller.visibility.value ? 0 : 5.w),
+        padding: EdgeInsets.only(left: controller.visibility.value ? 0 : 2.w),
         width: 50.w,
         child: Align(
           alignment: Alignment.centerLeft,
@@ -59,7 +59,7 @@ class _PositionedIntroText extends GetView<HomePageController> {
                 child: Row(
                   children: [
                     Text(
-                      'Can Arslan',
+                      StringConstants.name,
                       style: AppTextStyles.title.copyWith(
                         fontSize: 11.sp,
                         color: AppColors.blue,
@@ -89,7 +89,7 @@ class _PositionedIntroText extends GetView<HomePageController> {
             child: Stack(
               children: [
                 Text(
-                  'Can Arslan',
+                  StringConstants.name,
                   key: controller.mainTextWidgetKey,
                   style: AppTextStyles.title.copyWith(
                     fontSize: 11.sp,
@@ -112,7 +112,7 @@ class _PositionedIntroText extends GetView<HomePageController> {
 
   double? get _height {
     if (!controller.visibility.value) {
-      return controller.nameTextSize.value!.height + 18.h;
+      return controller.nameTextSize.value!.height + 15.h;
     } else {
       return controller.nameTextSize.value!.height + 30.h;
     }

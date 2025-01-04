@@ -1,7 +1,11 @@
 import 'package:canarslan_website/constants/string_constants.dart';
+import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
+import 'package:canarslan_website/services/feature_service.dart';
 import 'package:get/get.dart';
 
 mixin HomePageControllerIntroMixin {
+  Future<void> Function(Duration duration) duration = FeatureService().duration;
+
   void setVsCodeLines(RxString line) {
     for (var i = 0; i < 20; i++) {
       line.value += '$i\n';
@@ -23,17 +27,17 @@ Age: ${StringConstants.age}''';
       if (text[i] == '\n') {
         currentLine = ''.obs;
         if (vsCodeText.length == 1) {
-          await Future<void>.delayed(const Duration(seconds: 1));
+          await duration(const Duration(seconds: 1));
         }
         vsCodeText.add(currentLine);
       } else {
         currentLine.value += text[i];
-        await Future<void>.delayed(
+        await duration(
           Duration(milliseconds: i < text.indexOf('\n') + 1 ? 85 : 60),
         );
       }
     }
-    await Future<void>.delayed(const Duration(seconds: 1));
+    await duration(const Duration(milliseconds: 2000));
     forceQuitCursorAnimation.value = true;
   }
 
@@ -42,7 +46,7 @@ Age: ${StringConstants.age}''';
     RxBool forceQuitCursorAnimation,
   ) async {
     while (true) {
-      await Future<void>.delayed(const Duration(milliseconds: 300));
+      await duration(const Duration(milliseconds: 300));
       if (forceQuitCursorAnimation.value) {
         cursorOpacity.value = false;
         break;
@@ -52,25 +56,42 @@ Age: ${StringConstants.age}''';
   }
 
   Future<void> falseVisibility(RxBool visibility) async {
-    await Future<void>.delayed(const Duration(seconds: 6));
+    await duration(const Duration(milliseconds: 7000));
     visibility.value = false;
   }
 
   Future<void> openTextFirstAnimation(RxBool visibility) async {
-    await Future<void>.delayed(const Duration(milliseconds: 7500));
+    await duration(const Duration(milliseconds: 8500));
     visibility.value = false;
   }
 
   Future<void> openTextSecondAnimation(Rx<int> count) async {
-    await Future<void>.delayed(const Duration(milliseconds: 8500));
+    await duration(const Duration(milliseconds: 9500));
     count.value = 1;
 
-    await Future<void>.delayed(const Duration(milliseconds: 150));
+    await duration(const Duration(milliseconds: 150));
     count.value = 2;
   }
 
   Future<void> openMainWallpaperAnimation(RxBool wallpaperAnimation) async {
-    await Future<void>.delayed(const Duration(milliseconds: 5800));
+    await duration(const Duration(milliseconds: 6800));
     wallpaperAnimation.value = true;
+  }
+
+  Future<void> openInfoBarAnimation(Rx<bool> openInfoBar) async {
+    await duration(const Duration(milliseconds: 7200));
+    openInfoBar.value = true;
+  }
+
+  Future<void> openContentAnimation(Rx<bool> openInfoBar) async {
+    await duration(const Duration(milliseconds: 7500));
+    openInfoBar.value = true;
+  }
+
+  Future<void> get openNavBarAnimation async {
+    await duration(const Duration(milliseconds: 8000));
+    Get.put<NavigationBarController>(NavigationBarController())
+        .openNavbar
+        .value = true;
   }
 }

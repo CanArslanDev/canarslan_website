@@ -76,7 +76,7 @@ class _IntroText extends GetView<HomePageController> {
     if (index == 0) {
       return Row(
         children: [
-          Text(
+          SelectableText(
             controller.vsCodeText[index].value.nameSyntaxCheck(),
             style: AppTextStyles.codingTitle.copyWith(fontSize: 11.sp),
           ),
@@ -87,7 +87,7 @@ class _IntroText extends GetView<HomePageController> {
                 size.height,
               ).obs;
             },
-            child: Text(
+            child: SelectableText(
               controller.vsCodeText[index].value.nameCheck(),
               key: controller.textWidgetKey,
               style: AppTextStyles.title.copyWith(fontSize: 11.sp),
@@ -96,7 +96,7 @@ class _IntroText extends GetView<HomePageController> {
         ],
       );
     } else {
-      return Text(
+      return SelectableText(
         controller.vsCodeText[index].value,
         style: AppTextStyles.codingTitle.copyWith(fontSize: 11.sp),
       );

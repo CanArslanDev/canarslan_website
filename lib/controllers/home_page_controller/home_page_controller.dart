@@ -1,9 +1,13 @@
 import 'dart:async';
 
+import 'package:canarslan_website/constants/int_constants.dart';
 import 'package:canarslan_website/controllers/base_controller.dart';
 import 'package:canarslan_website/controllers/home_page_controller/home_page_controller_intro.dart';
+import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:canarslan_website/models/position_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class HomePageController extends BaseController
@@ -21,7 +25,11 @@ class HomePageController extends BaseController
   Rx<Size?> nameTextSize = Size.zero.obs;
   Rx<Size?> mainTextSize = Size.zero.obs;
   RxBool wallpaperAnimation = false.obs;
+  Rx<bool> openInfoBar = false.obs;
+  Rx<bool> openContent = false.obs;
   Rx<int> textAnimation = 0.obs;
+  DateTime time =
+      DateTime.now().toUtc().add(Duration(hours: IntConstants.timezone));
 
   @override
   void onInit() {
@@ -34,11 +42,14 @@ class HomePageController extends BaseController
     openTextFirstAnimation(visibility);
     openTextSecondAnimation(textAnimation);
     openMainWallpaperAnimation(wallpaperAnimation);
+    openInfoBarAnimation(openInfoBar);
+    openContentAnimation(openContent);
+    openNavBarAnimation;
     findMainNameTextPosition();
   }
 
   void findIntroNameTextPosition() {
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(milliseconds: 6000), () {
       final renderBox =
           textWidgetKey.currentContext!.findRenderObject()! as RenderBox;
       final position = renderBox.localToGlobal(Offset.zero);
@@ -47,15 +58,11 @@ class HomePageController extends BaseController
   }
 
   void findMainNameTextPosition() {
-    Timer(const Duration(seconds: 7), () {
+    Timer(const Duration(milliseconds: 8000), () {
       final renderBox =
           mainTextWidgetKey.currentContext!.findRenderObject()! as RenderBox;
       final position = renderBox.localToGlobal(Offset.zero);
       mainNameTextPosition.value = Position(position.dx, position.dy);
     });
-  }
-
-  void setTextWidgetSize(Rx<Size> size) {
-    nameTextSize = size;
   }
 }

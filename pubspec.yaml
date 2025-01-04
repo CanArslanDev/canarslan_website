@@ -8,6 +8,7 @@ dependencies:
   cupertino_icons: '^1.0.8'
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.16
   get: '^4.6.6'
   google_fonts: '^6.2.1'
   pubspec_dependency_sorter: '^1.0.5'
@@ -22,3 +23,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/icons/

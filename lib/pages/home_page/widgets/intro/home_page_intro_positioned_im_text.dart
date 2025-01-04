@@ -24,7 +24,7 @@ class _PositionedImText extends GetView<HomePageController> {
                   controller.mainTextSize.value = value;
                 },
                 child: FittedBox(
-                  child: Text(
+                  child: SelectableText(
                     '''I'm ''',
                     style: AppTextStyles.title.copyWith(
                         color: notEmpty ? Colors.white : Colors.transparent),
