@@ -10,4 +10,6 @@ abstract class StringConstants {
   static const x = 'x.com/CanArslanDev';
   static const github = 'github.com/CanArslanDev';
   static const instagram = 'instagram.com/niceinmak';
+  static const pubDevPublisher =
+      'https://pub.dev/publishers/canarslan.me/packages';
 }

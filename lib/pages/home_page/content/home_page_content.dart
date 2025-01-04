@@ -5,13 +5,8 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Positioned.fill(
-        child: Center(
-      child: Column(
-        children: [
-          _ContentInfo(),
-        ],
-      ),
-    ));
+    return const Column(
+      children: [_ContentInfo(), _ContentPackages(), _ContentContributions()],
+    );
   }
 }

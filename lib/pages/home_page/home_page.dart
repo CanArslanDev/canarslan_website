@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:canarslan_website/constants/int_constants.dart';
+import 'package:canarslan_website/constants/package_constants.dart';
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/controllers/home_page_controller/home_page_controller.dart';
 import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:canarslan_website/extensions/datetime_extension.dart';
 import 'package:canarslan_website/extensions/string_extension.dart';
 import 'package:canarslan_website/models/position_model.dart';
+import 'package:canarslan_website/services/html_service.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
 import 'package:canarslan_website/ui/border_radius.dart';
 import 'package:canarslan_website/ui/icons.dart';
@@ -35,6 +37,10 @@ part 'widgets/home_page_navigation_bar.dart';
 part 'content/home_page_content.dart';
 part 'content/home_page_content_info/home_page_content_info.dart';
 part 'content/home_page_content_info/home_page_content_info_buttons.dart';
+part 'content/home_page_content_packages/home_page_content_packages.dart';
+part 'content/home_page_content_packages/home_page_content_packages_widget.dart';
+part 'content/home_page_content_packages/home_page_content_packages_title.dart';
+part 'content/home_page_content_contributions/home_page_content_contributions.dart';
 
 class HomePage extends GetView<HomePageController> {
   const HomePage({super.key});

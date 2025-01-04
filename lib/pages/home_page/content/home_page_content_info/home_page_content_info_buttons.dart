@@ -1,6 +1,6 @@
 part of '../../home_page.dart';
 
-class _ContentInfoButtons extends StatelessWidget {
+class _ContentInfoButtons extends GetView<HomePageController> {
   const _ContentInfoButtons({super.key});
 
   @override
@@ -9,47 +9,55 @@ class _ContentInfoButtons extends StatelessWidget {
       tPadding: 1.w,
       child: Row(
         children: [
-          button('Contact Me', StringConstants.linkedin, ButtonType.primary),
+          button('Contact Me', StringConstants.linkedin, ButtonType.primary, 2),
           AppPadding(
             lPadding: 1.w,
             child: button('View My Projects',
-                StringConstants.github.toGithubRepo, ButtonType.secondary),
+                StringConstants.github.toGithubRepo, ButtonType.secondary, 3),
           ),
         ],
       ),
     );
   }
 
-  Widget button(String text, String url, ButtonType type) => MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: () => JavascriptService.openUrl(url),
-          child: Container(
-            height: 3.8.h,
-            padding: EdgeInsets.symmetric(horizontal: 1.w),
-            decoration: BoxDecoration(
-              color: type == ButtonType.primary
-                  ? AppColors.lightBlue
-                  : AppColors.white,
-              borderRadius: AppBorderRadius.extraSmall,
-              boxShadow: [
-                BoxShadow(
+  Widget button(String text, String url, ButtonType type, int visibleIndex) =>
+      Obx(
+        () => AnimatedOpacity(
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+          opacity: controller.contentVisibleList[visibleIndex] == 1 ? 1 : 0,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => JavascriptService.openUrl(url),
+              child: Container(
+                height: 3.8.h,
+                padding: EdgeInsets.symmetric(horizontal: 1.w),
+                decoration: BoxDecoration(
                   color: type == ButtonType.primary
                       ? AppColors.lightBlue
-                      : AppColors.white.withOpacity(0.5),
-                  blurRadius: 15,
-                  spreadRadius: 0.4,
-                )
-              ],
-            ),
-            child: Center(
-              child: Text(text,
-                  style: AppTextStyles.body.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11.5.sp,
+                      : AppColors.white,
+                  borderRadius: AppBorderRadius.extraSmall,
+                  boxShadow: [
+                    BoxShadow(
                       color: type == ButtonType.primary
-                          ? AppColors.white
-                          : AppColors.black)),
+                          ? AppColors.lightBlue
+                          : AppColors.white.withOpacity(0.5),
+                      blurRadius: 15,
+                      spreadRadius: 0.4,
+                    )
+                  ],
+                ),
+                child: Center(
+                  child: Text(text,
+                      style: AppTextStyles.body.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11.5.sp,
+                          color: type == ButtonType.primary
+                              ? AppColors.white
+                              : AppColors.black)),
+                ),
+              ),
             ),
           ),
         ),

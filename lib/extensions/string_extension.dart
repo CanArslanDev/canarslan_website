@@ -29,4 +29,10 @@ extension StringExtension on String {
   String get toGithubRepo {
     return '$this?tab=repositories';
   }
+
+  String get fixPackageName {
+    return split('_')
+        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .join(' ');
+  }
 }

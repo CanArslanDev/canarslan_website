@@ -94,4 +94,12 @@ Age: ${StringConstants.age}''';
         .openNavbar
         .value = true;
   }
+
+  Future<void> enableContentVisibleList(List<int> contentVisibleList) async {
+    await duration(const Duration(milliseconds: 8000));
+    for (var i = 0; i < contentVisibleList.length; i++) {
+      contentVisibleList[i] = 1;
+      await duration(const Duration(milliseconds: 400));
+    }
+  }
 }

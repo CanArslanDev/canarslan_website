@@ -22,12 +22,13 @@ abstract class AppTextStyles {
   );
 
   static final body = GoogleFonts.inter(
+    color: AppColors.white,
     fontSize: 12.sp,
   );
   static final codingBody =
       GoogleFonts.firaCode(fontSize: 13.sp, color: Colors.white);
-  static final bodyBold =
-      GoogleFonts.inter(fontSize: 12.sp, fontWeight: FontWeight.bold);
+  static final bodyBold = GoogleFonts.inter(
+      color: AppColors.white, fontSize: 12.sp, fontWeight: FontWeight.bold);
 
   static final caption = GoogleFonts.inter(
     fontSize: 9.sp,

@@ -8,10 +8,16 @@ class _Body extends GetView<HomePageController> {
     return Stack(
       children: [
         background,
-        intro,
-        info,
-        navBar,
-        content,
+        SingleChildScrollView(
+          child: Stack(
+            children: [
+              intro,
+              info,
+              navBar,
+              content,
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -26,5 +32,5 @@ class _Body extends GetView<HomePageController> {
 
   Widget get intro => const _IntroBody();
 
-  Widget get background => const SizedBox.expand(child: _Background());
+  Widget get background => const _Background();
 }

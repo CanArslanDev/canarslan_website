@@ -5,12 +5,15 @@ class _IntroBody extends GetView<HomePageController> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        mainBody,
-        const _PositionedIntroText(),
-        const _PositionedImText(),
-      ],
+    return SizedBox(
+      height: 100.h,
+      child: Stack(
+        children: [
+          mainBody,
+          const _PositionedIntroText(),
+          const _PositionedImText(),
+        ],
+      ),
     );
   }
 

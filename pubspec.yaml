@@ -11,6 +11,8 @@ dependencies:
   flutter_svg: ^2.0.16
   get: '^4.6.6'
   google_fonts: '^6.2.1'
+  html: ^0.15.5
+  http: ^1.2.2
   pubspec_dependency_sorter: '^1.0.5'
   responsive_sizer: '^3.3.1'
   very_good_analysis: '^6.0.0'
