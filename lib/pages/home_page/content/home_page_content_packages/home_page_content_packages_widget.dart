@@ -17,11 +17,11 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
 
   List<Widget> get packages {
     final widgets = <Widget>[];
-    widgets.add(package(
-        'Simple Animation Progress Bar', PackageConstants.packageIcons[0], ''));
+    widgets.add(package('Simple Animation Progress Bar',
+        PackageConstants.packageIcons[0], 'pub.dev/packages/simple_painter'));
     widgets.add(SizedBox(width: 3.w));
-    widgets
-        .add(package('Simple Painter', PackageConstants.packageIcons[1], ''));
+    widgets.add(package('Simple Painter', PackageConstants.packageIcons[1],
+        'pub.dev/packages/simple_animation_progress_bar'));
     return widgets;
     for (var i = 0; i < controller.packages.entries.length; i++) {
       final entry = controller.packages.entries.elementAt(i);
