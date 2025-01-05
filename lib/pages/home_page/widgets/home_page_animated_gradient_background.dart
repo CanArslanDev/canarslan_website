@@ -92,6 +92,6 @@ class _GradientBackgroundAnimationState
 
   Widget get mainWallpaper => Image.asset(
         'assets/images/main_wallpaper.png',
-        fit: BoxFit.fitHeight,
+        fit: BoxFit.fill,
       );
 }
