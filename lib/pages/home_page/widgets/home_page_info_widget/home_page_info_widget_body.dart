@@ -1,81 +1,53 @@
-part of '../home_page.dart';
+part of '../../home_page.dart';
 
-class _InfoWidget extends GetView<HomePageController> {
-  const _InfoWidget({super.key});
+class _InfoWidgetBody extends GetView<HomePageController> {
+  const _InfoWidgetBody({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      left: -25.w,
-      top: (100.h / 2) - (70.h / 2),
-      child: Obx(
-        () => SizedBox(
-          width: 46.w,
-          child: AnimatedAlign(
-            duration: const Duration(milliseconds: 2500),
-            curve: Curves.fastLinearToSlowEaseIn,
-            alignment: controller.openInfoBar.value
-                ? Alignment.centerRight
-                : Alignment.centerLeft,
-            child: Container(
-              height: 70.h,
-              width: 20.w,
-              decoration: BoxDecoration(
-                  color: AppColors.black.withOpacity(0.4),
-                  borderRadius: AppBorderRadius.medium,
-                  border: Border.all(color: AppColors.grey, width: 2),
-                  boxShadow: [
-                    BoxShadow(
-                      blurStyle: BlurStyle.outer,
-                      color: AppColors.grey.withOpacity(0.5),
-                      spreadRadius: -3,
-                      blurRadius: 10,
-                    ),
-                  ]),
-              child: Column(
-                children: [
-                  avatar,
-                  title,
-                  githubButton,
-                  Expanded(
-                    flex: 8,
-                    child: Column(
-                      children: [
-                        SizedBox(height: 1.6.h),
-                        text(StringConstants.location, AppIcons.location),
-                        text(
-                          controller.time.convertClock,
-                          AppIcons.clock,
-                          hintText: '(UTC +${IntConstants.timezone}:00)',
-                        ),
-                        text(StringConstants.email, AppIcons.email,
-                            url: 'mailto:${StringConstants.email}'),
-                        text(StringConstants.linkedin.linkedinTag,
-                            AppIcons.linkediin,
-                            url: StringConstants.linkedin),
-                        text(StringConstants.x.xTag, AppIcons.x,
-                            url: StringConstants.x),
-                        text(StringConstants.instagram.instagramTag,
-                            AppIcons.instagram,
-                            url: StringConstants.instagram),
-                        // text(StringConstants.email, 'assets/icons/email.png'),
-                        // text(StringConstants.phone, 'assets/icons/phone.png'),
-                        // text(StringConstants.website, 'assets/icons/website.png',
-                        //     url: StringConstants.website),
-                        // text(StringConstants.linkedin, 'assets/icons/linkedin.png',
-                        //     url: StringConstants.linkedin),
-                        // text(StringConstants.twitter, 'assets/icons/twitter.png',
-                        //     url: StringConstants.twitter),
-                        // text(StringConstants.github, 'assets/icons/github.png',
-                        //     url: StringConstants.github),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+    return Container(
+      height: 70.h,
+      width: 20.w,
+      decoration: BoxDecoration(
+          color: AppColors.black.withOpacity(0.4),
+          borderRadius: AppBorderRadius.medium,
+          border: Border.all(color: AppColors.grey, width: 2),
+          boxShadow: [
+            BoxShadow(
+              blurStyle: BlurStyle.outer,
+              color: AppColors.grey.withOpacity(0.5),
+              spreadRadius: -3,
+              blurRadius: 10,
             ),
-          ),
-        ),
+          ]),
+      child: Column(
+        children: [
+          avatar,
+          title,
+          githubButton,
+          Expanded(
+            flex: 8,
+            child: Column(
+              children: [
+                SizedBox(height: 1.6.h),
+                text(StringConstants.location, AppIcons.location),
+                text(
+                  controller.time.convertClock,
+                  AppIcons.clock,
+                  hintText: '(UTC +${IntConstants.timezone}:00)',
+                ),
+                text(StringConstants.email, AppIcons.email,
+                    url: 'mailto:${StringConstants.email}'),
+                text(StringConstants.linkedin.linkedinTag, AppIcons.linkediin,
+                    url: StringConstants.linkedin),
+                text(StringConstants.x.xTag, AppIcons.x,
+                    url: StringConstants.x),
+                text(StringConstants.instagram.instagramTag, AppIcons.instagram,
+                    url: StringConstants.instagram),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -162,7 +134,9 @@ class _InfoWidget extends GetView<HomePageController> {
                   style:
                       AppTextStyles.bodyBold.copyWith(color: AppColors.white),
                   children: [
-                    TextSpan(text: 'View on ', style: AppTextStyles.body),
+                    TextSpan(
+                        text: 'View on ',
+                        style: AppTextStyles.body.copyWith(fontSize: 11.sp)),
                     const TextSpan(text: 'Github'),
                   ],
                 ),

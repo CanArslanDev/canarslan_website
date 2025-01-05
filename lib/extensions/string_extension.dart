@@ -30,6 +30,10 @@ extension StringExtension on String {
     return '$this?tab=repositories';
   }
 
+  String get toGithubProjects {
+    return '$this?tab=projects';
+  }
+
   String get fixPackageName {
     return split('_')
         .map((word) => word[0].toUpperCase() + word.substring(1))

@@ -6,7 +6,7 @@ class _ContentContributions extends GetView<HomePageController> {
   @override
   Widget build(BuildContext context) {
     return AppPadding(
-      tPadding: 2.w,
+      tPadding: OrientationService.isPortrait ? 6.w : 2.w,
       child: Obx(
         () => Column(
           children: [
@@ -19,7 +19,6 @@ class _ContentContributions extends GetView<HomePageController> {
                 style: AppTextStyles.body.copyWith(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
-                  fontSize: 13.7.sp,
                 ),
               ),
             ),
@@ -30,7 +29,7 @@ class _ContentContributions extends GetView<HomePageController> {
               child: Image.asset(
                 'assets/images/contributions.png',
                 fit: BoxFit.fitWidth,
-                width: 36.w,
+                width: OrientationService.isPortrait ? 85.w : 36.w,
               ),
             ),
           ],

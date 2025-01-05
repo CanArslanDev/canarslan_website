@@ -1,7 +1,7 @@
-part of '../../home_page.dart';
+part of '../../../home_page.dart';
 
-class _IntroBody extends GetView<HomePageController> {
-  const _IntroBody();
+class _IntroBodyLandscape extends GetView<HomePageController> {
+  const _IntroBodyLandscape();
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class _IntroBody extends GetView<HomePageController> {
       child: Stack(
         children: [
           mainBody,
-          const _PositionedIntroText(),
+          const _PositionedIntroTextLandscape(),
           const _PositionedImText(),
         ],
       ),

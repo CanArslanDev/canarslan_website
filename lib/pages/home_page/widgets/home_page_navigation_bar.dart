@@ -5,8 +5,9 @@ class _NavBar extends GetView<NavigationBarController> {
 
   @override
   Widget build(BuildContext context) {
+    final width = OrientationService.isPortrait ? 80.w : 37.w;
     return Positioned(
-      left: 100.w / 2 - 37.w / 2,
+      left: 100.w / 2 - width / 2,
       top: -9.h,
       child: Obx(
         () => SizedBox(
@@ -19,7 +20,7 @@ class _NavBar extends GetView<NavigationBarController> {
                 : Alignment.topCenter,
             child: Container(
               height: 4.7.h,
-              width: 37.w,
+              width: width,
               decoration: BoxDecoration(
                   color: AppColors.black.withOpacity(0.4),
                   borderRadius: AppBorderRadius.medium,
@@ -35,9 +36,11 @@ class _NavBar extends GetView<NavigationBarController> {
               child: Row(
                 children: [
                   item('Home', 0),
-                  item('Repsitories', 1),
-                  item('Projects', 2),
-                  item('Packages', 3),
+                  item('Repositories', 1,
+                      url: StringConstants.github.toGithubRepo),
+                  item('Projects', 2,
+                      url: StringConstants.github.toGithubProjects),
+                  item('Packages', 3, url: StringConstants.pubDevPublisher),
                 ],
               ),
             ),
@@ -47,11 +50,17 @@ class _NavBar extends GetView<NavigationBarController> {
     );
   }
 
-  Widget item(String title, int index) => Expanded(
+  Widget item(String title, int index, {String? url}) => Expanded(
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () => controller.selectedPage(index),
+            onTap: () {
+              if (url != null) {
+                JavascriptService.openUrl(url);
+                return;
+              }
+              controller.selectedPage.value = index;
+            },
             child: Obx(() => Container(
                   margin: EdgeInsets.all(5.5.sp),
                   decoration: BoxDecoration(
@@ -63,6 +72,8 @@ class _NavBar extends GetView<NavigationBarController> {
                   child: Center(
                     child: Text(
                       title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.navBar,
                     ),
                   ),

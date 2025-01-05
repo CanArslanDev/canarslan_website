@@ -7,6 +7,7 @@ import 'package:canarslan_website/controllers/home_page_controller/home_page_con
 import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:canarslan_website/models/position_model.dart';
 import 'package:canarslan_website/services/html_service.dart';
+import 'package:canarslan_website/services/orientation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -34,10 +35,37 @@ class HomePageController extends BaseController
       DateTime.now().toUtc().add(Duration(hours: IntConstants.timezone));
   Map<String, String> packages = {};
   RxList<int> contentVisibleList = [0, 0, 0, 0, 0, 0, 0, 0, 0].obs;
+  Rx<bool> loadedPortraitImages = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+    if (OrientationService.isPortrait) {
+      portrait;
+    } else {
+      landscape;
+    }
+  }
+
+  void get portrait {
+    getPackages();
+    Timer(const Duration(seconds: 1), () {
+      startAnimationWithNewLines(vsCodeText, forceQuitCursorAnimation);
+      startAnimationCursorOpacity(cursorOpacity, forceQuitCursorAnimation);
+      findIntroNameTextPosition();
+      falseVisibility(visibility);
+      openTextFirstAnimation(visibility);
+      openTextSecondAnimation(textAnimation);
+      openMainWallpaperAnimation(wallpaperAnimation);
+      openInfoBarAnimation(openInfoBar);
+      openContentAnimation(openContent);
+      enableContentVisibleList(contentVisibleList);
+      openNavBarAnimation;
+      findMainNameTextPosition();
+    });
+  }
+
+  void get landscape {
     getPackages();
     setVsCodeLines(vsCodeLines);
     startAnimationWithNewLines(vsCodeText, forceQuitCursorAnimation);
@@ -61,6 +89,7 @@ class HomePageController extends BaseController
 
   void findIntroNameTextPosition() {
     Timer(const Duration(milliseconds: 6000), () {
+      if (textWidgetKey.currentContext == null) return;
       final renderBox =
           textWidgetKey.currentContext!.findRenderObject()! as RenderBox;
       final position = renderBox.localToGlobal(Offset.zero);
@@ -70,6 +99,7 @@ class HomePageController extends BaseController
 
   void findMainNameTextPosition() {
     Timer(const Duration(milliseconds: 8000), () {
+      if (mainTextWidgetKey.currentContext == null) return;
       final renderBox =
           mainTextWidgetKey.currentContext!.findRenderObject()! as RenderBox;
       final position = renderBox.localToGlobal(Offset.zero);

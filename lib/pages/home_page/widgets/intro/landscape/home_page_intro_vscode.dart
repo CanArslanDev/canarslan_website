@@ -1,4 +1,4 @@
-part of '../../home_page.dart';
+part of '../../../home_page.dart';
 
 class _VsCode extends StatelessWidget {
   const _VsCode();
@@ -12,7 +12,7 @@ class _VsCode extends StatelessWidget {
           fit: BoxFit.fitWidth,
           width: 30.w,
         ),
-        const Positioned.fill(child: _IntroText()),
+        const Positioned.fill(child: _IntroTextLandscape()),
       ],
     );
   }

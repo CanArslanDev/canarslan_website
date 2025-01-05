@@ -1,7 +1,7 @@
-part of '../../home_page.dart';
+part of '../../../home_page.dart';
 
-class _PositionedIntroText extends GetView<HomePageController> {
-  const _PositionedIntroText();
+class _PositionedIntroTextLandscape extends GetView<HomePageController> {
+  const _PositionedIntroTextLandscape();
 
   @override
   Widget build(BuildContext context) {
@@ -84,19 +84,22 @@ class _PositionedIntroText extends GetView<HomePageController> {
           curve: Curves.easeInOut,
           duration: const Duration(milliseconds: 2000),
           opacity: controller.textAnimation.value < 2 ? 1 : 0,
-          child: FittedBox(
-            alignment: Alignment.bottomRight,
-            child: Stack(
-              children: [
-                Text(
-                  StringConstants.name,
-                  key: controller.mainTextWidgetKey,
-                  style: AppTextStyles.title.copyWith(
-                    fontSize: 11.sp,
+          child: Opacity(
+            opacity: controller.visibility.value ? 0 : 1,
+            child: FittedBox(
+              alignment: Alignment.bottomRight,
+              child: Stack(
+                children: [
+                  Text(
+                    StringConstants.name,
+                    key: controller.mainTextWidgetKey,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 11.sp,
+                    ),
                   ),
-                ),
-                const _AnimationText(),
-              ],
+                  const _AnimationTextLandscape(),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,7 +1,7 @@
-part of '../../home_page.dart';
+part of '../../../home_page.dart';
 
-class _IntroText extends GetView<HomePageController> {
-  const _IntroText();
+class _IntroTextLandscape extends GetView<HomePageController> {
+  const _IntroTextLandscape();
 
   @override
   Widget build(BuildContext context) {

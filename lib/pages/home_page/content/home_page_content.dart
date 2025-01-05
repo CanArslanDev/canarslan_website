@@ -5,8 +5,13 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [_ContentInfo(), _ContentPackages(), _ContentContributions()],
+    return Column(
+      children: [
+        const _ContentInfo(),
+        const _ContentPackages(),
+        if (OrientationService.isPortrait) const _ContentInfoWidget(),
+        const _ContentContributions()
+      ],
     );
   }
 }

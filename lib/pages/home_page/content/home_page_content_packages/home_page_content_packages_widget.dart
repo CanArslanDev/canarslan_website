@@ -17,12 +17,12 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
 
   List<Widget> get packages {
     final widgets = <Widget>[];
-    widgets.add(package(
-        'Simple Animation Progress Bar', PackageConstants.packageIcons[0], ''));
-    widgets.add(SizedBox(width: 3.w));
-    widgets
-        .add(package('Simple Painter', PackageConstants.packageIcons[1], ''));
-    return widgets;
+    // widgets.add(package(
+    //     'Simple Animation Progress Bar', PackageConstants.packageIcons[0], ''));
+    // widgets.add(SizedBox(width: 3.w));
+    // widgets
+    //     .add(package('Simple Painter', PackageConstants.packageIcons[1], ''));
+    // return widgets;
     for (var i = 0; i < controller.packages.entries.length; i++) {
       final entry = controller.packages.entries.elementAt(i);
       final key = entry.key;
@@ -50,7 +50,7 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
             children: [
               SvgPicture.asset(
                 iconPath,
-                height: 1.7.w,
+                height: OrientationService.contentPackagesImageSize,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 1.5.h),
@@ -59,10 +59,12 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
                   child: GestureDetector(
                     onTap: () => JavascriptService.openUrl(url),
                     child: SizedBox(
-                      width: 9.5.w,
+                      width: OrientationService.isPortrait ? 30.w : 9.5.w,
                       child: Text(title,
                           textAlign: TextAlign.center,
                           style: AppTextStyles.body.copyWith(
+                            fontSize:
+                                OrientationService.contentPackagesDescription,
                             color: AppColors.blue,
                             decoration: TextDecoration.underline,
                             decorationColor: AppColors.blue,

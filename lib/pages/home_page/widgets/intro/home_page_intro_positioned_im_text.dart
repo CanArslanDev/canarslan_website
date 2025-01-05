@@ -25,7 +25,7 @@ class _PositionedImText extends GetView<HomePageController> {
                 },
                 child: FittedBox(
                   child: SelectableText(
-                    '''I'm ''',
+                    '''I'm${OrientationService.isPortrait ? '' : ' '}''',
                     style: AppTextStyles.title.copyWith(
                         color: notEmpty ? Colors.white : Colors.transparent),
                   ),
@@ -39,7 +39,7 @@ class _PositionedImText extends GetView<HomePageController> {
   }
 
   double get height {
-    return 8.h;
+    return OrientationService.isPortrait ? 5.7.h : 8.h;
   }
 
   bool get notEmpty {

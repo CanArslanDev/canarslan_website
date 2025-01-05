@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:canarslan_website/services/orientation_service.dart';
 import 'package:canarslan_website/ui/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +24,7 @@ abstract class AppTextStyles {
 
   static final body = GoogleFonts.inter(
     color: AppColors.white,
-    fontSize: 12.sp,
+    fontSize: OrientationService.contentPackagesTitle,
   );
   static final codingBody =
       GoogleFonts.firaCode(fontSize: 13.sp, color: Colors.white);
@@ -34,5 +35,7 @@ abstract class AppTextStyles {
     fontSize: 9.sp,
   );
   static final navBar = GoogleFonts.inter(
-      fontSize: 10.5.sp, color: AppColors.white, fontWeight: FontWeight.w500);
+      fontSize: OrientationService.isPortrait ? 13.6.sp : 10.5.sp,
+      color: AppColors.white,
+      fontWeight: FontWeight.w500);
 }

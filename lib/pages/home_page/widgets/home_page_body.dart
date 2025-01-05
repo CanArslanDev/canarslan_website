@@ -26,11 +26,15 @@ class _Body extends GetView<HomePageController> {
       ? const _Content()
       : const SizedBox.shrink());
 
-  Widget get info => const _InfoWidget();
+  Widget get info => OrientationService.isPortrait
+      ? const SizedBox.shrink()
+      : const _InfoWidget();
 
   Widget get navBar => const _NavBar();
 
-  Widget get intro => const _IntroBody();
+  Widget get intro => OrientationService.isPortrait
+      ? const _IntroBodyPortrait()
+      : const _IntroBodyLandscape();
 
   Widget get background => const _Background();
 }

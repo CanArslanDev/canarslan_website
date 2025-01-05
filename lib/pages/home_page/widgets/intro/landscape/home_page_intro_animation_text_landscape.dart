@@ -1,13 +1,13 @@
-part of '../../home_page.dart';
+part of '../../../home_page.dart';
 
-class _AnimationText extends StatefulWidget {
-  const _AnimationText();
+class _AnimationTextLandscape extends StatefulWidget {
+  const _AnimationTextLandscape();
 
   @override
-  _AnimationTextState createState() => _AnimationTextState();
+  _AnimationTextLandscapeState createState() => _AnimationTextLandscapeState();
 }
 
-class _AnimationTextState extends State<_AnimationText>
+class _AnimationTextLandscapeState extends State<_AnimationTextLandscape>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -69,7 +69,7 @@ class _AnimationTextState extends State<_AnimationText>
                   child: SelectableText(
                     StringConstants.name,
                     style: AppTextStyles.title.copyWith(
-                      fontSize: 11.sp,
+                      fontSize: OrientationService.isPortrait ? 18.sp : 11.sp,
                       color: Colors.blue,
                       shadows: [
                         const BoxShadow(
@@ -83,7 +83,7 @@ class _AnimationTextState extends State<_AnimationText>
                 SelectableText(
                   StringConstants.name,
                   style: AppTextStyles.title.copyWith(
-                    fontSize: 11.sp,
+                    fontSize: OrientationService.isPortrait ? 18.sp : 11.sp,
                     color: Colors.blue,
                   ),
                 ),

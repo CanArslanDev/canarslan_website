@@ -6,7 +6,8 @@ class _ContentInfo extends GetView<HomePageController> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 25.h),
+      padding:
+          EdgeInsets.only(top: OrientationService.isPortrait ? 17.h : 25.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -17,15 +18,17 @@ class _ContentInfo extends GetView<HomePageController> {
     );
   }
 
-  Widget get image => Obx(() => AnimatedOpacity(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-        opacity: controller.contentVisibleList[0] == 1 ? 1 : 0,
-        child: Image.asset(
-          'assets/images/work_icon.png',
-          height: 25.h,
-        ),
-      ));
+  Widget get image => OrientationService.isPortrait
+      ? const SizedBox.shrink()
+      : Obx(() => AnimatedOpacity(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            opacity: controller.contentVisibleList[0] == 1 ? 1 : 0,
+            child: Image.asset(
+              'assets/images/work_icon.png',
+              height: OrientationService.contentImageHeight,
+            ),
+          ));
 
   Widget get texts => Obx(
         () => Column(
@@ -37,7 +40,9 @@ class _ContentInfo extends GetView<HomePageController> {
               opacity: controller.contentVisibleList[0] == 1 ? 1 : 0,
               child: SelectableText.rich(
                 TextSpan(
-                  style: AppTextStyles.codingBody,
+                  style: AppTextStyles.codingBody.copyWith(
+                    fontSize: OrientationService.contentTextSize,
+                  ),
                   children: [
                     const TextSpan(
                       text: "I'm currently working on",
@@ -45,6 +50,7 @@ class _ContentInfo extends GetView<HomePageController> {
                     TextSpan(
                       text: '\nFlutter & Dart Developing',
                       style: AppTextStyles.codingBody.copyWith(
+                        fontSize: OrientationService.contentTextSize,
                         color: AppColors.blue,
                         fontWeight: FontWeight.bold,
                         shadows: [
@@ -69,7 +75,8 @@ class _ContentInfo extends GetView<HomePageController> {
                 child: SelectableText(
                   'I also share my projects on my\nGithub profile.',
                   maxLines: 2,
-                  style: AppTextStyles.codingBody.copyWith(fontSize: 12.sp),
+                  style: AppTextStyles.codingBody.copyWith(
+                      fontSize: OrientationService.contentSmallTextSize),
                 ),
               ),
             ),

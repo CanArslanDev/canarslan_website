@@ -6,12 +6,12 @@ class _ContentInfoButtons extends GetView<HomePageController> {
   @override
   Widget build(BuildContext context) {
     return AppPadding(
-      tPadding: 1.w,
+      tPadding: OrientationService.isPortrait ? 3.w : 1.w,
       child: Row(
         children: [
           button('Contact Me', StringConstants.linkedin, ButtonType.primary, 2),
           AppPadding(
-            lPadding: 1.w,
+            lPadding: OrientationService.isPortrait ? 3.w : 1.w,
             child: button('View My Projects',
                 StringConstants.github.toGithubRepo, ButtonType.secondary, 3),
           ),
@@ -32,7 +32,8 @@ class _ContentInfoButtons extends GetView<HomePageController> {
               onTap: () => JavascriptService.openUrl(url),
               child: Container(
                 height: 3.8.h,
-                padding: EdgeInsets.symmetric(horizontal: 1.w),
+                padding: EdgeInsets.symmetric(
+                    horizontal: OrientationService.isPortrait ? 2.w : 1.w),
                 decoration: BoxDecoration(
                   color: type == ButtonType.primary
                       ? AppColors.lightBlue
@@ -52,7 +53,7 @@ class _ContentInfoButtons extends GetView<HomePageController> {
                   child: Text(text,
                       style: AppTextStyles.body.copyWith(
                           fontWeight: FontWeight.w600,
-                          fontSize: 11.5.sp,
+                          fontSize: OrientationService.contentButtonTextSize,
                           color: type == ButtonType.primary
                               ? AppColors.white
                               : AppColors.black)),

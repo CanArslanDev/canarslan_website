@@ -14,7 +14,7 @@ class _ContentPackagesTitle extends GetView<HomePageController> {
           TextSpan(
             style: AppTextStyles.body.copyWith(
                 color: Colors.white,
-                fontSize: 13.7.sp,
+                fontSize: OrientationService.contentPackagesTitle,
                 fontWeight: FontWeight.w600),
             children: [
               const TextSpan(
@@ -25,7 +25,7 @@ class _ContentPackagesTitle extends GetView<HomePageController> {
                 style: AppTextStyles.body.copyWith(
                   color: AppColors.blue,
                   fontWeight: FontWeight.bold,
-                  fontSize: 13.7.sp,
+                  fontSize: OrientationService.contentPackagesTitle,
                   shadows: [
                     const BoxShadow(
                       color: AppColors.blue,
