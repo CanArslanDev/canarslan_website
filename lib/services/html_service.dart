@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 
 class HtmlService {
   Future<Map<String, String>> fetchPackages(String publisherUrl) async {
-    final response = await http.get(Uri.parse(publisherUrl));
+    final response = await http
+        .get(Uri.parse('https://cors-anywhere.herokuapp.com/$publisherUrl'));
 
     if (response.statusCode == 200) {
       final document = parse(response.body);
