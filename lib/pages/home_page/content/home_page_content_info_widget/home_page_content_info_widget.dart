@@ -9,7 +9,7 @@ class _ContentInfoWidget extends GetView<HomePageController> {
       () => AnimatedOpacity(
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
-        opacity: controller.contentVisibleList[6] == 1 ? 1 : 0,
+        opacity: controller.contentVisibleList[7] == 1 ? 1 : 0,
         child: Container(
           width: 80.w,
           margin: EdgeInsets.only(top: 6.h),

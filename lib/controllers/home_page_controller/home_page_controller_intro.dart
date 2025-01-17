@@ -83,9 +83,18 @@ Age: ${StringConstants.age}''';
     openInfoBar.value = true;
   }
 
-  Future<void> openContentAnimation(Rx<bool> openInfoBar) async {
+  Future<void> closeInfoBarAnimation(Rx<bool> openInfoBar) async {
+    openInfoBar.value = false;
+  }
+
+  Future<void> openContentAnimation(Rx<bool> contentAnimation) async {
     await duration(const Duration(milliseconds: 7500));
-    openInfoBar.value = true;
+    contentAnimation.value = true;
+  }
+
+  Future<void> openDisposeAnimation(Rx<bool> disposeAnimation) async {
+    await duration(const Duration(milliseconds: 8000));
+    disposeAnimation.value = true;
   }
 
   Future<void> get openNavBarAnimation async {
@@ -97,7 +106,7 @@ Age: ${StringConstants.age}''';
 
   Future<void> enableContentVisibleList(List<int> contentVisibleList) async {
     await duration(const Duration(milliseconds: 8000));
-    for (var i = 0; i < contentVisibleList.length; i++) {
+    for (var i = 1; i < contentVisibleList.length; i++) {
       contentVisibleList[i] = 1;
       await duration(const Duration(milliseconds: 400));
     }

@@ -13,7 +13,6 @@ class _Body extends GetView<HomePageController> {
             children: [
               intro,
               info,
-              navBar,
               content,
             ],
           ),
@@ -30,11 +29,11 @@ class _Body extends GetView<HomePageController> {
       ? const SizedBox.shrink()
       : const _InfoWidget();
 
-  Widget get navBar => const _NavBar();
-
-  Widget get intro => OrientationService.isPortrait
-      ? const _IntroBodyPortrait()
-      : const _IntroBodyLandscape();
+  Widget get intro => Obx(() => controller.disposeAnimation.value
+      ? const SizedBox.shrink()
+      : OrientationService.isPortrait
+          ? const _IntroBodyPortrait()
+          : const _IntroBodyLandscape());
 
   Widget get background => const _Background();
 }

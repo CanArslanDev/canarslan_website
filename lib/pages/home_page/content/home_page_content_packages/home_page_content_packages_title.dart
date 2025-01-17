@@ -9,7 +9,7 @@ class _ContentPackagesTitle extends GetView<HomePageController> {
       () => AnimatedOpacity(
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
-        opacity: controller.contentVisibleList[4] == 1 ? 1 : 0,
+        opacity: controller.contentVisibleList[5] == 1 ? 1 : 0,
         child: SelectableText.rich(
           TextSpan(
             style: AppTextStyles.body.copyWith(

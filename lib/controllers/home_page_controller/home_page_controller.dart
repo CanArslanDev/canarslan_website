@@ -30,11 +30,12 @@ class HomePageController extends BaseController
   RxBool wallpaperAnimation = false.obs;
   Rx<bool> openInfoBar = false.obs;
   Rx<bool> openContent = false.obs;
+  Rx<bool> disposeAnimation = false.obs;
   Rx<int> textAnimation = 0.obs;
   DateTime time =
       DateTime.now().toUtc().add(Duration(hours: IntConstants.timezone));
   Map<String, String> packages = {};
-  RxList<int> contentVisibleList = [0, 0, 0, 0, 0, 0, 0, 0, 0].obs;
+  RxList<int> contentVisibleList = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0].obs;
   Rx<bool> loadedPortraitImages = false.obs;
 
   @override
@@ -59,6 +60,7 @@ class HomePageController extends BaseController
       openMainWallpaperAnimation(wallpaperAnimation);
       openInfoBarAnimation(openInfoBar);
       openContentAnimation(openContent);
+      openDisposeAnimation(disposeAnimation);
       enableContentVisibleList(contentVisibleList);
       openNavBarAnimation;
       findMainNameTextPosition();
@@ -105,5 +107,15 @@ class HomePageController extends BaseController
       final position = renderBox.localToGlobal(Offset.zero);
       mainNameTextPosition.value = Position(position.dx, position.dy);
     });
+  }
+
+  Future<void> closeWidgetsAnimation() async {
+    unawaited(closeInfoBarAnimation(openInfoBar));
+    for (var i = contentVisibleList.length - 1; i >= 0; i--) {
+      contentVisibleList[i] = 0;
+      await duration(const Duration(milliseconds: 50));
+    }
+    //wait animation ending
+    await duration(const Duration(milliseconds: 1000));
   }
 }

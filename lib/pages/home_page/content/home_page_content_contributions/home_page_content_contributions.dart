@@ -13,7 +13,7 @@ class _ContentContributions extends GetView<HomePageController> {
             AnimatedOpacity(
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut,
-              opacity: controller.contentVisibleList[6] == 1 ? 1 : 0,
+              opacity: controller.contentVisibleList[7] == 1 ? 1 : 0,
               child: SelectableText(
                 'My last year contributions',
                 style: AppTextStyles.body.copyWith(
@@ -25,7 +25,7 @@ class _ContentContributions extends GetView<HomePageController> {
             AnimatedOpacity(
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut,
-              opacity: controller.contentVisibleList[7] == 1 ? 1 : 0,
+              opacity: controller.contentVisibleList[8] == 1 ? 1 : 0,
               child: Image.asset(
                 'assets/images/contributions.png',
                 fit: BoxFit.fitWidth,

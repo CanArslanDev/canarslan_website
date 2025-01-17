@@ -9,11 +9,11 @@ class _ContentInfoButtons extends GetView<HomePageController> {
       tPadding: OrientationService.isPortrait ? 3.w : 1.w,
       child: Row(
         children: [
-          button('Contact Me', StringConstants.linkedin, ButtonType.primary, 2),
+          button('Contact Me', StringConstants.linkedin, ButtonType.primary, 3),
           AppPadding(
             lPadding: OrientationService.isPortrait ? 3.w : 1.w,
             child: button('View My Projects',
-                StringConstants.github.toGithubRepo, ButtonType.secondary, 3),
+                StringConstants.github.toGithubRepo, ButtonType.secondary, 4),
           ),
         ],
       ),

@@ -8,6 +8,7 @@ import 'package:canarslan_website/controllers/navigation_bar_controller/navigati
 import 'package:canarslan_website/extensions/datetime_extension.dart';
 import 'package:canarslan_website/extensions/string_extension.dart';
 import 'package:canarslan_website/models/position_model.dart';
+import 'package:canarslan_website/ui/navigation_bar.dart';
 import 'package:canarslan_website/services/html_service.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
 import 'package:canarslan_website/services/orientation_service.dart';
@@ -40,7 +41,6 @@ part 'widgets/intro/landscape/home_page_intro_text_landscape.dart';
 part 'widgets/intro/portrait/home_page_intro_text_portrait.dart';
 part 'widgets/intro/landscape/home_page_intro_vscode.dart';
 part 'widgets/intro/portrait/home_page_intro_notes.dart';
-part 'widgets/home_page_navigation_bar.dart';
 part 'content/home_page_content.dart';
 part 'content/home_page_content_info/home_page_content_info.dart';
 part 'content/home_page_content_info/home_page_content_info_buttons.dart';

@@ -23,7 +23,7 @@ class _ContentInfo extends GetView<HomePageController> {
       : Obx(() => AnimatedOpacity(
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut,
-            opacity: controller.contentVisibleList[0] == 1 ? 1 : 0,
+            opacity: controller.contentVisibleList[1] == 1 ? 1 : 0,
             child: Image.asset(
               'assets/images/work_icon.png',
               height: OrientationService.contentImageHeight,
@@ -37,7 +37,7 @@ class _ContentInfo extends GetView<HomePageController> {
             AnimatedOpacity(
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut,
-              opacity: controller.contentVisibleList[0] == 1 ? 1 : 0,
+              opacity: controller.contentVisibleList[1] == 1 ? 1 : 0,
               child: SelectableText.rich(
                 TextSpan(
                   style: AppTextStyles.codingBody.copyWith(
@@ -69,7 +69,7 @@ class _ContentInfo extends GetView<HomePageController> {
             AnimatedOpacity(
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut,
-              opacity: controller.contentVisibleList[1] == 1 ? 1 : 0,
+              opacity: controller.contentVisibleList[2] == 1 ? 1 : 0,
               child: Padding(
                 padding: EdgeInsets.only(top: 0.5.h),
                 child: SelectableText(

@@ -1,7 +1,6 @@
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:canarslan_website/routes/pages.dart';
-import 'package:canarslan_website/services/html_service.dart';
 import 'package:canarslan_website/ui/utils/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
