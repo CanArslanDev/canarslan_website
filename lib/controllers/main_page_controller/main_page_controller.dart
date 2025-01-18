@@ -14,15 +14,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'dart:html' as html;
 
 class MainPageController extends BaseController {
-  String currentHrefPath = html.window.location.pathname ?? '/';
   List<Widget> widgetOptions = <Widget>[const HomePage(), const ProjectsPage()];
   final Rx<int> selectedIndex =
       Get.find<NavigationBarController>().selectedPage;
-
-  @override
-  void onInit() {
-    super.onInit();
-    RouteService.controlMainHref(
-        currentHrefPath, (path) => currentHrefPath = path);
-  }
 }

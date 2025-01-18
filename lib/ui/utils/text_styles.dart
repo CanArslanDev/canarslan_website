@@ -22,6 +22,8 @@ abstract class AppTextStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static final regular = GoogleFonts.inter();
+
   static final body = GoogleFonts.inter(
     color: AppColors.white,
     fontSize: OrientationService.contentPackagesTitle,
