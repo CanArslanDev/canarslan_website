@@ -8,12 +8,21 @@ class _Background extends GetView<HomePageController> {
     return body;
   }
 
-  Widget get body => Stack(
-        children: [
-          vsCodeWallpaper,
-          mainWallpaper,
-          blackHole,
-        ],
+  Widget get body => controller.disposeAnimation.value
+      ? mainWallpaper
+      : Stack(
+          children: [
+            vsCodeWallpaper,
+            mainWallpaperAnimation,
+            blackHole,
+          ],
+        );
+
+  Widget get mainWallpaper => Image.asset(
+        'assets/images/main_wallpaper.png',
+        width: 100.w,
+        height: 100.h,
+        fit: BoxFit.fill,
       );
 
   Widget get vsCodeWallpaper => SizedBox(
@@ -51,5 +60,5 @@ class _Background extends GetView<HomePageController> {
         ),
       );
 
-  Widget get mainWallpaper => const _GradientBackgroundAnimation();
+  Widget get mainWallpaperAnimation => const _GradientBackgroundAnimation();
 }

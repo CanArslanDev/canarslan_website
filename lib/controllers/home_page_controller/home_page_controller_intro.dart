@@ -1,4 +1,5 @@
 import 'package:canarslan_website/constants/string_constants.dart';
+import 'package:canarslan_website/controllers/home_page_controller/home_page_controller.dart';
 import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:canarslan_website/services/feature_service.dart';
 import 'package:get/get.dart';
@@ -110,5 +111,19 @@ Age: ${StringConstants.age}''';
       contentVisibleList[i] = 1;
       await duration(const Duration(milliseconds: 400));
     }
+  }
+
+  void skipAnimation(HomePageController controller) {
+    controller.visibility.value = false;
+    controller.textAnimation.value = 2;
+    controller.wallpaperAnimation.value = true;
+    controller.openInfoBar.value = true;
+    controller.openContent.value = true;
+    controller.disposeAnimation.value = true;
+    controller.contentVisibleList.value =
+        List<int>.filled(controller.contentVisibleList.length, 1);
+    Get.put<NavigationBarController>(NavigationBarController())
+        .openNavbar
+        .value = true;
   }
 }

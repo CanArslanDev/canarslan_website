@@ -7,6 +7,7 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        const _DisposeAnimationTitle(),
         const _ContentInfo(),
         const _ContentPackages(),
         if (OrientationService.isPortrait) const _ContentInfoWidget(),

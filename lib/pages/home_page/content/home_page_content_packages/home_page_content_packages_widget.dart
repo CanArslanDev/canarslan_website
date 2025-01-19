@@ -23,6 +23,13 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
     // widgets.add(package('Simple Painter', PackageConstants.packageIcons[1],
     //     'pub.dev/packages/simple_animation_progress_bar'));
     // return widgets;
+    if (controller.packages.entries.isEmpty) {
+      return [
+        SizedBox(
+          height: 8.h,
+        )
+      ];
+    }
     for (var i = 0; i < controller.packages.entries.length; i++) {
       final entry = controller.packages.entries.elementAt(i);
       final key = entry.key;

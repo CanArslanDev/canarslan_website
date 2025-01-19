@@ -1,7 +1,9 @@
+import 'package:canarslan_website/bindings/contact_page_binding.dart';
 import 'package:canarslan_website/bindings/home_page_binding.dart';
 import 'package:canarslan_website/bindings/main_page_binding.dart';
 import 'package:canarslan_website/bindings/not_found_page_binding.dart';
 import 'package:canarslan_website/bindings/projects_page_binding.dart';
+import 'package:canarslan_website/pages/contact_page/contact_page.dart';
 import 'package:canarslan_website/pages/home_page/home_page.dart';
 import 'package:canarslan_website/pages/main_page/main_page.dart';
 import 'package:canarslan_website/pages/not_found_page/not_found_page.dart';
@@ -23,8 +25,12 @@ abstract class Pages {
         page: ProjectsPage.new,
         binding: ProjectsPageBinding()),
     GetPage(
+        name: Routes.contactPage,
+        page: ContactPage.new,
+        binding: ContactPageBinding()),
+    GetPage(
         name: Routes.notFoundPage,
         page: NotFoundPage.new,
-        binding: NotFoundPageBinding())
+        binding: NotFoundPageBinding()),
   ];
 }

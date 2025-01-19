@@ -17,4 +17,8 @@ class OrientationService {
   static double contentPackagesTitle = isPortrait ? 19.sp : 13.7.sp;
   static double contentPackagesDescription = isPortrait ? 16.sp : 12.sp;
   static double contentPackagesImageSize = isPortrait ? 6.w : 1.7.w;
+  static double contentDisposeAnimationTextTopPadding =
+      isPortrait ? 10.h : 14.h;
+  static double contentDisposeAnimationTextFontSize =
+      isPortrait ? 22.sp : 18.sp;
 }

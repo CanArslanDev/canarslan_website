@@ -4,6 +4,7 @@ import 'package:canarslan_website/constants/int_constants.dart';
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/controllers/base_controller.dart';
 import 'package:canarslan_website/controllers/home_page_controller/home_page_controller_intro.dart';
+import 'package:canarslan_website/controllers/main_page_controller/main_page_controller.dart';
 import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:canarslan_website/models/position_model.dart';
 import 'package:canarslan_website/services/html_service.dart';
@@ -41,6 +42,10 @@ class HomePageController extends BaseController
   @override
   void onInit() {
     super.onInit();
+    if (!Get.find<MainPageController>().enableHomePageAnimation) {
+      skipAnimation(this);
+      return;
+    }
     if (OrientationService.isPortrait) {
       portrait;
     } else {
@@ -110,10 +115,11 @@ class HomePageController extends BaseController
   }
 
   Future<void> closeWidgetsAnimation() async {
+    if (!contentVisibleList.every((element) => element == 1)) return;
     unawaited(closeInfoBarAnimation(openInfoBar));
     for (var i = contentVisibleList.length - 1; i >= 0; i--) {
       contentVisibleList[i] = 0;
-      await duration(const Duration(milliseconds: 50));
+      await duration(const Duration(milliseconds: 30));
     }
     //wait animation ending
     await duration(const Duration(milliseconds: 1000));

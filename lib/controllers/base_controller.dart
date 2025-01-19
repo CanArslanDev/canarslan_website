@@ -6,6 +6,8 @@ import 'dart:html' as html;
 
 //Base Controller For Getx
 class BaseController extends GetxController {
+  bool _disposed = false;
+
   String currentHrefPath = html.window.location.pathname ?? '/';
   @override
   void onInit() {
@@ -17,7 +19,14 @@ class BaseController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    // ignore: avoid_print
-    // print("Starting base controller");
+    _disposed = true;
+  }
+
+  bool get isDisposed => _disposed;
+
+  void safelyDispose() {
+    if (!_disposed) {
+      dispose();
+    }
   }
 }

@@ -6,8 +6,12 @@ class _ContentInfo extends GetView<HomePageController> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.only(top: OrientationService.isPortrait ? 17.h : 25.h),
+      padding: EdgeInsets.only(
+          top: controller.disposeAnimation.value
+              ? 1.h
+              : OrientationService.isPortrait
+                  ? 17.h
+                  : 25.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

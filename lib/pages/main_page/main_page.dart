@@ -1,4 +1,5 @@
 import 'package:canarslan_website/controllers/main_page_controller/main_page_controller.dart';
+import 'package:canarslan_website/services/controller_service.dart';
 import 'package:canarslan_website/ui/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,8 +14,7 @@ class MainPage extends GetView<MainPageController> {
     return Scaffold(
       body: Obx(() => Stack(
             children: [
-              controller.widgetOptions
-                  .elementAt(controller.selectedIndex.value),
+              controller.pages.elementAt(controller.selectedIndex.value),
               navBar,
             ],
           )),
