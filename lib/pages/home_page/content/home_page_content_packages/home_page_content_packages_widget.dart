@@ -7,10 +7,13 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 3.6.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: packages,
+      child: Obx(
+        () => Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:
+              controller.packages.entries.isNotEmpty ? packages : nullWidget,
+        ),
       ),
     );
   }
@@ -23,13 +26,6 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
     // widgets.add(package('Simple Painter', PackageConstants.packageIcons[1],
     //     'pub.dev/packages/simple_animation_progress_bar'));
     // return widgets;
-    if (controller.packages.entries.isEmpty) {
-      return [
-        SizedBox(
-          height: 8.h,
-        )
-      ];
-    }
     for (var i = 0; i < controller.packages.entries.length; i++) {
       final entry = controller.packages.entries.elementAt(i);
       final key = entry.key;
@@ -43,6 +39,15 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
     return widgets;
   }
 
+  List<Widget> get nullWidget {
+    return [
+      Opacity(
+        opacity: 0,
+        child: package('Empty', PackageConstants.packageIcons[0], ''),
+      ),
+    ];
+  }
+
   Widget package(
     String title,
     String iconPath,
@@ -52,7 +57,7 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
         () => AnimatedOpacity(
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
-          opacity: controller.contentVisibleList[6] == 1 ? 1 : 0,
+          opacity: controller.contentVisibleList[6] == true ? 1 : 0,
           child: Column(
             children: [
               SvgPicture.asset(

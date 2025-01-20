@@ -25,7 +25,7 @@ class _ContentInfoButtons extends GetView<HomePageController> {
         () => AnimatedOpacity(
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
-          opacity: controller.contentVisibleList[visibleIndex] == 1 ? 1 : 0,
+          opacity: controller.contentVisibleList[visibleIndex] == true ? 1 : 0,
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(

@@ -16,7 +16,7 @@ class _PositionedImText extends GetView<HomePageController> {
           child: AnimatedOpacity(
             curve: Curves.fastLinearToSlowEaseIn,
             duration: const Duration(milliseconds: 2000),
-            opacity: controller.contentVisibleList[0] == 1
+            opacity: controller.contentVisibleList[0] == true
                 ? notEmpty
                     ? 1
                     : 0

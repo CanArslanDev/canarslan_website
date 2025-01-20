@@ -19,7 +19,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'dart:html' as html;
 
 class MainPageController extends BaseController {
-  bool enableHomePageAnimation = true;
+  bool enableHomePageAnimation = RouteService.isMainHref;
   // ignore: lines_longer_than_80_chars
   List<Widget> pages = <Widget>[
     const HomePage(),

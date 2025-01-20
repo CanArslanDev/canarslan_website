@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 class RouteService {
+  static bool get isMainHref =>
+      (html.window.location.pathname ?? '/') == Routes.mainPage;
   static void setHref(String path) {
     var hrefPath = path;
     if (hrefPath.startsWith('/')) {

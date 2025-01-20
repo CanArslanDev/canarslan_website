@@ -105,15 +105,23 @@ Age: ${StringConstants.age}''';
         .value = true;
   }
 
-  Future<void> enableContentVisibleList(List<int> contentVisibleList) async {
+  Future<void> enableContentVisibleList(List<bool> contentVisibleList) async {
     await duration(const Duration(milliseconds: 8000));
     for (var i = 1; i < contentVisibleList.length; i++) {
-      contentVisibleList[i] = 1;
+      contentVisibleList[i] = true;
       await duration(const Duration(milliseconds: 400));
     }
   }
 
+  Future<void> closeContentVisibleList(List<bool> contentVisibleList) async {
+    for (var i = contentVisibleList.length - 1; i >= 0; i--) {
+      contentVisibleList[i] = false;
+      await duration(const Duration(milliseconds: 30));
+    }
+  }
+
   void skipAnimation(HomePageController controller) {
+    controller.getPackages();
     controller.visibility.value = false;
     controller.textAnimation.value = 2;
     controller.wallpaperAnimation.value = true;
@@ -121,7 +129,7 @@ Age: ${StringConstants.age}''';
     controller.openContent.value = true;
     controller.disposeAnimation.value = true;
     controller.contentVisibleList.value =
-        List<int>.filled(controller.contentVisibleList.length, 1);
+        List<bool>.filled(controller.contentVisibleList.length, true);
     Get.put<NavigationBarController>(NavigationBarController())
         .openNavbar
         .value = true;

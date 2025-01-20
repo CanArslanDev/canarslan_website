@@ -10,22 +10,30 @@ class _DisposeAnimationTitle extends GetView<HomePageController> {
     );
   }
 
-  Widget get title => AppPadding(
-        tPadding: OrientationService.contentDisposeAnimationTextTopPadding,
-        child: Align(
-            alignment: Alignment.topCenter,
-            child: SelectableText.rich(
-              TextSpan(
-                children: [
-                  nameTag,
-                  name,
-                ],
-              ),
-            )),
+  Widget get title => Obx(
+        () => AnimatedOpacity(
+          duration: const Duration(milliseconds: 800),
+          opacity: controller.contentVisibleList[0] == true ? 1 : 0,
+          child: AppPadding(
+              tPadding:
+                  OrientationService.contentDisposeAnimationTextTopPadding,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: SelectableText.rich(
+                  TextSpan(
+                    children: [
+                      nameTag,
+                      name,
+                    ],
+                  ),
+                ),
+              )),
+        ),
       );
 
   TextSpan get nameTag => TextSpan(
-        text: 'I\'m ',
+        //previous text is 'I\'m ', i changed it to 'I'm ' to find easily
+        text: '''I'm ''',
         style: AppTextStyles.title.copyWith(
           fontSize: OrientationService.contentDisposeAnimationTextFontSize,
           color: AppColors.white,

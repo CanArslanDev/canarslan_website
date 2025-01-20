@@ -9,18 +9,18 @@ class _ContentInfoWidget extends GetView<HomePageController> {
       () => AnimatedOpacity(
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
-        opacity: controller.contentVisibleList[7] == 1 ? 1 : 0,
+        opacity: controller.contentVisibleList[7] == true ? 1 : 0,
         child: Container(
           width: 80.w,
           margin: EdgeInsets.only(top: 6.h),
           decoration: BoxDecoration(
-              color: AppColors.black.withOpacity(0.4),
+              color: AppColors.black.withValues(alpha: 0.4),
               borderRadius: AppBorderRadius.small,
               border: Border.all(color: AppColors.grey, width: 2),
               boxShadow: [
                 BoxShadow(
                   blurStyle: BlurStyle.outer,
-                  color: AppColors.grey.withOpacity(0.5),
+                  color: AppColors.grey.withValues(alpha: 0.5),
                   spreadRadius: -3,
                   blurRadius: 10,
                 ),

@@ -11,7 +11,7 @@ class _PositionedIntroTextLandscape extends GetView<HomePageController> {
               top: controller.introNameTextPosition.value.y - 30.h,
               left: controller.introNameTextPosition.value.x,
               child: AnimatedOpacity(
-                opacity: controller.contentVisibleList[0] == 1 ? 1 : 0,
+                opacity: controller.contentVisibleList[0] == true ? 1 : 0,
                 curve: Curves.easeInOut,
                 duration: const Duration(milliseconds: 1000),
                 child: Stack(

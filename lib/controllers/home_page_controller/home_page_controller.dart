@@ -5,14 +5,11 @@ import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/controllers/base_controller.dart';
 import 'package:canarslan_website/controllers/home_page_controller/home_page_controller_intro.dart';
 import 'package:canarslan_website/controllers/main_page_controller/main_page_controller.dart';
-import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:canarslan_website/models/position_model.dart';
 import 'package:canarslan_website/services/html_service.dart';
 import 'package:canarslan_website/services/orientation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class HomePageController extends BaseController
     with HomePageControllerIntroMixin {
@@ -35,8 +32,9 @@ class HomePageController extends BaseController
   Rx<int> textAnimation = 0.obs;
   DateTime time =
       DateTime.now().toUtc().add(Duration(hours: IntConstants.timezone));
-  Map<String, String> packages = {};
-  RxList<int> contentVisibleList = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0].obs;
+  RxMap<String, String> packages = <String, String>{}.obs;
+  RxList<bool> contentVisibleList =
+      [true, false, false, false, false, false, false, false, false, false].obs;
   Rx<bool> loadedPortraitImages = false.obs;
 
   @override
@@ -90,7 +88,7 @@ class HomePageController extends BaseController
   }
 
   Future<void> getPackages() async {
-    packages =
+    packages.value =
         await HtmlService().fetchPackages(StringConstants.pubDevPublisher);
   }
 
@@ -115,12 +113,9 @@ class HomePageController extends BaseController
   }
 
   Future<void> closeWidgetsAnimation() async {
-    if (!contentVisibleList.every((element) => element == 1)) return;
+    if (!contentVisibleList.every((element) => element == true)) return;
     unawaited(closeInfoBarAnimation(openInfoBar));
-    for (var i = contentVisibleList.length - 1; i >= 0; i--) {
-      contentVisibleList[i] = 0;
-      await duration(const Duration(milliseconds: 30));
-    }
+    await closeContentVisibleList(contentVisibleList);
     //wait animation ending
     await duration(const Duration(milliseconds: 1000));
   }
