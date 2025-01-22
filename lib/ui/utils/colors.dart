@@ -11,4 +11,5 @@ abstract class AppColors {
   static const grey = Color(0xFF404040);
   static const lightGrey = Color(0xFF8D8D8D);
   static const notesBackground = Color(0xFF1C1C1C);
+  static const projectsPageBlue = Color(0xFF071235);
 }

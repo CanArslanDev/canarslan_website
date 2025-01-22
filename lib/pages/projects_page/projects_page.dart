@@ -10,7 +10,27 @@ class ProjectsPage extends GetView<ProjectsPageController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.blue,
+      body: Stack(
+        children: [
+          mainWallpaper,
+        ],
+      ),
     );
   }
+
+  Widget get mainWallpaper => Obx(
+        () => AnimatedOpacity(
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 1000),
+          opacity: controller.hideMainwallpaper.value ? 0 : 1,
+          child: SizedBox(
+            width: Get.width,
+            height: Get.height,
+            child: Image.asset(
+              'assets/images/main_wallpaper.png',
+              fit: BoxFit.fill,
+            ),
+          ),
+        ),
+      );
 }

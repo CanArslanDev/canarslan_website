@@ -32,7 +32,7 @@ class HomePageController extends BaseController
   Rx<int> textAnimation = 0.obs;
   DateTime time =
       DateTime.now().toUtc().add(Duration(hours: IntConstants.timezone));
-  RxMap<String, String> packages = <String, String>{}.obs;
+  RxMap<String, String> packages = Get.put(MainPageController()).packages;
   RxList<bool> contentVisibleList =
       [true, false, false, false, false, false, false, false, false, false].obs;
   Rx<bool> loadedPortraitImages = false.obs;
@@ -40,7 +40,8 @@ class HomePageController extends BaseController
   @override
   void onInit() {
     super.onInit();
-    if (!Get.find<MainPageController>().enableHomePageAnimation) {
+    if (!Get.isRegistered<MainPageController>() ||
+        !Get.find<MainPageController>().enableHomePageAnmiation) {
       skipAnimation(this);
       return;
     }
@@ -52,7 +53,6 @@ class HomePageController extends BaseController
   }
 
   void get portrait {
-    getPackages();
     Timer(const Duration(seconds: 1), () {
       startAnimationWithNewLines(vsCodeText, forceQuitCursorAnimation);
       startAnimationCursorOpacity(cursorOpacity, forceQuitCursorAnimation);
@@ -71,7 +71,6 @@ class HomePageController extends BaseController
   }
 
   void get landscape {
-    getPackages();
     setVsCodeLines(vsCodeLines);
     startAnimationWithNewLines(vsCodeText, forceQuitCursorAnimation);
     startAnimationCursorOpacity(cursorOpacity, forceQuitCursorAnimation);
@@ -85,11 +84,6 @@ class HomePageController extends BaseController
     enableContentVisibleList(contentVisibleList);
     openNavBarAnimation;
     findMainNameTextPosition();
-  }
-
-  Future<void> getPackages() async {
-    packages.value =
-        await HtmlService().fetchPackages(StringConstants.pubDevPublisher);
   }
 
   void findIntroNameTextPosition() {
