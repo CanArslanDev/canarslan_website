@@ -13,6 +13,7 @@ class ControllerService {
     int controllerIndex,
     int currentIndex,
   ) {
+    if (controllerIndex == currentIndex) return;
     //tag not working in this area
     switch (currentIndex) {
       case 0:

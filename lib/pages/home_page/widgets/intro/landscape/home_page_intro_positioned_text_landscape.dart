@@ -63,7 +63,7 @@ class _PositionedIntroTextLandscape extends GetView<HomePageController> {
                 alignment: Alignment.bottomRight,
                 child: Row(
                   children: [
-                    Text(
+                    SelectableText(
                       StringConstants.name,
                       style: AppTextStyles.title.copyWith(
                         fontSize: 11.sp,

@@ -14,7 +14,9 @@ class BaseController extends GetxController {
   void onInit() {
     super.onInit();
     RouteService.controlMainHref(
-        currentHrefPath, (path) => currentHrefPath = path);
+      currentHrefPath,
+      (path) => currentHrefPath = path,
+    );
   }
 
   @override

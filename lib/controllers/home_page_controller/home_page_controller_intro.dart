@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/controllers/home_page_controller/home_page_controller.dart';
 import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
@@ -113,6 +115,13 @@ Age: ${StringConstants.age}''';
     }
   }
 
+  Future<void> openContentVisibleList(List<bool> contentVisibleList) async {
+    for (var i = 1; i < contentVisibleList.length; i++) {
+      contentVisibleList[i] = true;
+      await duration(const Duration(milliseconds: 30));
+    }
+  }
+
   Future<void> closeContentVisibleList(List<bool> contentVisibleList) async {
     for (var i = contentVisibleList.length - 1; i >= 0; i--) {
       contentVisibleList[i] = false;
@@ -121,15 +130,15 @@ Age: ${StringConstants.age}''';
   }
 
   void skipAnimation(HomePageController controller) {
-    controller.getPackages();
+    Timer(const Duration(milliseconds: 100), () {
+      controller.openInfoBar.value = true;
+    });
     controller.visibility.value = false;
     controller.textAnimation.value = 2;
     controller.wallpaperAnimation.value = true;
-    controller.openInfoBar.value = true;
     controller.openContent.value = true;
     controller.disposeAnimation.value = true;
-    controller.contentVisibleList.value =
-        List<bool>.filled(controller.contentVisibleList.length, true);
+    openContentVisibleList(controller.contentVisibleList);
     Get.put<NavigationBarController>(NavigationBarController())
         .openNavbar
         .value = true;

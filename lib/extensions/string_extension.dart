@@ -18,6 +18,8 @@ extension StringExtension on String {
     return replaceAll('linkedin.com/', '');
   }
 
+  String get getGithubNameFromUrl => split('/').last;
+
   String get xTag {
     return replaceAll('x.com/', '');
   }

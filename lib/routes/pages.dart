@@ -13,8 +13,8 @@ import 'package:get/get_navigation/src/routes/get_route.dart';
 
 abstract class Pages {
   static List<GetPage<Object>> pages = [
-    GetPage(
-        name: Routes.mainPage, page: MainPage.new, binding: MainPageBinding()),
+    // Do not change the order of the items in the navigation bar,
+    //it is used in Route Service.
     GetPage(
       name: Routes.homePage,
       page: HomePage.new,
@@ -28,6 +28,8 @@ abstract class Pages {
         name: Routes.contactPage,
         page: ContactPage.new,
         binding: ContactPageBinding()),
+    GetPage(
+        name: Routes.mainPage, page: MainPage.new, binding: MainPageBinding()),
     GetPage(
         name: Routes.notFoundPage,
         page: NotFoundPage.new,

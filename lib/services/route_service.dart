@@ -20,7 +20,9 @@ class RouteService {
   static String get getHref => html.window.location.pathname ?? '/';
 
   static void controlMainHref(
-      String currentHrefPath, void Function(String newPath) setHrefVoid) {
+    String currentHrefPath,
+    void Function(String newPath) setHrefVoid,
+  ) {
     void setMainHref(String newPath, {void Function()? timerEvent}) {
       final newRoute = newPath;
       setHrefVoid(newRoute);
@@ -38,5 +40,16 @@ class RouteService {
         Get.offAllNamed<dynamic>(Routes.notFoundPage);
       });
     }
+  }
+
+  static int get findCurrentNavigationPage {
+    final currentPath = html.window.location.pathname;
+    return hrefNavigationPageIndex(currentPath ?? '/');
+  }
+
+  static int hrefNavigationPageIndex(String path) {
+    if (path == '/') return 0;
+    final index = Pages.pages.indexWhere((element) => element.name == path);
+    return index == -1 ? 0 : index;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:canarslan_website/constants/string_constants.dart';
+import 'package:canarslan_website/controllers/main_page_controller/main_page_controller.dart';
 import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:canarslan_website/routes/pages.dart';
 import 'package:canarslan_website/ui/utils/themes.dart';
@@ -7,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 void main() async {
-  NavigationBarController().initialize();
+  NavigationBarController.initialize();
   runApp(const MyApp());
 }
 
