@@ -12,28 +12,22 @@ import 'package:canarslan_website/services/route_service.dart';
 import 'package:get/get.dart';
 
 class NavigationBarController extends BaseController {
-  late Rx<int> selectedPage;
+  Rx<int> selectedPage =
+      (RouteService.getHref == Routes.homePage || RouteService.isMainHref)
+          ? 0.obs
+          : (RouteService.getHref == Routes.projectsPage)
+              ? 1.obs
+              : 2.obs;
   Rx<bool> openNavbar = false.obs;
   Rx<Size> menuItemSize = Size.zero.obs;
 
   @override
   void onInit() {
     super.onInit();
-    selectedPage = initHrefPage.obs;
   }
 
   static void initialize() {
     Get.put<NavigationBarController>(NavigationBarController());
-  }
-
-  int get initHrefPage {
-    final page = RouteService.findCurrentNavigationPage;
-
-    ControllerService.putController(page, 0);
-    if (page != 0) {
-      openNavbar.value = true;
-    }
-    return page;
   }
 
   Future<void> changePage(int newIndex) async {

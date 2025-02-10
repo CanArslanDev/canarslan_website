@@ -17,7 +17,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 class MainPageController extends BaseController {
   bool enableHomePageAnmiation = RouteService.isMainHref;
 
-  RxMap<String, String> packages = <String, String>{}.obs;
+  RxList<Map<String, String>> packages = <Map<String, String>>[].obs;
   RxList<Map<String, dynamic>> repositories = <Map<String, dynamic>>[].obs;
   List<Widget> pages = <Widget>[
     const HomePage(),
@@ -36,7 +36,7 @@ class MainPageController extends BaseController {
 
   Future<void> getPackages() async {
     packages.value =
-        await HtmlService().fetchPackages(StringConstants.pubDevPublisher);
+        await HtmlService.fetchPackages(StringConstants.pubDevPublisher);
   }
 
   Future<void> getRepositories() async {

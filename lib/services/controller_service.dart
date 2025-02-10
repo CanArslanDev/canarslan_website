@@ -38,7 +38,7 @@ class ControllerService {
   }
 
   static void putFirstPageController() {
-    if (RouteService.isMainHref) {
+    if (RouteService.getHref == Routes.homePage || RouteService.isMainHref) {
       Get.put<HomePageController>(HomePageController());
     } else if (RouteService.getHref == Routes.projectsPage) {
       Get.put<ProjectsPageController>(ProjectsPageController());
