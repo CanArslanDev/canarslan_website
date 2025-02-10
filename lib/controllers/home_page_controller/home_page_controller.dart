@@ -32,7 +32,7 @@ class HomePageController extends BaseController
   Rx<int> textAnimation = 0.obs;
   DateTime time =
       DateTime.now().toUtc().add(Duration(hours: IntConstants.timezone));
-  RxMap<String, String> packages = <String, String>{}.obs;
+  RxList<Map<String, String>> packages = <Map<String, String>>[].obs;
   RxList<bool> contentVisibleList =
       [true, false, false, false, false, false, false, false, false, false].obs;
   Rx<bool> loadedPortraitImages = false.obs;
@@ -89,7 +89,7 @@ class HomePageController extends BaseController
 
   Future<void> getPackages() async {
     packages.value =
-        await HtmlService().fetchPackages(StringConstants.pubDevPublisher);
+        await HtmlService.fetchPackages(StringConstants.pubDevPublisher);
   }
 
   void findIntroNameTextPosition() {

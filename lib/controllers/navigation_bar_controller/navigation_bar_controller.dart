@@ -6,12 +6,17 @@ import 'package:canarslan_website/controllers/home_page_controller/home_page_con
 import 'package:canarslan_website/controllers/main_page_controller/main_page_controller.dart';
 import 'package:canarslan_website/controllers/projects_controller/projects_page_controller.dart';
 import 'package:canarslan_website/routes/pages.dart';
+import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/controller_service.dart';
 import 'package:canarslan_website/services/route_service.dart';
 import 'package:get/get.dart';
 
 class NavigationBarController extends BaseController {
-  Rx<int> selectedPage = 0.obs;
+  Rx<int> selectedPage = (RouteService.isMainHref)
+      ? 0.obs
+      : (RouteService.getHref == Routes.projectsPage)
+          ? 1.obs
+          : 2.obs;
   Rx<bool> openNavbar = false.obs;
   Rx<Size> menuItemSize = Size.zero.obs;
   void initialize() {

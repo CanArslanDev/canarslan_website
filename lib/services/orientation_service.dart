@@ -10,6 +10,8 @@ class OrientationService {
     }
   }
 
+  static bool get isLandscape => !isPortrait;
+
   static double contentImageHeight = isPortrait ? 14.h : 25.h;
   static double contentTextSize = isPortrait ? 19.sp : 13.sp;
   static double contentSmallTextSize = isPortrait ? 16.sp : 12.sp;
@@ -21,4 +23,9 @@ class OrientationService {
       isPortrait ? 10.h : 14.h;
   static double contentDisposeAnimationTextFontSize =
       isPortrait ? 22.sp : 18.sp;
+  static double asciiArtTitleFontSize = isPortrait ? 13.sp : 9.6.sp;
+  static int asciiButtonWidthCharacterCount = isPortrait ? 65 : 85;
+  static int asciiButtonWidthAsciiCharacterCount = isPortrait ? 24 : 30;
+  static double switchButtonWidth = isPortrait ? 30.w : 10.w;
+  static double switchButtonFontSize = isPortrait ? 25.sp : 11.sp;
 }

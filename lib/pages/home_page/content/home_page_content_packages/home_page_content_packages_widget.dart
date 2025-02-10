@@ -11,8 +11,7 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
         () => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              controller.packages.entries.isNotEmpty ? packages : nullWidget,
+          children: controller.packages.isNotEmpty ? packages : nullWidget,
         ),
       ),
     );
@@ -26,13 +25,11 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
     // widgets.add(package('Simple Painter', PackageConstants.packageIcons[1],
     //     'pub.dev/packages/simple_animation_progress_bar'));
     // return widgets;
-    for (var i = 0; i < controller.packages.entries.length; i++) {
-      final entry = controller.packages.entries.elementAt(i);
-      final key = entry.key;
-      final value = entry.value;
-      widgets.add(
-          package(key.fixPackageName, PackageConstants.packageIcons[i], value));
-      if (i != controller.packages.entries.length - 1) {
+    for (var i = 0; i < controller.packages.length; i++) {
+      final entry = controller.packages.elementAt(i);
+      widgets.add(package(
+          entry['name']!, PackageConstants.packageIcons[i], entry['url']!));
+      if (i != controller.packages.length - 1) {
         widgets.add(SizedBox(width: 3.w));
       }
     }

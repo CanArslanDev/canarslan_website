@@ -17,10 +17,12 @@ class RouteService {
     html.window.history.pushState(null, 'Projects', '/$hrefPath');
   }
 
+  static String get getHref => html.window.location.pathname ?? '/';
+
   static void controlMainHref(
       String currentHrefPath, void Function(String newPath) setHrefVoid) {
     void setMainHref(String newPath, {void Function()? timerEvent}) {
-      var newRoute = newPath;
+      final newRoute = newPath;
       setHrefVoid(newRoute);
       Timer(const Duration(milliseconds: 500), () {
         if (timerEvent != null) timerEvent();
