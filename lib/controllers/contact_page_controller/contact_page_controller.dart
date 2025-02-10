@@ -5,16 +5,68 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 
 class ContactPageController extends BaseController {
-  final date = DateFormat('EEE MMM d HH:mm:ss').format(DateTime.now());
+  final welcomeText =
+      '''Last login: ${DateFormat('EEE MMM d HH:mm:ss').format(DateTime.now())}
+Welcome User
+
+////////////////////////////////////
+/                                  /
+/            Can Arslan            /
+/         Mobile Developer         /
+/                                  /
+////////////////////////////////////
+
+My mail address: canarslanx@gmail.com
+You can use the links below to get information about me and to contact me.
+
+''';
+  final defaultText = ['This is my ', ' profile\n'];
+  final urlNames = ['LinkedIn', 'GitHub', 'X'];
+  Rx<String> welcomeTextAnimation = ''.obs;
+  Rx<String> linkedInTextAnimation = ''.obs;
+  Rx<String> githubTextAnimation = ''.obs;
+  Rx<String> xTextAnimation = ''.obs;
+  Rx<int> cursorTextAnimation = 0.obs;
   @override
   void onInit() {
     initialize;
     super.onInit();
   }
 
+  Future<void> startWelcomeTextAnimation() async {
+    for (var i = 0; i < welcomeText.length; i++) {
+      welcomeTextAnimation.value += welcomeText[i];
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+    }
+  }
+
+  Future<void> startUrlAnimations() async {
+    for (var i = 0; i < 3; i++) {
+      final text = '${defaultText[0]} ${urlNames[i]} ${defaultText[1]}';
+      for (var j = 0; j < text.length; j++) {
+        cursorTextAnimation.value = i + 1;
+        if (i == 0) {
+          linkedInTextAnimation.value += text[j];
+        } else if (i == 1) {
+          githubTextAnimation.value += text[j];
+        } else {
+          xTextAnimation.value += text[j];
+        }
+
+        await Future<void>.delayed(const Duration(milliseconds: 5));
+      }
+    }
+  }
+
   void get initialize {
     Get.put<NavigationBarController>(NavigationBarController())
         .openNavbar
         .value = true;
+    startAnimations();
+  }
+
+  Future<void> startAnimations() async {
+    await startWelcomeTextAnimation();
+    await startUrlAnimations();
   }
 }

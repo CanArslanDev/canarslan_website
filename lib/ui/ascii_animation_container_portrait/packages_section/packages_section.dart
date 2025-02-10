@@ -8,7 +8,7 @@ class _PackagesSection extends StatelessWidget {
     return AppPadding(
       tPadding: 3.h,
       child: Wrap(
-        children: packages.map((package) => packageWidget(package)).toList(),
+        children: packages.map(packageWidget).toList(),
       ),
     );
   }
