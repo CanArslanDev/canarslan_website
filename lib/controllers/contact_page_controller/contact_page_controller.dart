@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:canarslan_website/controllers/base_controller.dart';
 import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:get/get.dart';
@@ -27,6 +29,7 @@ You can use the links below to get information about me and to contact me.
   Rx<String> githubTextAnimation = ''.obs;
   Rx<String> xTextAnimation = ''.obs;
   Rx<int> cursorTextAnimation = 0.obs;
+  Rx<bool> cursorAnimation = false.obs;
   @override
   void onInit() {
     initialize;
@@ -34,6 +37,7 @@ You can use the links below to get information about me and to contact me.
   }
 
   Future<void> startWelcomeTextAnimation() async {
+    await Future<void>.delayed(const Duration(seconds: 2));
     for (var i = 0; i < welcomeText.length; i++) {
       welcomeTextAnimation.value += welcomeText[i];
       await Future<void>.delayed(const Duration(milliseconds: 5));
@@ -58,6 +62,21 @@ You can use the links below to get information about me and to contact me.
     }
   }
 
+  Future<void> startCursorAnimation() async {
+    bool condition = true;
+    while (condition) {
+      cursorAnimation.value = !cursorAnimation.value;
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      if (xTextAnimation.value.length >
+          defaultText[0].length + urlNames[2].length + defaultText[1].length) {
+        Timer(const Duration(seconds: 2), () {
+          condition = false;
+          cursorAnimation.value = false;
+        });
+      }
+    }
+  }
+
   void get initialize {
     Get.put<NavigationBarController>(NavigationBarController())
         .openNavbar
@@ -66,6 +85,7 @@ You can use the links below to get information about me and to contact me.
   }
 
   Future<void> startAnimations() async {
+    unawaited(startCursorAnimation());
     await startWelcomeTextAnimation();
     await startUrlAnimations();
   }

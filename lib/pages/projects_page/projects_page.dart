@@ -13,9 +13,9 @@ import 'package:canarslan_website/ui/ascii_animation_container_landscape/ascii_a
     as landscape;
 import 'package:canarslan_website/ui/ascii_animation_container_portrait/ascii_animation_container.dart'
     as portrait;
-part 'widgets/main_page_widgets.dart';
-part 'widgets/main_page_main_buttons.dart';
-part 'widgets/main_page_wallpaper.dart';
+part 'widgets/projects_page_widgets.dart';
+part 'widgets/projects_page_main_buttons.dart';
+part 'widgets/projects_page_wallpaper.dart';
 
 class ProjectsPage extends GetView<ProjectsPageController> {
   const ProjectsPage({super.key});

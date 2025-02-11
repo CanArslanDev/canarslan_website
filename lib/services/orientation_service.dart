@@ -28,4 +28,7 @@ class OrientationService {
   static int asciiButtonWidthAsciiCharacterCount = isPortrait ? 24 : 30;
   static double switchButtonWidth = isPortrait ? 30.w : 10.w;
   static double switchButtonFontSize = isPortrait ? 25.sp : 11.sp;
+  static double contactPageTitleFontSize = isPortrait ? 15.sp : 10.sp;
+  static double contactPageTextFontSize = isPortrait ? 14.sp : 11.sp;
+  static double contactPageCircleMargin = isPortrait ? 0.3.w : 0.1.w;
 }
