@@ -1,7 +1,7 @@
 part of '../projects_page.dart';
 
 class _Wallpaper extends GetView<ProjectsPageController> {
-  const _Wallpaper({super.key});
+  const _Wallpaper();
 
   @override
   Widget build(BuildContext context) {

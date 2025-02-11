@@ -1,7 +1,7 @@
 part of '../../../home_page.dart';
 
 class _IntroBodyPortrait extends GetView<HomePageController> {
-  const _IntroBodyPortrait({super.key});
+  const _IntroBodyPortrait();
 
   @override
   Widget build(BuildContext context) {

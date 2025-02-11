@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _ContentPackagesTitle extends GetView<HomePageController> {
-  const _ContentPackagesTitle({super.key});
+  const _ContentPackagesTitle();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class _ContentPackagesTitle extends GetView<HomePageController> {
             style: AppTextStyles.body.copyWith(
                 color: Colors.white,
                 fontSize: OrientationService.contentPackagesTitle,
-                fontWeight: FontWeight.w600),
+                fontWeight: FontWeight.w600,),
             children: [
               const TextSpan(
                 text: 'My',
@@ -31,7 +31,7 @@ class _ContentPackagesTitle extends GetView<HomePageController> {
                       color: AppColors.blue,
                       blurRadius: 10,
                       spreadRadius: 1,
-                    )
+                    ),
                   ],
                 ),
               ),

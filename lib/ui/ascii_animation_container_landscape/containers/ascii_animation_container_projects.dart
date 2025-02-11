@@ -1,14 +1,13 @@
 part of '../ascii_animation_container.dart';
 
 class _Projects extends StatelessWidget {
-  const _Projects({super.key});
+  const _Projects();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
-            flex: 1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -23,7 +22,7 @@ class _Projects extends StatelessWidget {
                   ],
                 ),
               ],
-            )),
+            ),),
         Expanded(
           flex: 8,
           child: Row(

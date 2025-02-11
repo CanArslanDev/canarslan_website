@@ -44,14 +44,14 @@ class _Terminal extends StatelessWidget {
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(10),
         topRight: Radius.circular(10),
-      ));
+      ),);
 
   Widget get terminalTitle => Center(
         child: Text('canarslan.me website guest',
             style: AppTextStyles.title.copyWith(
               color: const Color(0xFFa2a4a8),
               fontSize: OrientationService.contactPageTitleFontSize,
-            )),
+            ),),
       );
 
   Widget get terminalBody => Container(
@@ -65,9 +65,9 @@ class _Terminal extends StatelessWidget {
             ),
             border: Border(
               top: BorderSide(
-                color: AppColors.black,
+                
               ),
-            )),
+            ),),
         child: child,
       );
 
@@ -88,7 +88,7 @@ class _Terminal extends StatelessWidget {
   Widget circle(Color color) {
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: OrientationService.contactPageCircleMargin),
+          horizontal: OrientationService.contactPageCircleMargin,),
       width: 1.2.h,
       height: 1.2.h,
       decoration: BoxDecoration(

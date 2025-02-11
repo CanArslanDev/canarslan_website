@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _ContentPackagesWidget extends GetView<HomePageController> {
-  const _ContentPackagesWidget({super.key});
+  const _ContentPackagesWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
     for (var i = 0; i < controller.packages.length; i++) {
       final entry = controller.packages.elementAt(i);
       widgets.add(package(
-          entry['name']!, PackageConstants.packageIcons[i], entry['url']!));
+          entry['name']!, PackageConstants.packageIcons[i], entry['url']!,),);
       if (i != controller.packages.length - 1) {
         widgets.add(SizedBox(width: 3.w));
       }
@@ -71,11 +71,11 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
                             color: AppColors.blue,
                             decoration: TextDecoration.underline,
                             decorationColor: AppColors.blue,
-                          )),
+                          ),),
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

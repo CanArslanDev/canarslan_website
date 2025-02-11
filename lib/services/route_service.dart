@@ -4,7 +4,6 @@ import 'dart:html' as html;
 import 'package:canarslan_website/routes/pages.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class RouteService {
   static bool get isMainHref =>
@@ -38,7 +37,7 @@ class RouteService {
         currentHrefPath == Routes.notFoundPage) {
       setMainHref(Routes.notFoundPage, timerEvent: () {
         Get.offAllNamed<dynamic>(Routes.notFoundPage);
-      });
+      },);
     }
   }
 

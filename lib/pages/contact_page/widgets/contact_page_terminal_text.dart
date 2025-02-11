@@ -31,7 +31,7 @@ class _TerminalText extends GetView<ContactPageController> {
                       0,
                       (controller.defaultText[0].length > text.value.length
                           ? text.value.length
-                          : controller.defaultText[0].length))),
+                          : controller.defaultText[0].length),),),
               if (text.value.length > controller.defaultText[0].length + 1)
                 TextSpan(
                   text: text.value.substring(
@@ -41,7 +41,7 @@ class _TerminalText extends GetView<ContactPageController> {
                           ? controller.defaultText[0].length +
                               urlText.length +
                               1
-                          : text.value.length),
+                          : text.value.length,),
                   style: AppTextStyles.codingBody.copyWith(
                       fontSize: OrientationService.contactPageTextFontSize,
                       color: color,
@@ -50,8 +50,8 @@ class _TerminalText extends GetView<ContactPageController> {
                       decorationThickness: 3,
                       shadows: [
                         BoxShadow(
-                            color: color, blurRadius: 10, spreadRadius: 10),
-                      ]),
+                            color: color, blurRadius: 10, spreadRadius: 10,),
+                      ],),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => JavascriptService.openUrl(url),
                 ),
@@ -71,7 +71,7 @@ class _TerminalText extends GetView<ContactPageController> {
                   decoration: const BoxDecoration(
                     color: AppColors.lightGrey,
                   ),
-                ))
+                ),),
             ],
           ),
         ),

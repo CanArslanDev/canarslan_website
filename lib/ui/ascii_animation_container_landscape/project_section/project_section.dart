@@ -5,9 +5,9 @@ class _ProjectSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<List<Map<String, dynamic>>> projects = ValueNotifier([]);
-    ValueNotifier<List<Map<String, dynamic>>> viewProjects = ValueNotifier([]);
-    ValueNotifier<int> pageCount = ValueNotifier(0);
+    final projects = ValueNotifier<List<Map<String, dynamic>>>([]);
+    final viewProjects = ValueNotifier<List<Map<String, dynamic>>>([]);
+    final pageCount = ValueNotifier<int>(0);
     void selectPage(int page) {
       viewProjects.value = projects.value.skip(page * 7).take(7).toList();
       pageCount.value = page;
@@ -28,41 +28,46 @@ class _ProjectSection extends StatelessWidget {
       selectPage(pageCount.value);
     }
 
-    unawaited(Future(() async {
-      projects.value =
-          await HtmlService().fetchGitHubRepositories('CanArslanDev');
-      selectPage(pageCount.value);
-    }));
+    unawaited(
+      Future(() async {
+        projects.value =
+            await HtmlService().fetchGitHubRepositories('CanArslanDev');
+        selectPage(pageCount.value);
+      }),
+    );
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ValueListenableBuilder(
-            valueListenable: viewProjects,
-            builder: (context, value, child) {
-              if (viewProjects.value.isEmpty) return const SizedBox.shrink();
+          valueListenable: viewProjects,
+          builder: (context, value, child) {
+            if (viewProjects.value.isEmpty) return const SizedBox.shrink();
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (var i = 0; i < viewProjects.value.length; i++)
-                    section(
-                      value[i]['name'] as String,
-                      value[i]['description'] == 'Unknown'
-                          ? value[i]['updated_at'] as String
-                          : value[i]['description'] as String,
-                      value[i]['language'] as String,
-                      !value[i]['color'].toString().startsWith('#')
-                          ? Colors.white
-                          : Color(int.parse(
-                              '0xFF${value[i]['color'].substring(1, 7)}',
-                            )),
-                      int.parse(value[i]['stars'] as String),
-                      value[i] == value.last,
-                    ),
-                ],
-              );
-            }),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var i = 0; i < viewProjects.value.length; i++)
+                  section(
+                    value[i]['name'] as String,
+                    value[i]['description'] == 'Unknown'
+                        ? value[i]['updated_at'] as String
+                        : value[i]['description'] as String,
+                    value[i]['language'] as String,
+                    !value[i]['color'].toString().startsWith('#')
+                        ? Colors.white
+                        : Color(
+                            int.parse(
+                              '''0xFF${(value[i]['color'] as String).substring(1, 7)}''',
+                            ),
+                          ),
+                    int.parse(value[i]['stars'] as String),
+                    last: value[i] == value.last,
+                  ),
+              ],
+            );
+          },
+        ),
         AppPadding(
           bPadding: 2.h,
           child: ValueListenableBuilder(
@@ -78,8 +83,11 @@ class _ProjectSection extends StatelessWidget {
     );
   }
 
-  Widget menuNavigation(int pageCount, void Function() previousPage,
-          void Function() nextPage) =>
+  Widget menuNavigation(
+    int pageCount,
+    void Function() previousPage,
+    void Function() nextPage,
+  ) =>
       AppPadding(
         tPadding: 1.h,
         child: Row(
@@ -96,7 +104,6 @@ class _ProjectSection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(3),
                     border: Border.all(
                       color: Colors.white,
-                      width: 1,
                     ),
                   ),
                   child: Icon(
@@ -111,11 +118,15 @@ class _ProjectSection extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 0.2.w),
               margin: EdgeInsets.symmetric(horizontal: 0.4.w),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(3), color: Colors.white),
+                borderRadius: BorderRadius.circular(3),
+                color: Colors.white,
+              ),
               child: Text(
                 (pageCount + 1).toString(),
                 style: GoogleFonts.martianMono(
-                    color: const Color(0xFF071235), fontSize: 12.sp),
+                  color: const Color(0xFF071235),
+                  fontSize: 12.sp,
+                ),
               ),
             ),
             MouseRegion(
@@ -129,7 +140,6 @@ class _ProjectSection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(3),
                     border: Border.all(
                       color: Colors.white,
-                      width: 1,
                     ),
                   ),
                   child: Icon(
@@ -139,13 +149,19 @@ class _ProjectSection extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       );
 
-  Widget section(String title, String description, String language,
-      Color languageColor, int starCount, bool last) {
+  Widget section(
+    String title,
+    String description,
+    String language,
+    Color languageColor,
+    int starCount, {
+    required bool last,
+  }) {
     return AppPadding(
       lPadding: 1.w,
       rPadding: 2.w,
@@ -173,19 +189,25 @@ class _ProjectSection extends StatelessWidget {
                               text: title,
                             ),
                             WidgetSpan(
-                                child: Container(
-                              margin: EdgeInsets.only(left: 0.5.w),
-                              padding: EdgeInsets.symmetric(horizontal: 0.3.w),
-                              decoration: BoxDecoration(
+                              child: Container(
+                                margin: EdgeInsets.only(left: 0.5.w),
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: 0.3.w),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
                                   border: Border.all(
-                                      color: Colors.white, width: 1)),
-                              child: Text(
-                                'Public',
-                                style: GoogleFonts.inter(
-                                    color: Colors.white, fontSize: 10.5.sp),
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                child: Text(
+                                  'Public',
+                                  style: GoogleFonts.inter(
+                                    color: Colors.white,
+                                    fontSize: 10.5.sp,
+                                  ),
+                                ),
                               ),
-                            ))
+                            ),
                           ],
                         ),
                       ),
@@ -215,11 +237,12 @@ class _ProjectSection extends StatelessWidget {
                             text: 'Language: ',
                           ),
                           TextSpan(
-                              text: language,
-                              style: GoogleFonts.martianMono(
-                                color: languageColor,
-                                fontSize: 11.sp,
-                              )),
+                            text: language,
+                            style: GoogleFonts.martianMono(
+                              color: languageColor,
+                              fontSize: 11.sp,
+                            ),
+                          ),
                         ],
                       ),
                     ),

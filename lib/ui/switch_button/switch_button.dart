@@ -1,14 +1,19 @@
+import 'dart:math' as math;
+
 import 'package:canarslan_website/services/orientation_service.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'package:google_fonts/google_fonts.dart';
+
 part 'switch_button_painter.dart';
 
 class SwitchButton extends StatefulWidget {
-  const SwitchButton(
-      {super.key, required this.isSwitched, required this.onSwitch});
+  const SwitchButton({
+    required this.isSwitched,
+    required this.onSwitch,
+    super.key,
+  });
   final bool isSwitched;
-  final void Function(bool) onSwitch;
+  final void Function({bool value}) onSwitch;
   @override
   SwitchButtonState createState() => SwitchButtonState();
 }
@@ -25,7 +30,7 @@ class SwitchButtonState extends State<SwitchButton>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 1.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -45,7 +50,7 @@ class SwitchButtonState extends State<SwitchButton>
       onExit: (_) => _controller.reverse(),
       child: GestureDetector(
         onTap: () {
-          widget.onSwitch(!widget.isSwitched);
+          widget.onSwitch(value: !widget.isSwitched);
         },
         child: AnimatedBuilder(
           animation: _scaleAnimation,

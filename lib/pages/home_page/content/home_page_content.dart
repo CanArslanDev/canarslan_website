@@ -1,7 +1,7 @@
 part of '../home_page.dart';
 
 class _Content extends StatelessWidget {
-  const _Content({super.key});
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class _Content extends StatelessWidget {
         const _ContentInfo(),
         const _ContentPackages(),
         if (OrientationService.isPortrait) const _ContentInfoWidget(),
-        const _ContentContributions()
+        const _ContentContributions(),
       ],
     );
   }

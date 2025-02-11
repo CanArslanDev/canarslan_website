@@ -3,9 +3,10 @@ import 'dart:js' as js;
 
 abstract class JavascriptService {
   static void openUrl(String url) {
+    var newUrl = url;
     if (!url.startsWith('https://')) {
-      url = 'https://$url';
+      newUrl = 'https://$url';
     }
-    js.context.callMethod('open', [url]);
+    js.context.callMethod('open', [newUrl]);
   }
 }

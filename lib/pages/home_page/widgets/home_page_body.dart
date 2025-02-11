@@ -23,7 +23,7 @@ class _Body extends GetView<HomePageController> {
 
   Widget get content => Obx(() => controller.openContent.value
       ? const _Content()
-      : const SizedBox.shrink());
+      : const SizedBox.shrink(),);
 
   Widget get info => OrientationService.isPortrait
       ? const SizedBox.shrink()
@@ -33,7 +33,7 @@ class _Body extends GetView<HomePageController> {
       ? const SizedBox.shrink()
       : OrientationService.isPortrait
           ? const _IntroBodyPortrait()
-          : const _IntroBodyLandscape());
+          : const _IntroBodyLandscape(),);
 
   Widget get background => const _Background();
 }

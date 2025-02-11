@@ -90,6 +90,6 @@ class _AnimationTextLandscapeState extends State<_AnimationTextLandscape>
               ],
             ),
           );
-        });
+        },);
   }
 }

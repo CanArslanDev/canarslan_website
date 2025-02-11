@@ -1,7 +1,7 @@
 part of '../contact_page.dart';
 
 class _WelcomeText extends GetView<ContactPageController> {
-  const _WelcomeText({super.key});
+  const _WelcomeText();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _WelcomeText extends GetView<ContactPageController> {
                     ),
                   ),
                 ),
-              ))
+              ),),
           ],
         ),
       ),

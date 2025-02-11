@@ -90,6 +90,6 @@ class _AnimationTextPortraitState extends State<_AnimationTextPortrait>
               ],
             ),
           );
-        });
+        },);
   }
 }

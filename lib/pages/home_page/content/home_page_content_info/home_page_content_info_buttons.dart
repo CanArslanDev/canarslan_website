@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _ContentInfoButtons extends GetView<HomePageController> {
-  const _ContentInfoButtons({super.key});
+  const _ContentInfoButtons();
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +12,12 @@ class _ContentInfoButtons extends GetView<HomePageController> {
           button('Contact Me', StringConstants.linkedin, ButtonType.primary, 3),
           AppPadding(
             lPadding: OrientationService.isPortrait ? 3.w : 1.w,
-            child: button('View My Projects',
-                StringConstants.github.toGithubRepo, ButtonType.secondary, 4),
+            child: button(
+              'View My Projects',
+              StringConstants.github.toGithubRepo,
+              ButtonType.secondary,
+              4,
+            ),
           ),
         ],
       ),
@@ -33,7 +37,8 @@ class _ContentInfoButtons extends GetView<HomePageController> {
               child: Container(
                 height: 3.8.h,
                 padding: EdgeInsets.symmetric(
-                    horizontal: OrientationService.isPortrait ? 2.w : 1.w),
+                  horizontal: OrientationService.isPortrait ? 2.w : 1.w,
+                ),
                 decoration: BoxDecoration(
                   color: type == ButtonType.primary
                       ? AppColors.lightBlue
@@ -43,20 +48,23 @@ class _ContentInfoButtons extends GetView<HomePageController> {
                     BoxShadow(
                       color: type == ButtonType.primary
                           ? AppColors.lightBlue
-                          : AppColors.white.withOpacity(0.5),
+                          : AppColors.white.withValues(alpha: 0.5),
                       blurRadius: 15,
                       spreadRadius: 0.4,
-                    )
+                    ),
                   ],
                 ),
                 child: Center(
-                  child: Text(text,
-                      style: AppTextStyles.body.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: OrientationService.contentButtonTextSize,
-                          color: type == ButtonType.primary
-                              ? AppColors.white
-                              : AppColors.black)),
+                  child: Text(
+                    text,
+                    style: AppTextStyles.body.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: OrientationService.contentButtonTextSize,
+                      color: type == ButtonType.primary
+                          ? AppColors.white
+                          : AppColors.black,
+                    ),
+                  ),
                 ),
               ),
             ),

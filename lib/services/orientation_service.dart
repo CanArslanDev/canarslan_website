@@ -1,4 +1,3 @@
-import 'package:canarslan_website/pages/home_page/home_page.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class OrientationService {

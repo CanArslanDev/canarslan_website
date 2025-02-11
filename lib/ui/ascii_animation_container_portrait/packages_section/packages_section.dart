@@ -51,12 +51,12 @@ class _PackagesSection extends StatelessWidget {
                       child: AppPadding(
                         tPadding: 1.5.h,
                         child: publishedInfo(
-                            package['published_time'] as String,
-                            package['publisher'] as String),
+                            package['published_time']!,
+                            package['publisher']!,),
                       ),
                     ),
-                    platform(package['platforms'] as String),
-                    content(package['readme_content'] as String),
+                    platform(package['platforms']!),
+                    content(package['readme_content']!),
                   ],
                 ),
               ),

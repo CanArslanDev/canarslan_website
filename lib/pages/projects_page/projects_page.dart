@@ -1,21 +1,21 @@
-import 'package:canarslan_website/controllers/projects_controller/ascii_controller.dart';
+import 'package:canarslan_website/constants/ascii_constants.dart' as constants;
 import 'package:canarslan_website/controllers/projects_controller/projects_page_controller.dart';
 import 'package:canarslan_website/services/controller_service.dart';
 import 'package:canarslan_website/services/orientation_service.dart';
+import 'package:canarslan_website/ui/ascii_animation_container_landscape/ascii_animation_container.dart'
+    as landscape;
+import 'package:canarslan_website/ui/ascii_animation_container_portrait/ascii_animation_container.dart'
+    as portrait;
 import 'package:canarslan_website/ui/ascii_art_button.dart';
 import 'package:canarslan_website/ui/html_viewer.dart';
 import 'package:canarslan_website/ui/title_ascii_art_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:canarslan_website/constants/ascii_constants.dart' as constants;
-import 'package:canarslan_website/ui/ascii_animation_container_landscape/ascii_animation_container.dart'
-    as landscape;
-import 'package:canarslan_website/ui/ascii_animation_container_portrait/ascii_animation_container.dart'
-    as portrait;
-part 'widgets/projects_page_widgets.dart';
+
 part 'widgets/projects_page_main_buttons.dart';
 part 'widgets/projects_page_wallpaper.dart';
+part 'widgets/projects_page_widgets.dart';
 
 class ProjectsPage extends GetView<ProjectsPageController> {
   const ProjectsPage({super.key});

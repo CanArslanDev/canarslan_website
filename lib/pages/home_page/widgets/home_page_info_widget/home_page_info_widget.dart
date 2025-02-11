@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _InfoWidget extends GetView<HomePageController> {
-  const _InfoWidget({super.key});
+  const _InfoWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class _InfoWidget extends GetView<HomePageController> {
             alignment: controller.openInfoBar.value
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
-            child: _InfoWidgetBody(),
+            child: const _InfoWidgetBody(),
           ),
         ),
       ),

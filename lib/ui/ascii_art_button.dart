@@ -28,20 +28,19 @@ class AsciiConstants {
 
 // Size measuring widget
 class MeasureSize extends StatefulWidget {
+  const MeasureSize({
+    required this.onChange,
+    required this.child,
+    super.key,
+  });
   final Widget child;
   final void Function(Size) onChange;
 
-  const MeasureSize({
-    Key? key,
-    required this.onChange,
-    required this.child,
-  }) : super(key: key);
-
   @override
-  _MeasureSizeState createState() => _MeasureSizeState();
+  MeasureSizeState createState() => MeasureSizeState();
 }
 
-class _MeasureSizeState extends State<MeasureSize> {
+class MeasureSizeState extends State<MeasureSize> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
@@ -52,10 +51,9 @@ class _MeasureSizeState extends State<MeasureSize> {
 }
 
 class _SizeReporter extends CustomPainter {
+  _SizeReporter({required this.onChange});
   final void Function(Size) onChange;
   Size? _oldSize;
-
-  _SizeReporter({required this.onChange});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -71,6 +69,17 @@ class _SizeReporter extends CustomPainter {
 
 // Main Button Widget
 class AsciiArtButton extends StatefulWidget {
+  const AsciiArtButton({
+    required this.label,
+    required this.onPressed,
+    required this.width,
+    required this.height,
+    required this.direction,
+    required this.completedAsciiAnimation,
+    required this.asciiAnimationTrigger,
+    super.key,
+    this.padding,
+  });
   final String label;
   final VoidCallback onPressed;
   final double width;
@@ -79,18 +88,6 @@ class AsciiArtButton extends StatefulWidget {
   final AnimationDirection direction;
   final bool asciiAnimationTrigger;
   final VoidCallback completedAsciiAnimation;
-
-  const AsciiArtButton({
-    super.key,
-    required this.label,
-    required this.onPressed,
-    required this.width,
-    required this.height,
-    this.padding,
-    required this.direction,
-    required this.completedAsciiAnimation,
-    required this.asciiAnimationTrigger,
-  });
 
   @override
   AsciiArtButtonState createState() => AsciiArtButtonState();
@@ -109,10 +106,12 @@ class AsciiArtButtonState extends State<AsciiArtButton>
   Size? _buttonSize;
 
   final String _initialBinaryString = List.generate(
-          3,
-          (_) => '010101010101010010101010101010'.substring(
-              0, OrientationService.asciiButtonWidthAsciiCharacterCount))
-      .join('\n');
+    3,
+    (_) => '010101010101010010101010101010'.substring(
+      0,
+      OrientationService.asciiButtonWidthAsciiCharacterCount,
+    ),
+  ).join('\n');
   String _verticalAsciiAnimation = '';
   String _horizontalAsciiAnimation = '';
   String _labelAnimation = '';
@@ -131,7 +130,7 @@ class AsciiArtButtonState extends State<AsciiArtButton>
       duration: AsciiConstants.animationDuration,
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 1.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -177,7 +176,7 @@ class AsciiArtButtonState extends State<AsciiArtButton>
   }
 
   void _handleDisappearingAnimation() {
-    bool allLinesEmpty = true;
+    var allLinesEmpty = true;
 
     for (var i = 0; i < _currentLines.length; i++) {
       final currentLine = _currentLines[i];
@@ -194,7 +193,9 @@ class AsciiArtButtonState extends State<AsciiArtButton>
   }
 
   ({String newLine, bool isEmpty}) _processDisappearingLine(
-      String currentLine, int index) {
+    String currentLine,
+    int index,
+  ) {
     if (widget.direction == AnimationDirection.leftToRight) {
       return _processLeftToRight(currentLine, index);
     }
@@ -202,7 +203,9 @@ class AsciiArtButtonState extends State<AsciiArtButton>
   }
 
   ({String newLine, bool isEmpty}) _processLeftToRight(
-      String currentLine, int index) {
+    String currentLine,
+    int index,
+  ) {
     final emptyCount = _disappearingStep + index;
     final remainingLength = currentLine.length - emptyCount;
 
@@ -220,7 +223,9 @@ class AsciiArtButtonState extends State<AsciiArtButton>
   }
 
   ({String newLine, bool isEmpty}) _processRightToLeft(
-      String currentLine, int index) {
+    String currentLine,
+    int index,
+  ) {
     final remainingLength = currentLine.length - _disappearingStep - index;
 
     if (remainingLength <= 0) {
@@ -255,10 +260,8 @@ class AsciiArtButtonState extends State<AsciiArtButton>
   }
 
   void _updateBinaryAnimation() {
-    _currentLines = _initialBinaryString
-        .split('\n')
-        .map((line) => _randomizeBinaryString(line))
-        .toList();
+    _currentLines =
+        _initialBinaryString.split('\n').map(_randomizeBinaryString).toList();
   }
 
   void _scheduleDisappearingAnimation() {
@@ -334,9 +337,7 @@ class AsciiArtButtonState extends State<AsciiArtButton>
       text: textSpan,
       maxLines: 1,
       textDirection: TextDirection.ltr,
-    );
-
-    textPainter.layout(maxWidth: (_buttonSize?.width ?? 0) / 1.85);
+    )..layout(maxWidth: (_buttonSize?.width ?? 0) / 1.85);
     return textPainter.didExceedMaxLines;
   }
 
@@ -402,7 +403,7 @@ ${List.generate(widget.height.toInt() * 2, (index) => '.*+.$columnCenter  =*:').
         scale: _scaleAnimation.value,
         child: child,
       ),
-      child: Container(
+      child: ColoredBox(
         color: Colors.transparent,
         child: IgnorePointer(
           child: Stack(

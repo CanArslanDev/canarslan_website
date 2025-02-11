@@ -1,9 +1,11 @@
-import 'package:canarslan_website/models/pointer_event_details.dart';
 import 'dart:html' as html;
+
+import 'package:canarslan_website/models/pointer_event_details.dart';
 
 class JsBridgeService {
   late html.IFrameElement _iframeElement;
 
+  // ignore: use_setters_to_change_properties
   void setIframeElement(html.IFrameElement element) {
     _iframeElement = element;
   }

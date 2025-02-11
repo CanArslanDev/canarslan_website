@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _InfoWidgetBody extends GetView<HomePageController> {
-  const _InfoWidgetBody({super.key});
+  const _InfoWidgetBody();
 
   @override
   Widget build(BuildContext context) {
@@ -9,17 +9,18 @@ class _InfoWidgetBody extends GetView<HomePageController> {
       height: 70.h,
       width: 20.w,
       decoration: BoxDecoration(
-          color: AppColors.black.withOpacity(0.4),
-          borderRadius: AppBorderRadius.medium,
-          border: Border.all(color: AppColors.grey, width: 2),
-          boxShadow: [
-            BoxShadow(
-              blurStyle: BlurStyle.outer,
-              color: AppColors.grey.withOpacity(0.5),
-              spreadRadius: -3,
-              blurRadius: 10,
-            ),
-          ]),
+        color: AppColors.black.withValues(alpha: 0.4),
+        borderRadius: AppBorderRadius.medium,
+        border: Border.all(color: AppColors.grey, width: 2),
+        boxShadow: [
+          BoxShadow(
+            blurStyle: BlurStyle.outer,
+            color: AppColors.grey.withValues(alpha: 0.5),
+            spreadRadius: -3,
+            blurRadius: 10,
+          ),
+        ],
+      ),
       child: Column(
         children: [
           avatar,
@@ -36,17 +37,29 @@ class _InfoWidgetBody extends GetView<HomePageController> {
                   AppIcons.clock,
                   hintText: '(UTC +${IntConstants.timezone}:00)',
                 ),
-                text(StringConstants.email, AppIcons.email,
-                    url: 'mailto:${StringConstants.email}'),
-                text(StringConstants.linkedin.linkedinTag, AppIcons.linkediin,
-                    url: StringConstants.linkedin),
-                text(StringConstants.x.xTag, AppIcons.x,
-                    url: StringConstants.x),
-                text(StringConstants.instagram.instagramTag, AppIcons.instagram,
-                    url: StringConstants.instagram),
+                text(
+                  StringConstants.email,
+                  AppIcons.email,
+                  url: 'mailto:${StringConstants.email}',
+                ),
+                text(
+                  StringConstants.linkedin.linkedinTag,
+                  AppIcons.linkediin,
+                  url: StringConstants.linkedin,
+                ),
+                text(
+                  StringConstants.x.xTag,
+                  AppIcons.x,
+                  url: StringConstants.x,
+                ),
+                text(
+                  StringConstants.instagram.instagramTag,
+                  AppIcons.instagram,
+                  url: StringConstants.instagram,
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -76,14 +89,15 @@ class _InfoWidgetBody extends GetView<HomePageController> {
                             fontSize: 11.7.sp,
                           ),
                           children: [
-                            TextSpan(text: '$text'),
+                            TextSpan(text: text),
                             if (hintText != null)
                               TextSpan(
                                 text: ' $hintText ',
                                 style: AppTextStyles.body.copyWith(
-                                    color: AppColors.lightGrey,
-                                    fontSize: 11.7.sp,
-                                    fontWeight: FontWeight.w600),
+                                  color: AppColors.lightGrey,
+                                  fontSize: 11.7.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                           ],
                         ),
@@ -135,8 +149,9 @@ class _InfoWidgetBody extends GetView<HomePageController> {
                       AppTextStyles.bodyBold.copyWith(color: AppColors.white),
                   children: [
                     TextSpan(
-                        text: 'View on ',
-                        style: AppTextStyles.body.copyWith(fontSize: 11.sp)),
+                      text: 'View on ',
+                      style: AppTextStyles.body.copyWith(fontSize: 11.sp),
+                    ),
                     const TextSpan(text: 'Github'),
                   ],
                 ),
@@ -179,9 +194,10 @@ class _InfoWidgetBody extends GetView<HomePageController> {
                 SelectableText(
                   StringConstants.tag,
                   style: AppTextStyles.body.copyWith(
-                      color: AppColors.lightGrey,
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w600),
+                    color: AppColors.lightGrey,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),

@@ -11,8 +11,6 @@ import 'package:canarslan_website/services/html_service.dart';
 import 'package:canarslan_website/services/route_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class MainPageController extends BaseController {
   bool enableHomePageAnimation = RouteService.isMainHref;

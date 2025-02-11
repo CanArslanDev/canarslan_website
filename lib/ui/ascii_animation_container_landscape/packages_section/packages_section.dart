@@ -9,7 +9,7 @@ class _PackagesSection extends StatelessWidget {
       tPadding: 3.h,
       child: Wrap(
         spacing: 1.w,
-        children: packages.map((package) => packageWidget(package)).toList(),
+        children: packages.map(packageWidget).toList(),
       ),
     );
   }
@@ -49,25 +49,25 @@ class _PackagesSection extends StatelessWidget {
                             fontSize: 10.5.sp,
                             color: Colors.blue,
                           ),
-                        )
+                        ),
                       ],
                     ),
                     AppPadding(
                       tPadding: 1.5.h,
                       child: Row(
                         children: [
-                          publishedInfo(package['published_time'] as String,
-                              package['publisher'] as String),
+                          publishedInfo(package['published_time']!,
+                              package['publisher']!,),
                           const Spacer(),
                           specs(
-                              package['likes'] as String,
-                              package['points'] as String,
-                              package['downloads'] as String),
+                              package['likes']!,
+                              package['points']!,
+                              package['downloads']!,),
                         ],
                       ),
                     ),
-                    platform(package['platforms'] as String),
-                    content(package['readme_content'] as String),
+                    platform(package['platforms']!),
+                    content(package['readme_content']!),
                   ],
                 ),
               ),

@@ -1,7 +1,7 @@
 part of '../ascii_animation_container.dart';
 
 class _Packages extends StatefulWidget {
-  const _Packages({super.key});
+  const _Packages();
 
   @override
   State<_Packages> createState() => _PackagesState();
@@ -13,11 +13,12 @@ class _PackagesState extends State<_Packages> {
   void initState() {
     Future(() async {
       packages.value = await HtmlService.fetchPackages(
-          'https://pub.dev/publishers/canarslan.me/packages');
+          'https://pub.dev/publishers/canarslan.me/packages',);
     });
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -25,7 +26,7 @@ class _PackagesState extends State<_Packages> {
         ValueListenableBuilder(
           valueListenable: packages,
           builder: (context, value, child) => packagesWidget(value),
-        )
+        ),
       ],
     );
   }

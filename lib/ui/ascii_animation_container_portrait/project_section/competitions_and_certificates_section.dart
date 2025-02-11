@@ -1,7 +1,7 @@
 part of '../ascii_animation_container.dart';
 
 class _CompetitionsAndCertificatesSection extends StatelessWidget {
-  const _CompetitionsAndCertificatesSection({super.key});
+  const _CompetitionsAndCertificatesSection();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class _CompetitionsAndCertificatesSection extends StatelessWidget {
           certificates,
           line,
           title(AsciiConstants.competitions),
-          competitions
+          competitions,
         ],
       ),
     );
@@ -31,17 +31,26 @@ class _CompetitionsAndCertificatesSection extends StatelessWidget {
       );
 
   Widget get certificates => Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                certificate('Computer Science', '', 'Harvard University',
-                    'assets/images/harvard_university_logo.png', false),
-                certificate('Elements Of AI', '', 'University Of Helsinki',
-                    'assets/images/helsinki_university_logo.png', true),
+                certificate(
+                  'Computer Science',
+                  '',
+                  'Harvard University',
+                  'assets/images/harvard_university_logo.png',
+                  last: false,
+                ),
+                certificate(
+                  'Elements Of AI',
+                  '',
+                  'University Of Helsinki',
+                  'assets/images/helsinki_university_logo.png',
+                  last: true,
+                ),
               ],
             ),
           ),
@@ -49,22 +58,27 @@ class _CompetitionsAndCertificatesSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                certificate('Artificial Intelligence', '', 'Harvard University',
-                    'assets/images/harvard_university_logo.png', false),
                 certificate(
-                    'Computer Science for Business Professionals',
-                    '',
-                    'Harvard University',
-                    'assets/images/harvard_university_logo.png',
-                    true),
+                  'Artificial Intelligence',
+                  '',
+                  'Harvard University',
+                  'assets/images/harvard_university_logo.png',
+                  last: false,
+                ),
+                certificate(
+                  'Computer Science for Business Professionals',
+                  '',
+                  'Harvard University',
+                  'assets/images/harvard_university_logo.png',
+                  last: true,
+                ),
               ],
             ),
-          )
+          ),
         ],
       );
 
   Widget get competitions => Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
@@ -72,11 +86,12 @@ class _CompetitionsAndCertificatesSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 certificate(
-                    'Project Manager',
-                    'Efficiency Challenge',
-                    'Delta Cells',
-                    'assets/images/delta_cells_project_logo.png',
-                    false),
+                  'Project Manager',
+                  'Efficiency Challenge',
+                  'Delta Cells',
+                  'assets/images/delta_cells_project_logo.png',
+                  last: false,
+                ),
               ],
             ),
           ),
@@ -84,24 +99,35 @@ class _CompetitionsAndCertificatesSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                certificate('Project Manager', 'Efficiency Challenge', 'Alaz',
-                    'assets/images/alaz_project_logo.png', false),
                 certificate(
-                    'Project Manager',
-                    'Technology for the Benefit of Humanity',
-                    'AKUS',
-                    'assets/images/akus_project_logo.png',
-                    false,
-                    imageWidth: 8.w),
+                  'Project Manager',
+                  'Efficiency Challenge',
+                  'Alaz',
+                  'assets/images/alaz_project_logo.png',
+                  last: false,
+                ),
+                certificate(
+                  'Project Manager',
+                  'Technology for the Benefit of Humanity',
+                  'AKUS',
+                  'assets/images/akus_project_logo.png',
+                  last: false,
+                  imageWidth: 8.w,
+                ),
               ],
             ),
-          )
+          ),
         ],
       );
 
   Widget certificate(
-      String name, String tag, String organization, String imagePath, bool last,
-      {double? imageWidth}) {
+    String name,
+    String tag,
+    String organization,
+    String imagePath, {
+    required bool last,
+    double? imageWidth,
+  }) {
     return AppPadding(
       tPadding: last ? 1.w : 0.4.w,
       child: Row(
@@ -121,26 +147,29 @@ class _CompetitionsAndCertificatesSection extends StatelessWidget {
                   name,
                   textAlign: TextAlign.start,
                   style: GoogleFonts.martianMono(
-                      color: Colors.white,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 if (tag != '')
                   Text(
                     tag,
                     textAlign: TextAlign.start,
                     style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 Text(
                   organization,
                   textAlign: TextAlign.start,
                   style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),

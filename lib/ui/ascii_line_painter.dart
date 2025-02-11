@@ -1,20 +1,18 @@
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:flutter/material.dart';
 
 class AsciiLinePainter extends CustomPainter {
+  AsciiLinePainter({
+    this.isVerticalLine,
+    this.isHorizontalLine,
+  });
   final bool? isVerticalLine;
   final bool? isHorizontalLine;
 
   static const double dashWidth = 6;
   static const double dashSpace = 2;
   static const double lineThickness = 1.2;
-
-  AsciiLinePainter({
-    this.isVerticalLine,
-    this.isHorizontalLine,
-  });
 
   void drawDashedLine(Canvas canvas, Offset start, Offset end, Paint paint) {
     final path = Path();
@@ -43,8 +41,9 @@ class AsciiLinePainter extends CustomPainter {
           currentY + unitY * math.min(stepDistance, remainingDistance);
 
       if (isDrawing) {
-        path.moveTo(currentX, currentY);
-        path.lineTo(nextX, nextY);
+        path
+          ..moveTo(currentX, currentY)
+          ..lineTo(nextX, nextY);
       }
 
       currentX = nextX;
@@ -64,7 +63,7 @@ class AsciiLinePainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     // Dikey çizgi
-    if (isVerticalLine == true) {
+    if (isVerticalLine != null && isVerticalLine!) {
       drawDashedLine(
         canvas,
         Offset(size.width / 2, 0),
@@ -74,7 +73,7 @@ class AsciiLinePainter extends CustomPainter {
     }
 
     // Yatay çizgi
-    if (isHorizontalLine == true) {
+    if (isHorizontalLine != null && isHorizontalLine!) {
       drawDashedLine(
         canvas,
         Offset(0, size.height / 2),

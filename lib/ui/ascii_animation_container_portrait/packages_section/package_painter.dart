@@ -1,9 +1,8 @@
 part of '../ascii_animation_container.dart';
 
 class PackagePainter extends CustomPainter {
-  final double borderRadius;
-
-  PackagePainter({this.borderRadius = 8.0}); // Varsayılan border radius değeri
+  PackagePainter({this.borderRadius = 8.0});
+  final double borderRadius; // Varsayılan border radius değeri
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -21,13 +20,15 @@ class PackagePainter extends CustomPainter {
     final bottomLeftRadius = Radius.circular(borderRadius);
 
     // Border radius'lu path oluşturma
-    path.addRRect(RRect.fromRectAndCorners(
-      Rect.fromLTWH(0, 0, size.width, size.height),
-      topLeft: topLeftRadius,
-      topRight: topRightRadius,
-      bottomRight: bottomRightRadius,
-      bottomLeft: bottomLeftRadius,
-    ));
+    path.addRRect(
+      RRect.fromRectAndCorners(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+        topLeft: topLeftRadius,
+        topRight: topRightRadius,
+        bottomRight: bottomRightRadius,
+        bottomLeft: bottomLeftRadius,
+      ),
+    );
 
     // Kesikli çizgi efekti için path'i parçalara böl
     final dashedPath = extractPath(path);
@@ -41,7 +42,7 @@ class PackagePainter extends CustomPainter {
     const dashSpace = 2.0;
     final dashedPath = Path();
 
-    for (var metric in path.computeMetrics()) {
+    for (final metric in path.computeMetrics()) {
       var distance = 0.0;
       var isDrawing = true;
 
@@ -55,8 +56,9 @@ class PackagePainter extends CustomPainter {
               ?.position;
 
           if (start != null && end != null) {
-            dashedPath.moveTo(start.dx, start.dy);
-            dashedPath.lineTo(end.dx, end.dy);
+            dashedPath
+              ..moveTo(start.dx, start.dy)
+              ..lineTo(end.dx, end.dy);
           }
         }
 

@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _ContentInfoWidget extends GetView<HomePageController> {
-  const _ContentInfoWidget({super.key});
+  const _ContentInfoWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class _ContentInfoWidget extends GetView<HomePageController> {
                   spreadRadius: -3,
                   blurRadius: 10,
                 ),
-              ]),
+              ],),
           child: Column(
             children: [
               avatar,
@@ -39,14 +39,14 @@ class _ContentInfoWidget extends GetView<HomePageController> {
                     hintText: '(UTC +${IntConstants.timezone}:00)',
                   ),
                   text(StringConstants.email, AppIcons.email,
-                      url: 'mailto:${StringConstants.email}'),
+                      url: 'mailto:${StringConstants.email}',),
                   text(StringConstants.linkedin.linkedinTag, AppIcons.linkediin,
-                      url: StringConstants.linkedin),
+                      url: StringConstants.linkedin,),
                   text(StringConstants.x.xTag, AppIcons.x,
-                      url: StringConstants.x),
+                      url: StringConstants.x,),
                   text(StringConstants.instagram.instagramTag,
                       AppIcons.instagram,
-                      url: StringConstants.instagram),
+                      url: StringConstants.instagram,),
                 ],
               ),
               githubButton,
@@ -94,14 +94,14 @@ class _ContentInfoWidget extends GetView<HomePageController> {
                             fontSize: 16.sp,
                           ),
                           children: [
-                            TextSpan(text: '$text'),
+                            TextSpan(text: text),
                             if (hintText != null)
                               TextSpan(
                                 text: ' $hintText ',
                                 style: AppTextStyles.body.copyWith(
                                     color: AppColors.lightGrey,
                                     fontSize: 16.sp,
-                                    fontWeight: FontWeight.w600),
+                                    fontWeight: FontWeight.w600,),
                               ),
                           ],
                         ),
@@ -148,11 +148,11 @@ class _ContentInfoWidget extends GetView<HomePageController> {
               text: TextSpan(
                 style: AppTextStyles.bodyBold
                     .copyWith(color: AppColors.white, fontSize: 15.sp),
-                children: [
+                children: const [
                   TextSpan(
                     text: 'View on ',
                   ),
-                  const TextSpan(text: 'Github'),
+                  TextSpan(text: 'Github'),
                 ],
               ),
             ),
@@ -206,7 +206,7 @@ class _ContentInfoWidget extends GetView<HomePageController> {
                   style: AppTextStyles.body.copyWith(
                       color: AppColors.lightGrey,
                       fontSize: 14.sp,
-                      fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w600,),
                 ),
               ],
             ),

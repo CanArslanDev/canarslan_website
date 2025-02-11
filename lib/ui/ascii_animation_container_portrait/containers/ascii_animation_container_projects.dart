@@ -1,7 +1,7 @@
 part of '../ascii_animation_container.dart';
 
 class _Projects extends StatelessWidget {
-  const _Projects({super.key});
+  const _Projects();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,6 @@ class _Projects extends StatelessWidget {
         rPadding: 1.w,
         bPadding: 0.3.w,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             title(AsciiConstants.projects),
           ],

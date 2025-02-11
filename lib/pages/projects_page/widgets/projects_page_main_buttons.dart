@@ -32,7 +32,6 @@ class _MainButtons extends GetView<ProjectsPageController> {
               onPressed: () {
                 controller.startAsciiAnimation.value = true;
                 controller.switchButton.value = true;
-                print(controller.switchButton.value);
               },
               height: 5,
               width: 0,

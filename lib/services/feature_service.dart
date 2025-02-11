@@ -8,6 +8,6 @@ class FeatureService {
       throw ArgumentError('playbackRate must be greater than 0');
     }
     await Future<void>.delayed(
-        (duration.inMilliseconds ~/ playbackRate).milliseconds);
+        (duration.inMilliseconds ~/ playbackRate).milliseconds,);
   }
 }

@@ -3,24 +3,23 @@ import 'dart:math';
 import 'package:canarslan_website/services/orientation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 class TitleAsciiArtText extends StatefulWidget {
-  final Duration animationDuration;
-  final Duration initialStepDuration;
-  final String finalAsciiText;
-  final double? fontSize;
-  final double? height;
-  final double? letterSpacing;
   const TitleAsciiArtText({
-    super.key,
     required this.finalAsciiText,
+    super.key,
     this.animationDuration = const Duration(seconds: 4),
     this.initialStepDuration = const Duration(milliseconds: 50),
     this.fontSize,
     this.height,
     this.letterSpacing,
   });
+  final Duration animationDuration;
+  final Duration initialStepDuration;
+  final String finalAsciiText;
+  final double? fontSize;
+  final double? height;
+  final double? letterSpacing;
 
   @override
   State<TitleAsciiArtText> createState() => _TitleAsciiArtTextState();
@@ -29,9 +28,9 @@ class TitleAsciiArtText extends StatefulWidget {
 class _TitleAsciiArtTextState extends State<TitleAsciiArtText> {
   static const List<String> characterSets = [
     r'@#\$%&*+=<>', // High density
-    r'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', // Medium density
+    '''ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789''', // Medium density
     r'''!@#\$%^&*()_+-=[]{}|;:'",.<>/?''', // Low density
-    r'''~` .,;'"-_()[]{}|/<>''', // Very low density
+    '''~` .,;'"-_()[]{}|/<>''', // Very low density
   ];
 
   late String currentText;
@@ -86,7 +85,7 @@ class _TitleAsciiArtTextState extends State<TitleAsciiArtText> {
         return currentCharacterSet[_random.nextInt(currentCharacterSet.length)];
       }
       return char;
-    }).join('');
+    }).join();
   }
 
   void _completeAnimation() {
@@ -114,11 +113,11 @@ class _TitleAsciiArtTextState extends State<TitleAsciiArtText> {
         letterSpacing: widget.letterSpacing,
         shadows: [
           Shadow(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             blurRadius: 3,
           ),
           Shadow(
-            color: Colors.white.withOpacity(0.5),
+            color: Colors.white.withValues(alpha: 0.5),
             blurRadius: 30,
           ),
         ],

@@ -7,14 +7,16 @@ import 'package:http/http.dart' as http;
 
 class HtmlService {
   static Future<List<Map<String, String>>> fetchPackages(
-      String publisherUrl) async {
+    String publisherUrl,
+  ) async {
     // Try to load from cache first
     final storagePackages = StorageService.loadPublisherPackages;
     if (storagePackages != null) {
       final decodedPackages = jsonDecode(storagePackages);
       if (decodedPackages is List) {
-        return List<Map<String, String>>.from(decodedPackages
-            .map((item) => Map<String, String>.from(item as Map)));
+        return List<Map<String, String>>.from(
+          decodedPackages.map((item) => Map<String, String>.from(item as Map)),
+        );
       }
     }
     final response = await http.get(
@@ -49,7 +51,8 @@ class HtmlService {
   }
 
   static Future<Map<String, String>> fetchPackageDetails(
-      String packageUrl) async {
+    String packageUrl,
+  ) async {
     // Try to load from cache first
     final storagePackageDetails = StorageService.loadPackageDetails(packageUrl);
     if (storagePackageDetails != null) {
@@ -68,7 +71,7 @@ class HtmlService {
       // Extracting package details using JSON-LD data
       final jsonLdScript =
           document.querySelector('script[type="application/ld+json"]');
-      Map<String, dynamic> jsonLdData = {};
+      var jsonLdData = <String, dynamic>{};
       if (jsonLdScript != null) {
         jsonLdData = json.decode(jsonLdScript.text) as Map<String, dynamic>;
       }
@@ -84,7 +87,7 @@ class HtmlService {
               'No description';
 
       // Publisher
-      String publisher = 'Unknown';
+      var publisher = 'Unknown';
       final publisherLink = document.querySelector('a[href^="/publishers/"]');
       if (publisherLink != null) {
         publisher = publisherLink.text.trim();
@@ -93,19 +96,22 @@ class HtmlService {
       // Metrics
       final likes = document
               .querySelector(
-                  '.packages-score-like .packages-score-value-number')
+                '.packages-score-like .packages-score-value-number',
+              )
               ?.text
               .trim() ??
           '0';
       final points = document
               .querySelector(
-                  '.packages-score-health .packages-score-value-number')
+                '.packages-score-health .packages-score-value-number',
+              )
               ?.text
               .trim() ??
           '0';
       final downloads = document
               .querySelector(
-                  '.packages-score-downloads .packages-score-value-number')
+                '.packages-score-downloads .packages-score-value-number',
+              )
               ?.text
               .trim() ??
           '0';
@@ -123,7 +129,7 @@ class HtmlService {
       // Platforms - Looking for specific platform icons or text
       final platformsList = <String>[];
       final platformElements = document.querySelectorAll('.tag-badge-sub');
-      for (var element in platformElements) {
+      for (final element in platformElements) {
         final platformText = element.text.trim().toLowerCase();
         if (platformText.contains('android')) platformsList.add('Android');
         if (platformText.contains('ios')) platformsList.add('iOS');
@@ -136,7 +142,7 @@ class HtmlService {
           platformsList.isEmpty ? 'Unknown' : platformsList.join(', ');
 
       // Try to get GitHub repository link
-      String readmeContent = '';
+      var readmeContent = '';
       final repoLink =
           document.querySelector('a[href*="github.com"]')?.attributes['href'];
 
@@ -146,9 +152,10 @@ class HtmlService {
         final apiUrl = repoLink
             .replaceFirst('github.com', 'api.github.com/repos')
             .replaceAll(
-                'https://api.github.com/repos/https://api.github.com/repos/',
-                'https://api.github.com/repos/')
-            .replaceAll(RegExp(r'/tree/.*'), '');
+              'https://api.github.com/repos/https://api.github.com/repos/',
+              'https://api.github.com/repos/',
+            )
+            .replaceAll(RegExp('/tree/.*'), '');
         try {
           final readmeResponse = await http.get(
             Uri.parse('$apiUrl/readme'),
@@ -158,16 +165,17 @@ class HtmlService {
           if (readmeResponse.statusCode == 200) {
             readmeContent = readmeResponse.body;
 
-            // Remove <img> tags, links, headers, lines starting with !, and backticks
-            readmeContent = readmeContent.replaceAll(RegExp(r'<img[^>]*>'), '');
+            // Remove <img> tags, links, headers, lines starting with !,
+            //and backticks
+            readmeContent = readmeContent.replaceAll(RegExp('<img[^>]*>'), '');
             readmeContent =
                 readmeContent.replaceAll(RegExp(r'\[.*?\]\(.*?\)'), '');
             readmeContent =
-                readmeContent.replaceAll(RegExp(r'^#.*', multiLine: true), '');
+                readmeContent.replaceAll(RegExp('^#.*', multiLine: true), '');
             readmeContent =
                 readmeContent.replaceAll(RegExp(r'^\s*$', multiLine: true), '');
             readmeContent =
-                readmeContent.replaceAll(RegExp(r'^!.*', multiLine: true), '');
+                readmeContent.replaceAll(RegExp('^!.*', multiLine: true), '');
             readmeContent = readmeContent.replaceAll('`', '');
             readmeContent = readmeContent.replaceAll('*', '');
 
@@ -183,11 +191,11 @@ class HtmlService {
             readmeContent = markdownContent;
 
             // Remove <img> tags, links, and headers
-            readmeContent = readmeContent.replaceAll(RegExp(r'<img[^>]*>'), '');
+            readmeContent = readmeContent.replaceAll(RegExp('<img[^>]*>'), '');
             readmeContent =
                 readmeContent.replaceAll(RegExp(r'\[.*?\]\(.*?\)'), '');
             readmeContent =
-                readmeContent.replaceAll(RegExp(r'^#.*', multiLine: true), '');
+                readmeContent.replaceAll(RegExp('^#.*', multiLine: true), '');
           }
         }
       }
@@ -211,12 +219,14 @@ class HtmlService {
       return Map<String, String>.from(details);
     } else {
       throw Exception(
-          'Failed to fetch package details: ${response.statusCode}');
+        'Failed to fetch package details: ${response.statusCode}',
+      );
     }
   }
 
   Future<List<Map<String, dynamic>>> fetchGitHubRepositories(
-      String username) async {
+    String username,
+  ) async {
     // Try to load from cache first
     final storageRepos = StorageService.loadGithubRepositories(username);
     if (storageRepos != null) {
@@ -240,54 +250,49 @@ class HtmlService {
 
       if (response.statusCode != 200) {
         throw Exception(
-            'Failed to load data ${response.statusCode} ${response.body}');
+          'Failed to load data ${response.statusCode} ${response.body}',
+        );
       }
 
-      final List<dynamic> data = jsonDecode(response.body) as List;
+      final data = jsonDecode(response.body) as List;
 
       // Repository bilgilerini al ve yıldız sayısına göre sırala
-      final repositories = await Future.wait(data.map((repo) async {
-        // Dil rengi için languages endpoint'ini kullanıyoruz
-        final languageResponse = await http.get(
-          Uri.parse(repo['languages_url'] as String),
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            // 'Authorization': 'Bearer YOUR_GITHUB_TOKEN',
-          },
-        );
+      final repositories = await Future.wait(
+        data.map((repo) async {
+          // Dil rengi için languages endpoint'ini kullanıyoruz
 
-        final languages =
-            jsonDecode(languageResponse.body) as Map<String, dynamic>;
-        final primaryLanguage = repo['language'] ?? 'Unknown';
+          final primaryLanguage =
+              (repo as Map<String, dynamic>)['language'] ?? 'Unknown';
 
-        // GitHub'ın yaygın diller için kullandığı renkler
-        final languageColors = {
-          'JavaScript': '#f1e05a',
-          'Python': '#3572A5',
-          'Java': '#b07219',
-          'Dart': '#00B4AB',
-          'Swift': '#ffac45',
-          'Kotlin': '#F18E33',
-          // Diğer diller için renkleri buraya ekleyebilirsiniz
-        };
+          // GitHub'ın yaygın diller için kullandığı renkler
+          final languageColors = {
+            'JavaScript': '#f1e05a',
+            'Python': '#3572A5',
+            'Java': '#b07219',
+            'Dart': '#00B4AB',
+            'Swift': '#ffac45',
+            'Kotlin': '#F18E33',
+            // Diğer diller için renkleri buraya ekleyebilirsiniz
+          };
 
-        return {
-          'name': repo['name'] ?? 'Unknown',
-          'description': repo['description'] ?? 'Unknown',
-          'updated_at':
-              'Updated ${TimeService.getRelativeTime(DateTime.parse(repo['updated_at'] as String))}',
-          'language': primaryLanguage,
-          'color': languageColors[primaryLanguage] ??
-              '#FFFFFF', // #FFFFFF rengi ekledik
-          'stars':
-              repo['stargazers_count'].toString(), // Yıldız sayısını ekliyoruz
-        };
-      }).toList());
+          return {
+            'name': repo['name'] ?? 'Unknown',
+            'description': repo['description'] ?? 'Unknown',
+            'updated_at':
+                '''Updated ${TimeService.getRelativeTime(DateTime.parse(repo['updated_at'] as String))}''',
+            'language': primaryLanguage,
+            'color': languageColors[primaryLanguage] ??
+                '#FFFFFF', // #FFFFFF rengi ekledik
+            'stars': repo['stargazers_count']
+                .toString(), // Yıldız sayısını ekliyoruz
+          };
+        }).toList(),
+      );
 
       // Yıldız sayısına göre azalan sırayla sıralama yapıyoruz
       repositories.sort((a, b) {
-        int starsA = int.tryParse(a['stars'] as String ?? '0') ?? 0;
-        int starsB = int.tryParse(b['stars'] as String ?? '0') ?? 0;
+        final starsA = int.tryParse(a['stars'] as String) ?? 0;
+        final starsB = int.tryParse(b['stars'] as String) ?? 0;
         return starsB.compareTo(starsA); // Azalan sıralama
       });
 

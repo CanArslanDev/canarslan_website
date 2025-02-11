@@ -1,7 +1,7 @@
 part of '../home_page.dart';
 
 class _DisposeAnimationTitle extends GetView<HomePageController> {
-  const _DisposeAnimationTitle({super.key});
+  const _DisposeAnimationTitle();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class _DisposeAnimationTitle extends GetView<HomePageController> {
                     ],
                   ),
                 ),
-              )),
+              ),),
         ),
       );
 

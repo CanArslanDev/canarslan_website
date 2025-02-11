@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _PositionedImText extends GetView<HomePageController> {
-  const _PositionedImText({super.key});
+  const _PositionedImText();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _PositionedImText extends GetView<HomePageController> {
                   child: SelectableText(
                     '''I'm${OrientationService.isPortrait ? '' : ' '}''',
                     style: AppTextStyles.title.copyWith(
-                        color: notEmpty ? Colors.white : Colors.transparent),
+                        color: notEmpty ? Colors.white : Colors.transparent,),
                   ),
                 ),
               ),

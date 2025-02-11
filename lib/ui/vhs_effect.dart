@@ -4,8 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class VHSEffect extends StatefulWidget {
+  const VHSEffect({required this.child, super.key});
   final Widget child;
-  const VHSEffect({Key? key, required this.child}) : super(key: key);
 
   @override
   State<VHSEffect> createState() => _VHSEffectState();
@@ -17,7 +17,7 @@ class _VHSEffectState extends State<VHSEffect>
   late Animation<double> _animation;
   late math.Random _random;
   bool _isGlitching = false;
-  double _glitchOffset = 0.0;
+  double _glitchOffset = 0;
   Timer? _glitchTimer;
   Timer? _glitchEffectTimer;
 
@@ -88,29 +88,30 @@ class _VHSEffectState extends State<VHSEffect>
               // Perspektif için hafif rotasyon
               ..rotateX(0.1)
               // Kenarlardan içe doğru daha sert bükülme
-              ..scale(0.85 - 0.2 * math.cos(math.pi * 0.5),
-                  0.8 + 0.2 * math.sin(math.pi * 0.5), 1),
+              ..scale(
+                0.85 - 0.2 * math.cos(math.pi * 0.5),
+                0.8 + 0.2 * math.sin(math.pi * 0.5),
+                1,
+              ),
             alignment: Alignment.center,
             child: Container(
               decoration: BoxDecoration(
                 gradient: RadialGradient(
-                  center: Alignment.center,
                   radius: 1.5,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.1),
-                    Colors.black.withOpacity(0.3),
+                    Colors.black.withValues(alpha: 0.1),
+                    Colors.black.withValues(alpha: 0.3),
                   ],
                 ),
               ),
               child: ShaderMask(
                 shaderCallback: (Rect bounds) {
                   return RadialGradient(
-                    center: Alignment.center,
-                    radius: 1.0,
+                    radius: 1,
                     colors: [
                       Colors.white,
-                      Colors.white.withOpacity(0.9),
+                      Colors.white.withValues(alpha: 0.9),
                     ],
                   ).createShader(bounds);
                 },
@@ -126,8 +127,8 @@ class _VHSEffectState extends State<VHSEffect>
               left: 0,
               right: 0,
               height: 50,
-              child: Container(
-                color: Colors.white.withOpacity(0.1),
+              child: ColoredBox(
+                color: Colors.white.withValues(alpha: 0.1),
                 child: ShaderMask(
                   shaderCallback: (Rect bounds) {
                     return LinearGradient(
@@ -135,14 +136,14 @@ class _VHSEffectState extends State<VHSEffect>
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.white.withOpacity(0.3),
+                        Colors.white.withValues(alpha: 0.3),
                         Colors.transparent,
                       ],
                     ).createShader(bounds);
                   },
                   blendMode: BlendMode.screen,
                   child: Container(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                   ),
                 ),
               ),
@@ -177,8 +178,8 @@ class _VHSEffectState extends State<VHSEffect>
                       Colors.white.withValues(alpha: 0.2),
                     ],
                     stops: const [0.0, 1.0],
-                    begin: Alignment(-0.2 + _random.nextDouble() * 0.4, 0.0),
-                    end: Alignment(0.2 + _random.nextDouble() * 0.4, 0.0),
+                    begin: Alignment(-0.2 + _random.nextDouble() * 0.4, 0),
+                    end: Alignment(0.2 + _random.nextDouble() * 0.4, 0),
                   ).createShader(bounds);
                 },
                 blendMode: BlendMode.screen,
@@ -194,12 +195,11 @@ class _VHSEffectState extends State<VHSEffect>
               child: Container(
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
-                    center: Alignment.center,
                     radius: 1.2,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(0.3),
-                      Colors.black.withOpacity(0.7),
+                      Colors.black.withValues(alpha: 0.3),
+                      Colors.black.withValues(alpha: 0.7),
                     ],
                   ),
                 ),
@@ -241,18 +241,17 @@ class _VHSEffectState extends State<VHSEffect>
 }
 
 class ScanLinePainter extends CustomPainter {
+  ScanLinePainter({required this.offset, required this.isGlitching});
   final double offset;
   final bool isGlitching;
-
-  ScanLinePainter({required this.offset, required this.isGlitching});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(isGlitching ? 0.2 : 0.1)
+      ..color = Colors.white.withValues(alpha: isGlitching ? 0.2 : 0.1)
       ..strokeWidth = 1.0;
 
-    double lineSpacing = isGlitching ? 2.0 : 3.0;
+    final lineSpacing = isGlitching ? 2.0 : 3.0;
     for (double i = 0; i < size.height; i += lineSpacing) {
       final y = (i + offset * 20) % size.height;
       canvas.drawLine(
@@ -284,7 +283,7 @@ class NoisePainter extends CustomPainter {
       final y = random.nextDouble() * size.height;
       final opacity = random.nextDouble() * intensity;
 
-      paint.color = Colors.white.withOpacity(opacity);
+      paint.color = Colors.white.withValues(alpha: opacity);
       canvas.drawPoints(
         PointMode.points,
         [Offset(x, y)],
@@ -299,15 +298,14 @@ class NoisePainter extends CustomPainter {
 }
 
 class HorizontalDistortionPainter extends CustomPainter {
+  HorizontalDistortionPainter({required this.offset, required this.random});
   final double offset;
   final math.Random random;
-
-  HorizontalDistortionPainter({required this.offset, required this.random});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.2)
+      ..color = Colors.white.withValues(alpha: 0.2)
       ..strokeWidth = 2.0;
 
     for (var i = 0; i < 5; i++) {

@@ -1,12 +1,9 @@
-import 'package:canarslan_website/controllers/base_controller.dart';
 import 'package:canarslan_website/controllers/contact_page_controller/contact_page_controller.dart';
 import 'package:canarslan_website/controllers/home_page_controller/home_page_controller.dart';
-import 'package:canarslan_website/controllers/main_page_controller/main_page_controller.dart';
 import 'package:canarslan_website/controllers/projects_controller/projects_page_controller.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/route_service.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class ControllerService {
   static void putController(

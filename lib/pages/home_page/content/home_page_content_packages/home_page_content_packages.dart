@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _ContentPackages extends StatelessWidget {
-  const _ContentPackages({super.key});
+  const _ContentPackages();
 
   @override
   Widget build(BuildContext context) {

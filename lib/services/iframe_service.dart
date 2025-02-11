@@ -1,17 +1,15 @@
-import 'package:canarslan_website/services/js_bridge_service.dart';
-
 import 'dart:html' as html;
 import 'dart:ui_web' as ui_web;
-import 'package:flutter/material.dart';
+
+import 'package:canarslan_website/services/js_bridge_service.dart';
 
 class IframeService {
-  static const String viewID = 'ascii-video-player';
-  late html.IFrameElement iframeElement;
-  final JsBridgeService _jsBridgeService;
-
   IframeService(this._jsBridgeService) {
     _registerIframeView();
   }
+  static const String viewID = 'ascii-video-player';
+  late html.IFrameElement iframeElement;
+  final JsBridgeService _jsBridgeService;
 
   void _registerIframeView() {
     ui_web.platformViewRegistry.registerViewFactory(viewID, (int viewId) {

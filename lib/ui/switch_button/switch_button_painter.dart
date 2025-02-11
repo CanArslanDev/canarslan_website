@@ -15,15 +15,16 @@ class SwitchButtonPainter extends CustomPainter {
         0.1; // Bu değeri artırıp azaltarak şekli ayarlayabilirsiniz
 
     // Sol üst köşe
-    path.moveTo(insetAmount, 0);
-    // Sağ üst köşe
-    path.lineTo(size.width - insetAmount, 0);
-    // Sağ alt köşe
-    path.lineTo(size.width, size.height);
-    // Sol alt köşe
-    path.lineTo(0, size.height);
-    // Başlangıç noktasına geri dön
-    path.close();
+    path
+      ..moveTo(insetAmount, 0)
+      // Sağ üst köşe
+      ..lineTo(size.width - insetAmount, 0)
+      // Sağ alt köşe
+      ..lineTo(size.width, size.height)
+      // Sol alt köşe
+      ..lineTo(0, size.height)
+      // Başlangıç noktasına geri dön
+      ..close();
 
     // Clip the canvas to the path
     canvas.clipPath(path);
@@ -31,7 +32,9 @@ class SwitchButtonPainter extends CustomPainter {
     // Fill the background with the specified color
     final backgroundPaint = Paint()..color = const Color(0xFF071235);
     canvas.drawRect(
-        Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      backgroundPaint,
+    );
 
     // Kesikli çizgi efekti için path'i parçalara böl
     final dashedPath = extractPath(path);
@@ -45,7 +48,7 @@ class SwitchButtonPainter extends CustomPainter {
     const dashSpace = 2.0;
     final dashedPath = Path();
 
-    for (var metric in path.computeMetrics()) {
+    for (final metric in path.computeMetrics()) {
       var distance = 0.0;
       var isDrawing = true;
 
@@ -59,8 +62,9 @@ class SwitchButtonPainter extends CustomPainter {
               ?.position;
 
           if (start != null && end != null) {
-            dashedPath.moveTo(start.dx, start.dy);
-            dashedPath.lineTo(end.dx, end.dy);
+            dashedPath
+              ..moveTo(start.dx, start.dy)
+              ..lineTo(end.dx, end.dy);
           }
         }
 

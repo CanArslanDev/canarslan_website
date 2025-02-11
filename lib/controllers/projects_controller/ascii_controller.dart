@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AsciiController {
+  AsciiController() {
+    _jsBridgeService = JsBridgeService();
+    _iframeService = IframeService(_jsBridgeService);
+  }
   late final JsBridgeService _jsBridgeService;
+  // ignore: unused_field
   late final IframeService _iframeService;
   final FocusNode focusNode = FocusNode();
   bool isCtrlPressed = false;
   bool isMetaPressed = false;
   bool isPointerDown = false;
-
-  AsciiController() {
-    _jsBridgeService = JsBridgeService();
-    _iframeService = IframeService(_jsBridgeService);
-  }
 
   void handleKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent) {
@@ -55,7 +55,9 @@ class AsciiController {
   }
 
   PointerEventDetails _createPointerEventDetails(
-      PointerEvent event, RenderBox htmlElementBox) {
+    PointerEvent event,
+    RenderBox htmlElementBox,
+  ) {
     final localPosition =
         event.position - htmlElementBox.localToGlobal(Offset.zero);
 

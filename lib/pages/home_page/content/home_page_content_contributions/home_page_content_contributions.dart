@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _ContentContributions extends GetView<HomePageController> {
-  const _ContentContributions({super.key});
+  const _ContentContributions();
 
   @override
   Widget build(BuildContext context) {

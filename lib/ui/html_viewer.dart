@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class HtmlViewer extends StatelessWidget {
-  final AsciiController controller;
-
   const HtmlViewer({
-    super.key,
     required this.controller,
+    super.key,
   });
+  final AsciiController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +64,7 @@ class HtmlViewer extends StatelessWidget {
   }
 
   void _handlePointerEvent(PointerEvent event, BuildContext context) {
-    final RenderBox? htmlElementBox = context.findRenderObject() as RenderBox?;
+    final htmlElementBox = context.findRenderObject() as RenderBox?;
     if (htmlElementBox == null) return;
 
     controller.handlePointerEvent(event, htmlElementBox);

@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:canarslan_website/controllers/base_controller.dart';
 import 'package:canarslan_website/controllers/navigation_bar_controller/navigation_bar_controller.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 
 class ContactPageController extends BaseController {
-  final welcomeText =
-      '''Last login: ${DateFormat('EEE MMM d HH:mm:ss').format(DateTime.now())}
+  final welcomeText = '''
+Last login: ${DateFormat('EEE MMM d HH:mm:ss').format(DateTime.now())}
 Welcome User
 
 ////////////////////////////////////

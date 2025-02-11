@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:canarslan_website/constants/ascii_constants.dart';
 import 'package:canarslan_website/controllers/projects_controller/projects_page_controller.dart';
@@ -10,20 +11,17 @@ import 'package:canarslan_website/ui/padding.dart';
 import 'package:canarslan_website/ui/switch_button/switch_button.dart';
 import 'package:canarslan_website/ui/title_ascii_art_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
 part 'containers/ascii_animation_container_projects.dart';
-part 'project_section/project_section.dart';
-part 'project_section/competitions_and_certificates_section.dart';
-part 'packages_section/packages_section.dart';
-part 'packages_section/package_painter.dart';
 part 'containers/ascii_animation_controller_packages.dart';
+part 'packages_section/package_painter.dart';
+part 'packages_section/packages_section.dart';
+part 'project_section/competitions_and_certificates_section.dart';
+part 'project_section/project_section.dart';
 
 class AsciiAnimationContainer extends StatefulWidget {
   const AsciiAnimationContainer({
@@ -47,35 +45,35 @@ class _AsciiAnimationContainerState extends State<AsciiAnimationContainer>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: Duration(milliseconds: (4000 * 1).round()), // Hızı ayarladım
+      duration: const Duration(milliseconds: 4000 * 1), // Hızı ayarladım
       vsync: this,
     );
 
     _verticalLineAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.25, curve: Curves.linear),
+        curve: const Interval(0, 0.25),
       ),
     );
 
     _horizontalLineAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.25, 0.5, curve: Curves.linear),
+        curve: const Interval(0.25, 0.5),
       ),
     );
 
     _containerVerticalAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.5, 0.75, curve: Curves.linear),
+        curve: const Interval(0.5, 0.75),
       ),
     );
 
     _containerBottomAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.75, 1.0, curve: Curves.linear),
+        curve: const Interval(0.75, 1),
       ),
     );
 
@@ -117,17 +115,23 @@ class _AsciiAnimationContainerState extends State<AsciiAnimationContainer>
               child: Center(
                 child: Container(
                   margin: EdgeInsets.only(
-                      top: (90.h * 0.3), bottom: 30.h - (90.h * 0.3)),
+                    top: 90.h * 0.3,
+                    bottom: 30.h - (90.h * 0.3),
+                  ),
                   width: 90.w,
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: SingleChildScrollView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        child: SizedBox(
-                            height: 85.h,
-                            child: Obx(() => controller.switchButton.value
-                                ? const _Packages()
-                                : const _Projects()))),
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: SizedBox(
+                        height: 85.h,
+                        child: Obx(
+                          () => controller.switchButton.value
+                              ? const _Packages()
+                              : const _Projects(),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -148,19 +152,20 @@ class _AsciiAnimationContainerState extends State<AsciiAnimationContainer>
                           width: OrientationService.switchButtonWidth,
                           height: 4.h,
                           child: SizedBox(
-                              width: 10.w,
-                              height: 4.h,
-                              child: Obx(
-                                () => SwitchButton(
-                                  isSwitched: controller.switchButton.value,
-                                  onSwitch: (bool) {
-                                    setState(() {
-                                      controller.switchButton.value =
-                                          !controller.switchButton.value;
-                                    });
-                                  },
-                                ),
-                              )),
+                            width: 10.w,
+                            height: 4.h,
+                            child: Obx(
+                              () => SwitchButton(
+                                isSwitched: controller.switchButton.value,
+                                onSwitch: ({bool value = false}) {
+                                  setState(() {
+                                    controller.switchButton.value =
+                                        !controller.switchButton.value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -182,6 +187,21 @@ class _AsciiAnimationContainerState extends State<AsciiAnimationContainer>
 }
 
 class AsciiAnimationPainter extends CustomPainter {
+  // Çizgi kalınlığı
+
+  AsciiAnimationPainter({
+    required this.verticalLineProgress,
+    required this.horizontalLineProgress,
+    required this.containerVerticalProgress,
+    required this.containerBottomProgress,
+  }) : super(
+          repaint: Listenable.merge([
+            verticalLineProgress,
+            horizontalLineProgress,
+            containerVerticalProgress,
+            containerBottomProgress,
+          ]),
+        );
   final Animation<double> verticalLineProgress;
   final Animation<double> horizontalLineProgress;
   final Animation<double> containerVerticalProgress;
@@ -190,25 +210,12 @@ class AsciiAnimationPainter extends CustomPainter {
   // Çizgi özelliklerini ayarladım
   static const double dashWidth = 6; // Kesik çizgi uzunluğu
   static const double dashSpace = 2; // Kesik çizgi aralığı
-  static const double lineThickness = 1.2; // Çizgi kalınlığı
-
-  AsciiAnimationPainter({
-    required this.verticalLineProgress,
-    required this.horizontalLineProgress,
-    required this.containerVerticalProgress,
-    required this.containerBottomProgress,
-  }) : super(
-            repaint: Listenable.merge([
-          verticalLineProgress,
-          horizontalLineProgress,
-          containerVerticalProgress,
-          containerBottomProgress,
-        ]));
+  static const double lineThickness = 1.2;
 
   void drawDashedLine(Canvas canvas, Offset start, Offset end, Paint paint) {
     final path = Path();
-    final dash = dashWidth;
-    final space = dashSpace;
+    const dash = dashWidth;
+    const space = dashSpace;
     final startPoint = start;
     final endPoint = end;
 
@@ -232,8 +239,9 @@ class AsciiAnimationPainter extends CustomPainter {
           currentY + unitY * math.min(stepDistance, remainingDistance);
 
       if (isDrawing) {
-        path.moveTo(currentX, currentY);
-        path.lineTo(nextX, nextY);
+        path
+          ..moveTo(currentX, currentY)
+          ..lineTo(nextX, nextY);
       }
 
       currentX = nextX;
@@ -313,7 +321,9 @@ class AsciiAnimationPainter extends CustomPainter {
         canvas,
         Offset(startX, y),
         Offset(
-            startX + (containerWidth / 2 * containerBottomProgress.value), y),
+          startX + (containerWidth / 2 * containerBottomProgress.value),
+          y,
+        ),
         paint,
       );
 

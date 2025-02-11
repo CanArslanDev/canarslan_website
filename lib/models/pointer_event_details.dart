@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
 class PointerEventDetails {
-  final String eventType;
-  final Offset position;
-  final Offset localPosition;
-  final int buttons;
-  final bool isPointerDown;
 
   PointerEventDetails({
     required this.eventType,
@@ -14,4 +9,9 @@ class PointerEventDetails {
     required this.buttons,
     required this.isPointerDown,
   });
+  final String eventType;
+  final Offset position;
+  final Offset localPosition;
+  final int buttons;
+  final bool isPointerDown;
 }

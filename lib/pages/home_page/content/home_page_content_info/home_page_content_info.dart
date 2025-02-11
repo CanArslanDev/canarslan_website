@@ -1,7 +1,7 @@
 part of '../../home_page.dart';
 
 class _ContentInfo extends GetView<HomePageController> {
-  const _ContentInfo({super.key});
+  const _ContentInfo();
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class _ContentInfo extends GetView<HomePageController> {
               ? 1.h
               : OrientationService.isPortrait
                   ? 17.h
-                  : 25.h),
+                  : 25.h,),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -32,7 +32,7 @@ class _ContentInfo extends GetView<HomePageController> {
               'assets/images/work_icon.png',
               height: OrientationService.contentImageHeight,
             ),
-          ));
+          ),);
 
   Widget get texts => Obx(
         () => Column(
@@ -62,7 +62,7 @@ class _ContentInfo extends GetView<HomePageController> {
                             color: AppColors.blue,
                             blurRadius: 10,
                             spreadRadius: 1,
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -80,7 +80,7 @@ class _ContentInfo extends GetView<HomePageController> {
                   'I also share my projects on my\nGithub profile.',
                   maxLines: 2,
                   style: AppTextStyles.codingBody.copyWith(
-                      fontSize: OrientationService.contentSmallTextSize),
+                      fontSize: OrientationService.contentSmallTextSize,),
                 ),
               ),
             ),

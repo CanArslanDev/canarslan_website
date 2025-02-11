@@ -23,16 +23,16 @@ abstract class Pages {
     GetPage(
         name: Routes.projectsPage,
         page: ProjectsPage.new,
-        binding: ProjectsPageBinding()),
+        binding: ProjectsPageBinding(),),
     GetPage(
         name: Routes.contactPage,
         page: ContactPage.new,
-        binding: ContactPageBinding()),
+        binding: ContactPageBinding(),),
     GetPage(
-        name: Routes.mainPage, page: MainPage.new, binding: MainPageBinding()),
+        name: Routes.mainPage, page: MainPage.new, binding: MainPageBinding(),),
     GetPage(
         name: Routes.notFoundPage,
         page: NotFoundPage.new,
-        binding: NotFoundPageBinding()),
+        binding: NotFoundPageBinding(),),
   ];
 }

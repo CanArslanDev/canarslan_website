@@ -1,7 +1,7 @@
 part of '../../../home_page.dart';
 
 class _Notes extends GetView<HomePageController> {
-  const _Notes({super.key});
+  const _Notes();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _Notes extends GetView<HomePageController> {
             const Spacer(),
             AppPadding(
                 rPadding: 5.w,
-                child: noteIcon('assets/icons/notes/notes_more.svg')),
+                child: noteIcon('assets/icons/notes/notes_more.svg'),),
           ],
         ),
       );

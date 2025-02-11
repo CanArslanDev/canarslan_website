@@ -1,8 +1,6 @@
 import 'package:canarslan_website/controllers/main_page_controller/main_page_controller.dart';
-import 'package:canarslan_website/services/controller_service.dart';
 import 'package:canarslan_website/ui/navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 
@@ -17,7 +15,7 @@ class MainPage extends GetView<MainPageController> {
               controller.pages.elementAt(controller.selectedIndex.value),
               navBar,
             ],
-          )),
+          ),),
     );
   }
 
