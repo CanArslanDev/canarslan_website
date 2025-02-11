@@ -64,7 +64,7 @@ class HomePageController extends BaseController
       openMainWallpaperAnimation(wallpaperAnimation);
       openInfoBarAnimation(openInfoBar);
       openContentAnimation(openContent);
-      openDisposeAnimation(disposeAnimation);
+      // openDisposeAnimation(disposeAnimation);
       enableContentVisibleList(contentVisibleList);
       openNavBarAnimation;
       findMainNameTextPosition();

@@ -28,6 +28,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/icons/notes/
     - assets/web/
     - assets/web/js/
     - assets/web/css/

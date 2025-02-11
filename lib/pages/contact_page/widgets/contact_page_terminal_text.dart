@@ -1,19 +1,18 @@
 part of '../contact_page.dart';
 
 class _TerminalText extends GetView<ContactPageController> {
-  final Rx<String> text;
-  final String urlText;
-  final String url;
-  final Color color;
-  final int cursor;
-
-  _TerminalText({
+  const _TerminalText({
     required this.text,
     required this.urlText,
     required this.url,
     required this.color,
     required this.cursor,
   });
+  final Rx<String> text;
+  final String urlText;
+  final String url;
+  final Color color;
+  final int cursor;
 
   @override
   Widget build(BuildContext context) {

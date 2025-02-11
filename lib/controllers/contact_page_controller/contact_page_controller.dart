@@ -63,7 +63,7 @@ You can use the links below to get information about me and to contact me.
   }
 
   Future<void> startCursorAnimation() async {
-    bool condition = true;
+    var condition = true;
     while (condition) {
       cursorAnimation.value = !cursorAnimation.value;
       await Future<void>.delayed(const Duration(milliseconds: 300));
