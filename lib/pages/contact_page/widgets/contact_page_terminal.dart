@@ -74,7 +74,7 @@ class _Terminal extends StatelessWidget {
   Widget get circles => SizedBox(
         height: 3.h,
         child: AppPadding(
-          lPadding: 0.5.w,
+          lPadding: OrientationService.contactPageCircleLeftPadding,
           child: Row(
             children: [
               circle(AppColors.red),

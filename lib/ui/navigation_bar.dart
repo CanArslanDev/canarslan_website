@@ -105,10 +105,6 @@ class NavBar extends GetView<NavigationBarController> {
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
-              // if (url != null) {
-              //   JavascriptService.openUrl(url);
-              //   return;
-              // }
               controller.changePage(index);
 
               RouteService.setHref(id);

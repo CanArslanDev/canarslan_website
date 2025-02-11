@@ -42,7 +42,7 @@ class HomePageController extends BaseController
     super.onInit();
     getPackages();
     if (!Get.isRegistered<MainPageController>() ||
-        !Get.find<MainPageController>().enableHomePageAnmiation) {
+        !Get.find<MainPageController>().enableHomePageAnimation) {
       skipAnimation(this);
       return;
     }

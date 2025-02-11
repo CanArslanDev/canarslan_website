@@ -31,4 +31,5 @@ class OrientationService {
   static double contactPageTitleFontSize = isPortrait ? 15.sp : 10.sp;
   static double contactPageTextFontSize = isPortrait ? 14.sp : 11.sp;
   static double contactPageCircleMargin = isPortrait ? 0.3.w : 0.1.w;
+  static double contactPageCircleLeftPadding = isPortrait ? 1.5.w : 0.5.w;
 }

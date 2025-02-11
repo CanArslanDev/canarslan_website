@@ -15,7 +15,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class MainPageController extends BaseController {
-  bool enableHomePageAnmiation = RouteService.isMainHref;
+  bool enableHomePageAnimation = RouteService.isMainHref;
 
   RxList<Map<String, String>> packages = <Map<String, String>>[].obs;
   RxList<Map<String, dynamic>> repositories = <Map<String, dynamic>>[].obs;

@@ -32,8 +32,8 @@ class NavigationBarController extends BaseController {
 
   Future<void> changePage(int newIndex) async {
     final currentIndex = selectedPage.value;
-    if (newIndex != 0) {
-      Get.find<MainPageController>().enableHomePageAnmiation = false;
+    if (newIndex == 1) {
+      Get.find<MainPageController>().enableHomePageAnimation = false;
       if (Get.isRegistered<HomePageController>()) {
         final homePageController = Get.find<HomePageController>();
         await homePageController.closeWidgetsAnimation();

@@ -14,7 +14,6 @@ class ProjectsPageController extends BaseController {
   AsciiController asciiController = AsciiController();
   Rx<bool> switchButton = false.obs;
   Future<void> Function(Duration duration) duration = FeatureService().duration;
-  Rx<bool> hideMainwallpaper = true.obs;
 
   @override
   void onClose() {
@@ -30,7 +29,6 @@ class ProjectsPageController extends BaseController {
     if (!Get.isRegistered<MainPageController>()) {
       return;
     }
-    openAnimation();
   }
 
   void get initialize {
@@ -46,15 +44,8 @@ class ProjectsPageController extends BaseController {
     });
   }
 
-  Future<void> openAnimation() async {
-    hideMainwallpaper.value = false;
-    await duration(const Duration(milliseconds: 100));
-
-    hideMainwallpaper.value = true;
-  }
-
   Future<void> closeAnimation() async {
-    hideMainwallpaper.value = false;
+    homePageTransition.value = true;
     await duration(const Duration(seconds: 1));
   }
 }
