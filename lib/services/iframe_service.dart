@@ -12,9 +12,10 @@ class IframeService {
   final JsBridgeService _jsBridgeService;
 
   void _registerIframeView() {
+    String iframeSrc = Uri.base.resolve('assets/web/index.html').toString();
     ui_web.platformViewRegistry.registerViewFactory(viewID, (int viewId) {
       iframeElement = html.IFrameElement()
-        ..src = 'assets/web/index.html'
+        ..src = iframeSrc
         ..style.border = 'none'
         ..style.height = '100%'
         ..style.width = '100%';
