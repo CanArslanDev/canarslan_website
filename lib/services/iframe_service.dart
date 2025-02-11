@@ -2,6 +2,7 @@ import 'dart:html' as html;
 import 'dart:ui_web' as ui_web;
 
 import 'package:canarslan_website/services/js_bridge_service.dart';
+import 'package:flutter/foundation.dart';
 
 class IframeService {
   IframeService(this._jsBridgeService) {
@@ -12,10 +13,9 @@ class IframeService {
   final JsBridgeService _jsBridgeService;
 
   void _registerIframeView() {
-    String iframeSrc = Uri.base.resolve('assets/web/index.html').toString();
     ui_web.platformViewRegistry.registerViewFactory(viewID, (int viewId) {
       iframeElement = html.IFrameElement()
-        ..src = iframeSrc
+        ..src = '../assets${kReleaseMode ? '/assets' : ''}/web/index.html'
         ..style.border = 'none'
         ..style.height = '100%'
         ..style.width = '100%';
