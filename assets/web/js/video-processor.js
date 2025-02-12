@@ -14,7 +14,7 @@ class VideoProcessor {
         const charHeight = 8;
 
         // Windows renders text slightly wider than macOS
-        const widthMultiplier = navigator.userAgentData.platform.includes('Windows') ? 1.8 : 1.66;
+        const widthMultiplier = navigator.userAgentData.platform.includes('Windows') ? 1.85 : 1.66;
 
         const cols = Math.floor((window.innerWidth * widthMultiplier) / charWidth);
         const rows = Math.floor(window.innerHeight / charHeight);
