@@ -11,24 +11,27 @@ class VideoProcessor {
 
     resizeCanvas() {
         const charWidth = 6;
-        const charHeight = 8; // 12'den 8'e değiştirildi
+        const charHeight = 8;
 
-        // 8/12 = 2/3 oranı ile çarparak düzeltme yapıyoruz
-        const heightRatio = 8 / 12;
-        console.log(window.innerWidth);
-        const screenRatio = (window.innerWidth * 1.82 * heightRatio) / window.innerHeight;
+        // Windows renders text slightly wider than macOS
+        const widthMultiplier = navigator.userAgentData.platform.includes('Windows') ? 1.8 : 1.66;
 
-        const cols = Math.floor((window.innerWidth * 1.82) / charWidth);
+        const cols = Math.floor((window.innerWidth * widthMultiplier) / charWidth);
         const rows = Math.floor(window.innerHeight / charHeight);
+
+        const heightRatio = 8 / 12;
+        const screenRatio = (window.innerWidth * widthMultiplier * heightRatio) / window.innerHeight;
+
+        this.canvas.width = cols;
+        this.canvas.height = rows;
+
+        this.ascii.style.fontSize = `${charWidth}px`;
+        this.ascii.style.lineHeight = `${charHeight}px`;
 
         this.noiseOffsets = Array(rows).fill().map(() =>
             Array(cols).fill().map(() => Math.random() * 0.2)
         );
 
-        this.canvas.width = cols;
-        this.canvas.height = rows;
-        this.ascii.style.fontSize = `${charWidth}px`;
-        this.ascii.style.lineHeight = `${charHeight}px`;
         return { cols, rows, screenRatio };
     }
 

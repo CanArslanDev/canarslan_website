@@ -10,32 +10,37 @@ class _PositionedIntroTextPortrait extends GetView<HomePageController> {
           ? Positioned(
               top: controller.introNameTextPosition.value.y - 30.h,
               left: controller.introNameTextPosition.value.x,
-              child: Stack(
-                children: [
-                  _coloredFitText,
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 2000),
-                    curve: Curves.fastLinearToSlowEaseIn,
-                    padding: EdgeInsets.only(
-                      left: controller.visibility.value
-                          ? 0
-                          : OrientationService.isPortrait
-                              ? 10.w
-                              : 2.w,
-                    ),
-                    width: 60.w,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 2000),
-                        curve: Curves.fastLinearToSlowEaseIn,
-                        width: _width,
-                        height: _height,
-                        child: _fitText,
+              child: AnimatedOpacity(
+                opacity: controller.contentVisibleList[0] == true ? 1 : 0,
+                curve: Curves.easeInOut,
+                duration: const Duration(milliseconds: 1000),
+                child: Stack(
+                  children: [
+                    _coloredFitText,
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 2000),
+                      curve: Curves.fastLinearToSlowEaseIn,
+                      padding: EdgeInsets.only(
+                        left: controller.visibility.value
+                            ? 0
+                            : OrientationService.isPortrait
+                                ? 10.w
+                                : 2.w,
+                      ),
+                      width: 60.w,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 2000),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                          width: _width,
+                          height: _height,
+                          child: _fitText,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )
           : const SizedBox.shrink(),

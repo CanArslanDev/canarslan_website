@@ -1,6 +1,7 @@
 import 'dart:html' as html;
 import 'dart:ui_web' as ui_web;
 
+import 'package:canarslan_website/services/asset_service.dart';
 import 'package:canarslan_website/services/js_bridge_service.dart';
 import 'package:flutter/foundation.dart';
 
@@ -15,7 +16,7 @@ class IframeService {
   void _registerIframeView() {
     ui_web.platformViewRegistry.registerViewFactory(viewID, (int viewId) {
       iframeElement = html.IFrameElement()
-        ..src = '../assets${kReleaseMode ? '/assets' : ''}/web/index.html'
+        ..src = '${AssetService.assetPath}/web/index.html'
         ..style.border = 'none'
         ..style.height = '100%'
         ..style.width = '100%';
