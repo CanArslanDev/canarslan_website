@@ -15,9 +15,10 @@ class VideoProcessor {
 
         // 8/12 = 2/3 oranı ile çarparak düzeltme yapıyoruz
         const heightRatio = 8 / 12;
-        const screenRatio = (window.innerWidth * 1.66 * heightRatio) / window.innerHeight;
+        console.log(window.innerWidth);
+        const screenRatio = (window.innerWidth * 1.82 * heightRatio) / window.innerHeight;
 
-        const cols = Math.floor((window.innerWidth * 1.66) / charWidth);
+        const cols = Math.floor((window.innerWidth * 1.82) / charWidth);
         const rows = Math.floor(window.innerHeight / charHeight);
 
         this.noiseOffsets = Array(rows).fill().map(() =>
