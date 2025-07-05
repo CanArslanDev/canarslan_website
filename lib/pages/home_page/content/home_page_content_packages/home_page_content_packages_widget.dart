@@ -9,6 +9,7 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
       padding: EdgeInsets.only(top: 3.6.h),
       child: Obx(
         () => Row(
+          spacing: 1.w,
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: controller.packages.isNotEmpty ? packages : nullWidget,
@@ -21,11 +22,13 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
     final widgets = <Widget>[];
     for (var i = 0; i < controller.packages.length; i++) {
       final entry = controller.packages.elementAt(i);
-      widgets.add(package(
-          entry['name']!, PackageConstants.packageIcons[i], entry['url']!,),);
-      if (i != controller.packages.length - 1) {
-        widgets.add(SizedBox(width: 3.w));
-      }
+      widgets.add(
+        package(
+          entry['name']!,
+          PackageConstants.packageIcons[i],
+          entry['url']!,
+        ),
+      );
     }
     return widgets;
   }
@@ -53,6 +56,10 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
             children: [
               SvgPicture.asset(
                 iconPath,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.white,
+                  BlendMode.srcIn,
+                ),
                 height: OrientationService.contentPackagesImageSize,
               ),
               Padding(
@@ -63,15 +70,17 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
                     onTap: () => JavascriptService.openUrl(url),
                     child: SizedBox(
                       width: OrientationService.isPortrait ? 30.w : 9.5.w,
-                      child: Text(title,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.body.copyWith(
-                            fontSize:
-                                OrientationService.contentPackagesDescription,
-                            color: AppColors.blue,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.blue,
-                          ),),
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.body.copyWith(
+                          fontSize:
+                              OrientationService.contentPackagesDescription,
+                          color: AppColors.blue,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.blue,
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -10,6 +10,7 @@
 analyzer:
   errors:
     avoid_web_libraries_in_flutter: ignore
+    deprecated_member_use: ignore
 include: package:very_good_analysis/analysis_options.yaml
 
 linter:

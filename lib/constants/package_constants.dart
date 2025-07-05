@@ -6,5 +6,8 @@ abstract class PackageConstants {
   static List<String> packageIcons = [
     'assets/icons/progress_bar.svg',
     'assets/icons/painter.svg',
+    'assets/icons/offline_sync_kit.svg',
+    'assets/icons/contributions_chart.svg',
+    'assets/icons/liquid_glass.svg',
   ];
 }

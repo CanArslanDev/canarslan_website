@@ -14,17 +14,18 @@ class _ContentInfoWidget extends GetView<HomePageController> {
           width: 80.w,
           margin: EdgeInsets.only(top: 6.h),
           decoration: BoxDecoration(
-              color: AppColors.black.withValues(alpha: 0.4),
-              borderRadius: AppBorderRadius.small,
-              border: Border.all(color: AppColors.grey, width: 2),
-              boxShadow: [
-                BoxShadow(
-                  blurStyle: BlurStyle.outer,
-                  color: AppColors.grey.withValues(alpha: 0.5),
-                  spreadRadius: -3,
-                  blurRadius: 10,
-                ),
-              ],),
+            color: AppColors.black.withValues(alpha: 0.4),
+            borderRadius: AppBorderRadius.small,
+            border: Border.all(color: AppColors.grey, width: 2),
+            boxShadow: [
+              BoxShadow(
+                blurStyle: BlurStyle.outer,
+                color: AppColors.grey.withValues(alpha: 0.5),
+                spreadRadius: -3,
+                blurRadius: 10,
+              ),
+            ],
+          ),
           child: Column(
             children: [
               avatar,
@@ -38,15 +39,26 @@ class _ContentInfoWidget extends GetView<HomePageController> {
                     AppIcons.clock,
                     hintText: '(UTC +${IntConstants.timezone}:00)',
                   ),
-                  text(StringConstants.email, AppIcons.email,
-                      url: 'mailto:${StringConstants.email}',),
-                  text(StringConstants.linkedin.linkedinTag, AppIcons.linkediin,
-                      url: StringConstants.linkedin,),
-                  text(StringConstants.x.xTag, AppIcons.x,
-                      url: StringConstants.x,),
-                  text(StringConstants.instagram.instagramTag,
-                      AppIcons.instagram,
-                      url: StringConstants.instagram,),
+                  text(
+                    StringConstants.email,
+                    AppIcons.email,
+                    url: 'mailto:${StringConstants.email}',
+                  ),
+                  text(
+                    StringConstants.linkedin.linkedinTag,
+                    AppIcons.linkediin,
+                    url: StringConstants.linkedin,
+                  ),
+                  text(
+                    StringConstants.x.xTag,
+                    AppIcons.x,
+                    url: StringConstants.x,
+                  ),
+                  text(
+                    StringConstants.instagram.instagramTag,
+                    AppIcons.instagram,
+                    url: StringConstants.instagram,
+                  ),
                 ],
               ),
               githubButton,
@@ -99,9 +111,10 @@ class _ContentInfoWidget extends GetView<HomePageController> {
                               TextSpan(
                                 text: ' $hintText ',
                                 style: AppTextStyles.body.copyWith(
-                                    color: AppColors.lightGrey,
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w600,),
+                                  color: AppColors.lightGrey,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                           ],
                         ),
@@ -204,9 +217,10 @@ class _ContentInfoWidget extends GetView<HomePageController> {
                 SelectableText(
                   StringConstants.tag,
                   style: AppTextStyles.body.copyWith(
-                      color: AppColors.lightGrey,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,),
+                    color: AppColors.lightGrey,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
