@@ -8,11 +8,14 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
     return Padding(
       padding: EdgeInsets.only(top: 3.6.h),
       child: Obx(
-        () => Row(
-          spacing: 1.w,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: controller.packages.isNotEmpty ? packages : nullWidget,
+        () => SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            spacing: 1.w,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: controller.packages.isNotEmpty ? packages : nullWidget,
+          ),
         ),
       ),
     );
