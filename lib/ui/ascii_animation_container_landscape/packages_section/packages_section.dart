@@ -56,13 +56,16 @@ class _PackagesSection extends StatelessWidget {
                       tPadding: 1.5.h,
                       child: Row(
                         children: [
-                          publishedInfo(package['published_time']!,
-                              package['publisher']!,),
+                          publishedInfo(
+                            package['published_time']!,
+                            package['publisher']!,
+                          ),
                           const Spacer(),
                           specs(
-                              package['likes']!,
-                              package['points']!,
-                              package['downloads']!,),
+                            package['likes']!,
+                            package['points']!,
+                            package['downloads']!,
+                          ),
                         ],
                       ),
                     ),

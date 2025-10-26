@@ -16,6 +16,7 @@ import 'package:canarslan_website/ui/padding.dart';
 import 'package:canarslan_website/ui/utils/colors.dart';
 import 'package:canarslan_website/ui/utils/text_styles.dart';
 import 'package:canarslan_website/ui/widgets/measure_size.dart';
+import 'package:contributions_chart/contributions_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';

@@ -23,7 +23,7 @@ class _ContentPackagesWidget extends GetView<HomePageController> {
 
   List<Widget> get packages {
     final widgets = <Widget>[];
-    for (var i = 0; i < controller.packages.length; i++) {
+    for (var i = 0; i < controller.packages.length - 1; i++) {
       final entry = controller.packages.elementAt(i);
       widgets.add(
         package(

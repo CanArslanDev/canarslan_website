@@ -13,21 +13,24 @@ class _PackagesState extends State<_Packages> {
   void initState() {
     Future(() async {
       packages.value = await HtmlService.fetchPackages(
-          'https://pub.dev/publishers/canarslan.me/packages',);
+        'https://pub.dev/publishers/canarslan.me/packages',
+      );
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        topSection,
-        ValueListenableBuilder(
-          valueListenable: packages,
-          builder: (context, value, child) => packagesWidget(value),
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          topSection,
+          ValueListenableBuilder(
+            valueListenable: packages,
+            builder: (context, value, child) => packagesWidget(value),
+          ),
+        ],
+      ),
     );
   }
 

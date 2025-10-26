@@ -37,7 +37,10 @@ class _MainButtons extends GetView<ProjectsPageController> {
               width: 0,
               direction: AnimationDirection.rightToLeft,
               asciiAnimationTrigger: controller.startAsciiAnimation.value,
-              completedAsciiAnimation: () {},
+              completedAsciiAnimation: () {
+                controller.startAsciiAnimation.value = true;
+                controller.switchButton.value = true;
+              },
             ),
           ),
         ],

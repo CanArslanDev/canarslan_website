@@ -1,26 +1,27 @@
-name: 'canarslan_website'
-version: '1.0.0+1'
+name: canarslan_website
+version: 1.0.0+1
 publish_to: none
 environment:
-  sdk: '^3.5.4'
+  sdk: ^3.5.4
 description: A new Flutter project.
 dependencies:
-  cupertino_icons: '^1.0.8'
+  contributions_chart: ^1.0.0+4
+  cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.16
-  get: '^4.6.6'
-  google_fonts: '^6.2.1'
+  get: ^4.6.6
+  google_fonts: ^6.2.1
   html: ^0.15.5
   http: ^1.2.2
   intl: ^0.20.2
   pointer_interceptor: ^0.10.1+2
-  pubspec_dependency_sorter: '^1.0.5'
-  responsive_sizer: '^3.3.1'
-  very_good_analysis: '^6.0.0'
+  pubspec_dependency_sorter: ^1.0.5
+  responsive_sizer: ^3.3.1
+  very_good_analysis: ^6.0.0
   widget_mask: ^1.0.0+0
 dev_dependencies:
-  flutter_lints: '^4.0.0'
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
 flutter:

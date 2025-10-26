@@ -19,11 +19,11 @@ mixin HomePageControllerIntroMixin {
     RxList<RxString> vsCodeText,
     RxBool forceQuitCursorAnimation,
   ) async {
-    const text = '''
+    final text = '''
 Hi, I am ${StringConstants.name}
 Language: ${StringConstants.lang}
 Framework: ${StringConstants.framework}
-Age: ${StringConstants.age}''';
+Age: ${DateTime.now().year - StringConstants.birthYear.year}''';
     var currentLine = ''.obs;
     vsCodeText.add(currentLine);
     for (var i = 0; i < text.length; i++) {
