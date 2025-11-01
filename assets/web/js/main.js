@@ -1,11 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('video');
     const processor = new VideoProcessor();
+    let hasStarted = false;
 
-    video.addEventListener('loadeddata', () => {
+    const startVideo = () => {
+        if (hasStarted) return;
+        hasStarted = true;
         processor.processFrame(video);
-        video.play();
-    });
+        video.play().catch(err => console.log('Video play failed:', err));
+    };
+
+    // Try multiple events for iOS Safari compatibility
+    video.addEventListener('loadeddata', startVideo);
+    video.addEventListener('canplay', startVideo);
+    video.addEventListener('canplaythrough', startVideo);
+
+    // Fallback: try to start after a short delay
+    setTimeout(() => {
+        if (!hasStarted && video.readyState >= 2) {
+            startVideo();
+        }
+    }, 100);
+
     window.addEventListener('message', function (event) {
         if (event.data && event.data.type === 'mouseEvent') {
             const mouseEvent = new MouseEvent(event.data.eventType, {

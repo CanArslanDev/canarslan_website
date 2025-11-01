@@ -18,7 +18,8 @@ class IframeService {
         ..src = '${AssetService.assetPath}/web/index.html'
         ..style.border = 'none'
         ..style.height = '100%'
-        ..style.width = '100%';
+        ..style.width = '100%'
+        ..allow = 'autoplay; fullscreen';
 
       // JsBridgeService'e iframeElement'i set et
       _jsBridgeService.setIframeElement(iframeElement);
