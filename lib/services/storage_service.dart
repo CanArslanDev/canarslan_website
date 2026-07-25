@@ -1,51 +1,37 @@
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
+/// Thin wrapper over `localStorage`, used to cache remote pub.dev and GitHub
+/// data between visits.
 class StorageService {
-  static void savePubDevPackages(String json) {
-    window.localStorage['pubDevPackages'] = json;
-  }
+  static const _publisherPackagesKey = 'publisherPackages';
 
-  static void saveRepositories(String json) {
-    window.localStorage['repository'] = json;
-  }
-
-  static String? get loadPubDevPackages {
-    return window.localStorage['pubDevPackages'];
-  }
+  static web.Storage get _store => web.window.localStorage;
 
   // Publisher packages
-  static void savePublisherPackages(String json) {
-    window.localStorage['publisherPackages'] = json;
-  }
+  static void savePublisherPackages(String json) =>
+      _store.setItem(_publisherPackagesKey, json);
 
-  static String? get loadPublisherPackages {
-    return window.localStorage['publisherPackages'];
-  }
+  static String? get loadPublisherPackages =>
+      _store.getItem(_publisherPackagesKey);
 
   // Package details
-  static void savePackageDetails(String packageUrl, String json) {
-    final key = 'package_${Uri.encodeComponent(packageUrl)}';
-    window.localStorage[key] = json;
-  }
+  static String _packageKey(String packageUrl) =>
+      'package_${Uri.encodeComponent(packageUrl)}';
 
-  static String? loadPackageDetails(String packageUrl) {
-    final key = 'package_${Uri.encodeComponent(packageUrl)}';
-    return window.localStorage[key];
-  }
+  static void savePackageDetails(String packageUrl, String json) =>
+      _store.setItem(_packageKey(packageUrl), json);
+
+  static String? loadPackageDetails(String packageUrl) =>
+      _store.getItem(_packageKey(packageUrl));
 
   // GitHub repositories
-  static void saveGithubRepositories(String username, String json) {
-    final key = 'github_repos_$username';
-    window.localStorage[key] = json;
-  }
+  static String _reposKey(String username) => 'github_repos_$username';
 
-  static String? loadGithubRepositories(String username) {
-    final key = 'github_repos_$username';
-    return window.localStorage[key];
-  }
+  static void saveGithubRepositories(String username, String json) =>
+      _store.setItem(_reposKey(username), json);
 
-  // Cache cleanup method (optional)
-  static void clearCache() {
-    window.localStorage.clear();
-  }
+  static String? loadGithubRepositories(String username) =>
+      _store.getItem(_reposKey(username));
+
+  static void clearCache() => _store.clear();
 }

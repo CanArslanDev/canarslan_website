@@ -34,7 +34,6 @@ part 'widgets/home_page_animated_gradient_background.dart';
 part 'widgets/home_page_background.dart';
 part 'widgets/home_page_body.dart';
 part 'widgets/home_page_dispose_animation_title.dart';
-part 'widgets/home_page_infinite_scroll_image.dart';
 part 'widgets/home_page_info_widget/home_page_info_widget.dart';
 part 'widgets/home_page_info_widget/home_page_info_widget_body.dart';
 part 'widgets/intro/home_page_intro_dock.dart';

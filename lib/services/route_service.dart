@@ -1,33 +1,32 @@
 import 'dart:async';
-import 'dart:html' as html;
 
 import 'package:canarslan_website/routes/pages.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:get/get.dart';
+import 'package:web/web.dart' as web;
 
 class RouteService {
-  static bool get isMainHref =>
-      (html.window.location.pathname ?? '/') == Routes.mainPage;
+  static bool get isMainHref => getHref == Routes.mainPage;
+
   static void setHref(String path) {
-    var hrefPath = path;
-    if (hrefPath.startsWith('/')) {
-      hrefPath = hrefPath.substring(1);
-    }
-    html.window.history.pushState(null, 'Projects', '/$hrefPath');
+    final hrefPath = path.startsWith('/') ? path.substring(1) : path;
+    web.window.history.pushState(null, 'Projects', '/$hrefPath');
   }
 
-  static String get getHref => html.window.location.pathname ?? '/';
+  static String get getHref {
+    final path = web.window.location.pathname;
+    return path.isEmpty ? '/' : path;
+  }
 
   static void controlMainHref(
     String currentHrefPath,
     void Function(String newPath) setHrefVoid,
   ) {
     void setMainHref(String newPath, {void Function()? timerEvent}) {
-      final newRoute = newPath;
-      setHrefVoid(newRoute);
+      setHrefVoid(newPath);
       Timer(const Duration(milliseconds: 500), () {
-        if (timerEvent != null) timerEvent();
-        setHref(newRoute);
+        timerEvent?.call();
+        setHref(newPath);
       });
     }
 
@@ -35,16 +34,14 @@ class RouteService {
       setMainHref(Routes.homePage);
     } else if (!Pages.pages.any((element) => element.name == currentHrefPath) ||
         currentHrefPath == Routes.notFoundPage) {
-      setMainHref(Routes.notFoundPage, timerEvent: () {
-        Get.offAllNamed<dynamic>(Routes.notFoundPage);
-      },);
+      setMainHref(
+        Routes.notFoundPage,
+        timerEvent: () => Get.offAllNamed<dynamic>(Routes.notFoundPage),
+      );
     }
   }
 
-  static int get findCurrentNavigationPage {
-    final currentPath = html.window.location.pathname;
-    return hrefNavigationPageIndex(currentPath ?? '/');
-  }
+  static int get findCurrentNavigationPage => hrefNavigationPageIndex(getHref);
 
   static int hrefNavigationPageIndex(String path) {
     if (path == '/') return 0;

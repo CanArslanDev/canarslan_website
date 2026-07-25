@@ -1,0 +1,553 @@
+part of '../design_page.dart';
+
+/// Hero data strip — the wireframe row of live facts under the CTAs.
+class _SpecStrip extends StatelessWidget {
+  const _SpecStrip();
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.signal;
+
+    Widget field(Widget child, {bool last = false}) => Container(
+          constraints: const BoxConstraints(minWidth: 150),
+          padding: const EdgeInsets.symmetric(
+            horizontal: SignalSpace.x4,
+            vertical: 10,
+          ),
+          decoration: BoxDecoration(
+            border: last
+                ? null
+                : Border(right: BorderSide(color: palette.line)),
+          ),
+          child: child,
+        );
+
+    // The strip spans the full column, split into equal cells — it reads as an
+    // instrument readout, not a row of chips huddled around their content.
+    Widget cell(Widget child, {bool last = false}) =>
+        Expanded(child: field(child, last: last));
+
+    TextSpan strong(String text) => TextSpan(
+          text: text,
+          style: SignalType.eyebrow(palette.fg),
+        );
+
+    final entries = <Widget>[
+      Text.rich(
+        TextSpan(
+          style: SignalType.eyebrow(palette.muted),
+          children: [strong('05'), const TextSpan(text: '  PACKAGES')],
+        ),
+      ),
+      Text.rich(
+        TextSpan(
+          style: SignalType.eyebrow(palette.muted),
+          children: [
+            const TextSpan(text: 'PUB.DEV  '),
+            strong('PUBLISHER'),
+          ],
+        ),
+      ),
+      Text.rich(
+        TextSpan(
+          style: SignalType.eyebrow(palette.muted),
+          children: [
+            const TextSpan(text: 'OPEN  '),
+            strong('SOURCE'),
+          ],
+        ),
+      ),
+      const _LiveClock(),
+    ];
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: palette.line),
+      ),
+      // Four equal columns only where they actually fit; below that the cells
+      // wrap rather than squeezing the clock past its own width.
+      child: !context.breakpoint.isExpanded
+          ? Wrap(
+              children: [
+                for (var i = 0; i < entries.length; i++)
+                  field(entries[i], last: i == entries.length - 1),
+              ],
+            )
+          : Row(
+              children: [
+                for (var i = 0; i < entries.length; i++)
+                  cell(entries[i], last: i == entries.length - 1),
+              ],
+            ),
+    );
+  }
+}
+
+/// Blinking accent LED plus the local time — the "live" signal.
+class _LiveClock extends StatefulWidget {
+  const _LiveClock();
+
+  @override
+  State<_LiveClock> createState() => _LiveClockState();
+}
+
+class _LiveClockState extends State<_LiveClock> {
+  Timer? _timer;
+  bool _lit = true;
+  late DateTime _now = _tr();
+
+  static DateTime _tr() => DateTime.now().toUtc().add(const Duration(hours: 3));
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 600), (Timer tick) {
+      if (!mounted) return;
+      setState(() {
+        _now = _tr();
+        _lit = tick.tick % 4 != 0;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.signal;
+    String two(int v) => v.toString().padLeft(2, '0');
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedOpacity(
+          opacity: _lit ? 1 : 0.15,
+          duration: SignalMotion.state,
+          child: Container(width: 7, height: 7, color: palette.accent),
+        ),
+        const SizedBox(width: SignalSpace.x2),
+        // Flexible so a narrow cell clips the label instead of overflowing
+        // the strip.
+        Flexible(
+          child: Text.rich(
+            TextSpan(
+              style: SignalType.eyebrow(palette.muted),
+              children: [
+                const TextSpan(text: 'LIVE  '),
+                TextSpan(
+                  text: '${two(_now.hour)}:${two(_now.minute)}',
+                  style: SignalType.eyebrow(palette.fg),
+                ),
+                const TextSpan(text: '  UTC+3'),
+              ],
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.clip,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Colour swatches, each a square hairline cell.
+class _SwatchGrid extends StatelessWidget {
+  const _SwatchGrid();
+
+  /// Swatches read the live palette rather than repeating hex strings, so the
+  /// storybook can never drift from the tokens it documents.
+  static List<(Color, String, String)> _swatches(SignalPalette p) => [
+        (
+          p.canvas,
+          'Canvas',
+          'Sayfa zemini. Saf siyah değil — limon aksanla akraba olsun diye '
+              'çok hafif yeşil eğimli.',
+        ),
+        (
+          p.surface,
+          'Surface',
+          'Hücre zemini ve frosted nav. Zeminden yalnızca bir kademe ayrılır.',
+        ),
+        (
+          p.recess,
+          'Recess',
+          'Input çukurları ve satır hover zemini.',
+        ),
+        (
+          p.fg,
+          'Foreground',
+          'Birincil metin. Saf beyaz değil, kemik — siyah üzerinde parlamayı '
+              'keser.',
+        ),
+        (
+          p.muted,
+          'Muted',
+          'İkincil metin, eyebrow etiketleri, veri sütunları.',
+        ),
+        (
+          p.accent,
+          'Accent // Signal',
+          'Tek kromatik ses. Dolgu, aktif durum ve ASCII alanların sıcak '
+              'noktaları.',
+        ),
+        (
+          p.inverse.canvas,
+          'Paper',
+          'Ters çevrilen müze bandının zemini. Tek bir bölümde kullanılır.',
+        ),
+        (
+          p.lineHi,
+          'Hairline',
+          'Tüm yapıyı taşıyan çizgi. Gölge yok — ayrım iki opaklıktan gelir.',
+        ),
+      ];
+
+  static String _hex(Color color) {
+    final value = color.toARGB32() & 0xFFFFFF;
+    return '#${value.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.signal;
+
+    return Wrap(
+      children: [
+        for (final (color, name, role) in _swatches(palette))
+          Container(
+            width: 232,
+            // Fixed so the swatch grid stays a regular contact sheet — with
+            // intrinsic heights the rows step and the hairlines stop aligning.
+            height: 268,
+            decoration: BoxDecoration(
+              color: palette.surface,
+              border: Border.all(color: palette.line),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: color,
+                    border: Border(bottom: BorderSide(color: palette.line)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(SignalSpace.x4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(_hex(color), style: SignalType.caption(palette.fg)),
+                      const SizedBox(height: SignalSpace.x1),
+                      Text(
+                        name,
+                        style: SignalType.bodySmall(palette.fg)
+                            .copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: SignalSpace.x1),
+                      Text(role, style: SignalType.bodySmall(palette.muted)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _TypeSection extends StatelessWidget {
+  const _TypeSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.signal;
+
+    Widget specimen(String label, Widget sample, String meta) => Container(
+          width: 460,
+          padding: const EdgeInsets.all(SignalSpace.x6),
+          decoration: BoxDecoration(
+            color: palette.surface,
+            border: Border.all(color: palette.line),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SignalMicro(label),
+              const SizedBox(height: SignalSpace.x3),
+              ClipRect(child: sample),
+              const SizedBox(height: SignalSpace.x3),
+              Text(meta, style: SignalType.eyebrow(palette.muted)),
+            ],
+          ),
+        );
+
+    return SignalSection(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _Head(
+            eyebrow: 'The system // 02',
+            stamp: 'Type',
+            lede: 'Üç aile. Clash Display — düz kesilmiş uçlar, geometrik '
+                'iskelet. General Sans gövde için. JetBrains Mono teknik ses. '
+                'Display yalnızca iki uçta yaşar: 200 ve 700.',
+            provenance: 'Kaynak: dope.security (General Sans) // gt-planar '
+                '(mono) // leonardo.ai (display kütlesi)',
+          ),
+          SignalReveal(
+            child: Wrap(
+              spacing: SignalSpace.x6,
+              runSpacing: SignalSpace.x6,
+              children: [
+                specimen(
+                  'Clash Display 700 — kütle',
+                  const SignalDisplayLine(
+                    'Selected work',
+                    weight: SignalDisplayWeight.mass,
+                    section: true,
+                  ),
+                  'clamp(38–74px) // lh .90 // tracking −.035em',
+                ),
+                specimen(
+                  'Clash Display 200 — hairline',
+                  const SignalDisplayLine(
+                    'Selected work',
+                    weight: SignalDisplayWeight.hair,
+                    section: true,
+                  ),
+                  'clamp(38–74px) // lh .95 // tracking −.015em',
+                ),
+                specimen(
+                  'JetBrains Mono 400 — bölüm damgası',
+                  const SignalStamp('Packages', animate: false),
+                  'uppercase // tracking +.2em // tek H2 aracı',
+                ),
+                specimen(
+                  'General Sans 400/500 — gövde',
+                  Text(
+                    'Sitedeki tüm okunur metin burada. 15–18px, satır '
+                    'yüksekliği 1.55, satır uzunluğu 56 karakteri geçmez.',
+                    style: SignalType.body(palette.fg),
+                  ),
+                  '15 / 16 / 17 / 18px // lh 1.55',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Bordered demo box used across the shape and component sections.
+class _RuleBox extends StatelessWidget {
+  const _RuleBox({required this.label, required this.child});
+
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 380,
+      padding: const EdgeInsets.all(SignalSpace.x6),
+      decoration: BoxDecoration(
+        color: context.signal.surface,
+        border: Border.all(color: context.signal.line),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SignalMicro(label),
+          const SizedBox(height: SignalSpace.x4),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class _ShapeSwatch extends StatelessWidget {
+  const _ShapeSwatch({required this.caption, required this.child});
+
+  final String caption;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        child,
+        const SizedBox(height: SignalSpace.x2),
+        Text(
+          caption.toUpperCase(),
+          style: SignalType.eyebrow(context.signal.muted),
+        ),
+      ],
+    );
+  }
+}
+
+class _Ruler extends StatelessWidget {
+  const _Ruler();
+
+  @override
+  Widget build(BuildContext context) {
+    const steps = [4.0, 8.0, 12.0, 16.0, 24.0, 32.0, 40.0, 48.0, 56.0];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 56,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              for (final step in steps) ...[
+                Container(
+                  width: 14,
+                  height: step,
+                  color: context.signal.lineHi,
+                ),
+                const SizedBox(width: 6),
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(height: SignalSpace.x3),
+        Text(
+          '4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 80 · 120',
+          style: SignalType.eyebrow(context.signal.muted),
+        ),
+      ],
+    );
+  }
+}
+
+class _MotionRow extends StatelessWidget {
+  const _MotionRow({
+    required this.name,
+    required this.where,
+    required this.behaviour,
+  });
+
+  final String name;
+  final String where;
+  final String behaviour;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.signal;
+    final wide = !context.breakpoint.isCompact;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: SignalSpace.x4,
+        vertical: SignalSpace.x3 + 2,
+      ),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: palette.line)),
+      ),
+      child: wide
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 150,
+                  child: Text(
+                    name.toUpperCase(),
+                    style: SignalType.caption(palette.fg),
+                  ),
+                ),
+                SizedBox(
+                  width: 170,
+                  child: Text(
+                    where,
+                    style: SignalType.bodySmall(palette.muted),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    behaviour,
+                    style: SignalType.bodySmall(palette.muted),
+                  ),
+                ),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name.toUpperCase(),
+                  style: SignalType.caption(palette.fg),
+                ),
+                const SizedBox(height: SignalSpace.x1),
+                Text(
+                  '$where — $behaviour',
+                  style: SignalType.bodySmall(palette.muted),
+                ),
+              ],
+            ),
+    );
+  }
+}
+
+class _TabsDemo extends StatefulWidget {
+  const _TabsDemo();
+
+  @override
+  State<_TabsDemo> createState() => _TabsDemoState();
+}
+
+class _TabsDemoState extends State<_TabsDemo> {
+  int _selected = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SignalTabs(
+      labels: const ['All', 'Flutter', 'Dart', 'Package'],
+      selected: _selected,
+      onSelected: (index) => setState(() => _selected = index),
+    );
+  }
+}
+
+/// One museum plaque inside the paper band.
+class _MuseumTile extends StatelessWidget {
+  const _MuseumTile({
+    required this.plaque,
+    required this.title,
+    required this.organisation,
+  });
+
+  final String plaque;
+  final String title;
+  final String organisation;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.signal;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          plaque.toUpperCase(),
+          style: SignalType.micro(palette.muted)
+              .copyWith(letterSpacing: 10 * 0.18),
+        ),
+        const SizedBox(height: SignalSpace.x2),
+        Text(title, style: SignalType.cellTitle(palette.fg)),
+        const Spacer(),
+        Text(organisation, style: SignalType.caption(palette.fg)),
+      ],
+    );
+  }
+}

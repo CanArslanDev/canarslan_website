@@ -9,7 +9,8 @@
 # packages, and plugins designed to encourage good coding practices.
 analyzer:
   errors:
-    avoid_web_libraries_in_flutter: ignore
+    # Legacy dart:html / dart:js are gone — the project now uses package:web
+    # with dart:js_interop, so the suppression is no longer needed.
     deprecated_member_use: ignore
 include: package:very_good_analysis/analysis_options.yaml
 

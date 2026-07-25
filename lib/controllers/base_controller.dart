@@ -1,6 +1,3 @@
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
-
 import 'package:canarslan_website/services/route_service.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +5,8 @@ import 'package:get/get.dart';
 class BaseController extends GetxController {
   bool _disposed = false;
 
-  String currentHrefPath = html.window.location.pathname ?? '/';
+  String currentHrefPath = RouteService.getHref;
+
   @override
   void onInit() {
     super.onInit();

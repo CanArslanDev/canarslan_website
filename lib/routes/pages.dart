@@ -4,6 +4,7 @@ import 'package:canarslan_website/bindings/main_page_binding.dart';
 import 'package:canarslan_website/bindings/not_found_page_binding.dart';
 import 'package:canarslan_website/bindings/projects_page_binding.dart';
 import 'package:canarslan_website/pages/contact_page/contact_page.dart';
+import 'package:canarslan_website/pages/design_page/design_page.dart';
 import 'package:canarslan_website/pages/home_page/home_page.dart';
 import 'package:canarslan_website/pages/main_page/main_page.dart';
 import 'package:canarslan_website/pages/not_found_page/not_found_page.dart';
@@ -34,5 +35,7 @@ abstract class Pages {
         name: Routes.notFoundPage,
         page: NotFoundPage.new,
         binding: NotFoundPageBinding(),),
+    // Keep last: the indices above are relied on by the navigation bar.
+    GetPage(name: Routes.designPage, page: DesignPage.new),
   ];
 }

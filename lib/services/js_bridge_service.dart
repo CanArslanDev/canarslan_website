@@ -1,12 +1,13 @@
-import 'dart:html' as html;
+import 'dart:js_interop';
 
 import 'package:canarslan_website/models/pointer_event_details.dart';
+import 'package:web/web.dart' as web;
 
 class JsBridgeService {
-  late html.IFrameElement _iframeElement;
+  web.HTMLIFrameElement? _iframeElement;
 
   // ignore: use_setters_to_change_properties
-  void setIframeElement(html.IFrameElement element) {
+  void setIframeElement(web.HTMLIFrameElement element) {
     _iframeElement = element;
   }
 
@@ -68,13 +69,13 @@ class JsBridgeService {
             }
           }
           asciiElement.dispatchEvent(mouseEvent);
-          
+
           if (${details.isPointerDown} && '${details.eventType}' === 'mousemove') {
             const selection = window.getSelection();
             if (selection && selection.rangeCount > 0) {
               const range = selection.getRangeAt(0);
               const newPosition = document.caretRangeFromPoint(
-                ${details.localPosition.dx}, 
+                ${details.localPosition.dx},
                 ${details.localPosition.dy}
               );
               if (newPosition) {
@@ -89,17 +90,14 @@ class JsBridgeService {
     ''';
   }
 
-  void handleCopy() {
-    if (_iframeElement.contentWindow != null) {
-      final js = _generateCopyScript();
-      _iframeElement.contentWindow?.postMessage(js, '*');
-    }
+  void _post(String script) {
+    final target = _iframeElement?.contentWindow;
+    if (target == null) return;
+    target.postMessage(script.toJS, '*'.toJS);
   }
 
-  void dispatchPointerEvent(PointerEventDetails details) {
-    if (_iframeElement.contentWindow != null) {
-      final js = _generatePointerEventScript(details);
-      _iframeElement.contentWindow?.postMessage(js, '*');
-    }
-  }
+  void handleCopy() => _post(_generateCopyScript());
+
+  void dispatchPointerEvent(PointerEventDetails details) =>
+      _post(_generatePointerEventScript(details));
 }

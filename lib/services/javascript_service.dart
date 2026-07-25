@@ -1,12 +1,7 @@
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:js' as js;
+import 'package:canarslan_website/services/javascript_service_stub.dart'
+    if (dart.library.js_interop) 'package:canarslan_website/services/javascript_service_web.dart';
 
 abstract class JavascriptService {
-  static void openUrl(String url) {
-    var newUrl = url;
-    if (!url.startsWith('https://')) {
-      newUrl = 'https://$url';
-    }
-    js.context.callMethod('open', [newUrl]);
-  }
+  /// Opens [url] in a new tab. URLs without a scheme are assumed to be https.
+  static void openUrl(String url) => openUrlImpl(url);
 }
