@@ -33,10 +33,11 @@ linked from the navigation and is meant to stay that way — it is how the desig
 gets reviewed. Keep it current: **a component that is not in the storybook does
 not exist.**
 
-The [approved prototype](https://claude.ai/code/artifact/1b5d8000-969d-4fa0-b592-0c32b7f53c1d)
-is the HTML mockup the design was signed off from. `/design` says what the system
-*is*; the prototype says what it is *supposed to look like*. If they disagree,
-the prototype wins unless `DESIGN.md` records a reason.
+`docs/signal-prototype.html` is the mockup the design was signed off from —
+a self-contained HTML file, versioned with the code, openable straight from the
+repo with no server. `/design` says what the system *is*; the prototype says
+what it is *supposed to look like*. If they disagree, the prototype wins unless
+`DESIGN.md` records a reason.
 
 This has already mattered once: the ASCII field was "improved" away from the
 prototype's parameters and had to be reverted. Match it, don't tune it.

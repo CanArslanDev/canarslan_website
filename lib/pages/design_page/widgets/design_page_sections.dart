@@ -13,7 +13,9 @@ class _Hero extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SignalEyebrow('Mobile engineer // Flutter & Dart // Türkiye'),
+          // Turkish words are authored uppercase: Dart's toUpperCase() is
+          // locale-independent and would render "Türkiye" as "TÜRKIYE".
+          const SignalEyebrow('Mobile engineer // Flutter & Dart // TÜRKİYE'),
           const SizedBox(height: SignalSpace.x6),
           const SignalDisplayLine('Can', weight: SignalDisplayWeight.mass),
           const SignalDisplayLine('Arslan', weight: SignalDisplayWeight.hair),

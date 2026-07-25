@@ -11,11 +11,14 @@ Two references, and they answer different questions.
   and component below is rendered there from the real code, so it can never
   drift from the system it documents. **This is the source of truth for what the
   system currently is.**
-- **[The approved prototype](https://claude.ai/code/artifact/1b5d8000-969d-4fa0-b592-0c32b7f53c1d)**
-  — the HTML mockup this system was signed off from. **This is the source of
-  truth for what it is supposed to look like.** When the Flutter build and the
+- **[`docs/signal-prototype.html`](docs/signal-prototype.html)** — the HTML
+  mockup this system was signed off from. Open it straight from the repo; it is
+  self-contained, needs no server and no network. **This is the source of truth
+  for what the system is supposed to look like.** When the Flutter build and the
   prototype disagree, the prototype wins unless there is a written reason here
   saying otherwise.
+  ([Hosted copy](https://claude.ai/code/artifact/1b5d8000-969d-4fa0-b592-0c32b7f53c1d)
+  — convenient to link, but the file in the repo is the one that counts.)
 
 Both were compared side by side at 1440px during implementation; the hero,
 column alignment, spec strip and ASCII field parameters match the prototype
@@ -109,6 +112,17 @@ Flutter's `letterSpacing` is in logical pixels.
 
 Ranges scale with the viewport via `fluid()` — the Dart equivalent of CSS
 `clamp()`. Sizes are never a percentage of the viewport.
+
+### Turkish in uppercase labels
+
+The system sets eyebrows, stamps and buttons in uppercase, and Dart's
+`String.toUpperCase()` is locale-independent: it maps `i` → `I`, so *Türkiye*
+becomes *TÜRKIYE* with a dotless I. A Turkish-locale transform is not the fix
+either — it would turn *MOBILE* into *MOBİLE* in the same mixed-language line.
+
+**Author Turkish words already uppercase in the source** (`TÜRKİYE`,
+`GELİŞTİRİCİ`). `toUpperCase()` leaves `İ` untouched, so the label survives the
+transform intact.
 
 ### The stamp is the only H2
 

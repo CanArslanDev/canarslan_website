@@ -63,7 +63,8 @@ class DesignPage extends StatelessWidget {
                       _AboutSection(),
                       SignalFooter(
                         name: StringConstants.name,
-                        role: 'Yazılım geliştirici',
+                        // Authored uppercase — see the note in _Hero.
+                        role: 'YAZILIM GELİŞTİRİCİ',
                         contactLines: [
                           StringConstants.email,
                           StringConstants.github,
