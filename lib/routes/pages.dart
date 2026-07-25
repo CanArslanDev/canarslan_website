@@ -1,41 +1,28 @@
-import 'package:canarslan_website/bindings/contact_page_binding.dart';
-import 'package:canarslan_website/bindings/home_page_binding.dart';
-import 'package:canarslan_website/bindings/main_page_binding.dart';
-import 'package:canarslan_website/bindings/not_found_page_binding.dart';
-import 'package:canarslan_website/bindings/projects_page_binding.dart';
-import 'package:canarslan_website/pages/contact_page/contact_page.dart';
+import 'package:canarslan_website/pages/about/about_page.dart';
+import 'package:canarslan_website/pages/contact/contact_page.dart';
 import 'package:canarslan_website/pages/design_page/design_page.dart';
-import 'package:canarslan_website/pages/home_page/home_page.dart';
-import 'package:canarslan_website/pages/main_page/main_page.dart';
-import 'package:canarslan_website/pages/not_found_page/not_found_page.dart';
-import 'package:canarslan_website/pages/projects_page/projects_page.dart';
+import 'package:canarslan_website/pages/home/home_page.dart';
+import 'package:canarslan_website/pages/not_found/not_found_page.dart';
+import 'package:canarslan_website/pages/packages/packages_page.dart';
+import 'package:canarslan_website/pages/work/work_page.dart';
 import 'package:canarslan_website/routes/routes.dart';
-import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:get/get.dart';
 
 abstract class Pages {
-  static List<GetPage<Object>> pages = [
-    // Do not change the order of the items in the navigation bar,
-    //it is used in Route Service.
-    GetPage(
-      name: Routes.homePage,
-      page: HomePage.new,
-      binding: HomePageBinding(),
-    ),
-    GetPage(
-        name: Routes.projectsPage,
-        page: ProjectsPage.new,
-        binding: ProjectsPageBinding(),),
-    GetPage(
-        name: Routes.contactPage,
-        page: ContactPage.new,
-        binding: ContactPageBinding(),),
-    GetPage(
-        name: Routes.mainPage, page: MainPage.new, binding: MainPageBinding(),),
-    GetPage(
-        name: Routes.notFoundPage,
-        page: NotFoundPage.new,
-        binding: NotFoundPageBinding(),),
-    // Keep last: the indices above are relied on by the navigation bar.
-    GetPage(name: Routes.designPage, page: DesignPage.new),
+  /// Every route is a page of its own. Nav items swap the route rather than
+  /// scrolling one long document, so each section keeps its own URL, its own
+  /// scroll position and its own data.
+  static final List<GetPage<void>> pages = [
+    GetPage(name: Routes.home, page: HomePage.new),
+    GetPage(name: Routes.work, page: WorkPage.new),
+    GetPage(name: Routes.packages, page: PackagesPage.new),
+    GetPage(name: Routes.about, page: AboutPage.new),
+    GetPage(name: Routes.contact, page: ContactPage.new),
+    GetPage(name: Routes.notFound, page: NotFoundPage.new),
+    // Internal storybook, deliberately not in the navigation.
+    GetPage(name: Routes.design, page: DesignPage.new),
   ];
+
+  static final GetPage<void> unknown =
+      GetPage(name: Routes.notFound, page: NotFoundPage.new);
 }

@@ -1,8 +1,8 @@
-import 'dart:async';
-
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
+import 'package:canarslan_website/services/route_service.dart';
 import 'package:flutter/material.dart';
 
 part 'widgets/design_page_sections.dart';
@@ -18,28 +18,30 @@ class DesignPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Scoped rather than global: the existing pages keep their old theme
-    // until they are migrated, so this route is additive and risk-free.
     return Theme(
       data: SignalTheme.instrument,
       child: Builder(
         builder: (context) => Scaffold(
           backgroundColor: context.signal.canvas,
-          body: const Column(
+          body: Column(
             children: [
               SignalNavBar(
                 wordmark: StringConstants.name,
-                selectedIndex: 0,
+                // The storybook is not one of the site's sections, so no nav
+                // item is lit — but the links work, because a nav that does
+                // nothing is worse than no nav at all.
+                selectedIndex: -1,
                 items: [
-                  SignalNavItem(label: 'Work', onTap: _noop),
-                  SignalNavItem(label: 'Packages', onTap: _noop),
-                  SignalNavItem(label: 'About', onTap: _noop),
-                  SignalNavItem(label: 'Contact', onTap: _noop),
+                  for (final (path, label) in Routes.navigation)
+                    SignalNavItem(
+                      label: label,
+                      onTap: () => RouteService.go(path),
+                    ),
                 ],
                 actionLabel: 'Get in touch',
-                onAction: _noop,
+                onAction: () => RouteService.go(Routes.contact),
               ),
-              Expanded(
+              const Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -69,7 +71,7 @@ class DesignPage extends StatelessWidget {
                           StringConstants.email,
                           StringConstants.github,
                         ],
-                        locationLabel: 'Türkiye',
+                        locationLabel: 'TÜRKİYE',
                         utcOffsetHours: 3,
                         note: 'Signal v1 — design system',
                       ),
@@ -85,6 +87,8 @@ class DesignPage extends StatelessWidget {
   }
 }
 
+/// The component demos are specimens, not controls — their buttons are meant
+/// to be looked at, not followed.
 void _noop() {}
 
 /// Section header: eyebrow, stamp, lede and an optional provenance note.

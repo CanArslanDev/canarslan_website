@@ -273,6 +273,8 @@ Import the barrel: `package:canarslan_website/design/signal.dart`.
 | `SignalEyebrow`, `SignalStamp`, `SignalLede`, `SignalMicro` | The text roles |
 | `SignalDisplayLine` | One display line; `mass` or `hair`, hero or section scale |
 | `SignalDataRow` | A project as a wireframe row, not a card |
+| `SignalSpecStrip` | The wireframe readout of facts under a hero. Splits into columns only where they fit; stacks full-width below that. |
+| `SignalLiveClock` | Blinking accent LED beside the local time — one of the three permitted accent appearances |
 | `SignalMarquee` | Edge-to-edge ticker with accent `//` separators |
 | `SignalDrawnRule`, `SignalReveal`, `SignalOnVisible`, `SignalScrambleText` | Motion primitives |
 | `SignalAsciiField` | The atmosphere; `vortex` / `wave` / `scan` |

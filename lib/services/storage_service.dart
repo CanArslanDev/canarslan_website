@@ -1,37 +1,35 @@
-import 'package:web/web.dart' as web;
+import 'package:canarslan_website/services/storage_service_stub.dart'
+    if (dart.library.js_interop) 'package:canarslan_website/services/storage_service_web.dart';
 
-/// Thin wrapper over `localStorage`, used to cache remote pub.dev and GitHub
-/// data between visits.
+/// Caches remote pub.dev and GitHub responses between visits.
 class StorageService {
   static const _publisherPackagesKey = 'publisherPackages';
 
-  static web.Storage get _store => web.window.localStorage;
-
   // Publisher packages
   static void savePublisherPackages(String json) =>
-      _store.setItem(_publisherPackagesKey, json);
+      StorageBackend.write(_publisherPackagesKey, json);
 
   static String? get loadPublisherPackages =>
-      _store.getItem(_publisherPackagesKey);
+      StorageBackend.read(_publisherPackagesKey);
 
   // Package details
   static String _packageKey(String packageUrl) =>
       'package_${Uri.encodeComponent(packageUrl)}';
 
   static void savePackageDetails(String packageUrl, String json) =>
-      _store.setItem(_packageKey(packageUrl), json);
+      StorageBackend.write(_packageKey(packageUrl), json);
 
   static String? loadPackageDetails(String packageUrl) =>
-      _store.getItem(_packageKey(packageUrl));
+      StorageBackend.read(_packageKey(packageUrl));
 
   // GitHub repositories
   static String _reposKey(String username) => 'github_repos_$username';
 
   static void saveGithubRepositories(String username, String json) =>
-      _store.setItem(_reposKey(username), json);
+      StorageBackend.write(_reposKey(username), json);
 
   static String? loadGithubRepositories(String username) =>
-      _store.getItem(_reposKey(username));
+      StorageBackend.read(_reposKey(username));
 
-  static void clearCache() => _store.clear();
+  static void clearCache() => StorageBackend.clear();
 }

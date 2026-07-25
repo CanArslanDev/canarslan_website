@@ -17,21 +17,11 @@ import 'package:flutter_test/flutter_test.dart';
 /// widening the rule.
 void main() {
   /// Pre-redesign code, kept working until each page is rebuilt on SIGNAL.
-  /// Delete entries as pages migrate; never add to this list.
-  const legacy = <String>[
-    // Still wraps the app in ResponsiveSizer for the un-migrated pages.
-    'lib/main.dart',
-    'lib/constants/',
-    'lib/controllers/',
-    'lib/models/',
-    'lib/pages/contact_page/',
-    'lib/pages/home_page/',
-    'lib/pages/main_page/',
-    'lib/pages/not_found_page/',
-    'lib/pages/projects_page/',
-    'lib/services/',
-    'lib/ui/',
-  ];
+  ///
+  /// Now empty: every page runs on the design system, and the old tree is
+  /// gone. Leave it that way — the list exists to be deleted from, not added
+  /// to. New code is covered by every rule below with no opt-out.
+  const legacy = <String>[];
 
   /// Files allowed to break a specific rule because they *define* it.
   const tokenFiles = <String>[

@@ -1,51 +1,29 @@
-import 'dart:async';
-
-import 'package:canarslan_website/routes/pages.dart';
 import 'package:canarslan_website/routes/routes.dart';
+import 'package:canarslan_website/services/browser_location_stub.dart'
+    if (dart.library.js_interop) 'package:canarslan_website/services/browser_location_web.dart';
 import 'package:get/get.dart';
-import 'package:web/web.dart' as web;
 
-class RouteService {
-  static bool get isMainHref => getHref == Routes.mainPage;
+/// Navigation helpers.
+///
+/// Routing is GetX's own, which keeps the browser URL in sync. The previous
+/// implementation pushed history entries by hand alongside it, which is why
+/// deep links needed a `404.html` shim to work at all.
+abstract class RouteService {
+  /// The path the browser was opened at.
+  static String get currentPath => currentBrowserPath();
 
-  static void setHref(String path) {
-    final hrefPath = path.startsWith('/') ? path.substring(1) : path;
-    web.window.history.pushState(null, 'Projects', '/$hrefPath');
+  /// Where the app should start. Unknown paths land on the 404 page rather
+  /// than silently redirecting, so a broken link stays visible.
+  static String get initialRoute {
+    final path = currentPath;
+    return Routes.isKnown(path) ? path : Routes.notFound;
   }
 
-  static String get getHref {
-    final path = web.window.location.pathname;
-    return path.isEmpty ? '/' : path;
-  }
-
-  static void controlMainHref(
-    String currentHrefPath,
-    void Function(String newPath) setHrefVoid,
-  ) {
-    void setMainHref(String newPath, {void Function()? timerEvent}) {
-      setHrefVoid(newPath);
-      Timer(const Duration(milliseconds: 500), () {
-        timerEvent?.call();
-        setHref(newPath);
-      });
-    }
-
-    if (currentHrefPath == '/') {
-      setMainHref(Routes.homePage);
-    } else if (!Pages.pages.any((element) => element.name == currentHrefPath) ||
-        currentHrefPath == Routes.notFoundPage) {
-      setMainHref(
-        Routes.notFoundPage,
-        timerEvent: () => Get.offAllNamed<dynamic>(Routes.notFoundPage),
-      );
-    }
-  }
-
-  static int get findCurrentNavigationPage => hrefNavigationPageIndex(getHref);
-
-  static int hrefNavigationPageIndex(String path) {
-    if (path == '/') return 0;
-    final index = Pages.pages.indexWhere((element) => element.name == path);
-    return index == -1 ? 0 : index;
+  /// Navigate from the nav bar. Replaces rather than stacks: a site's
+  /// top-level sections are siblings, so back should leave the site rather
+  /// than walk a pile of visited tabs.
+  static void go(String path) {
+    if (Get.currentRoute == path) return;
+    Get.offNamed<void>(path);
   }
 }

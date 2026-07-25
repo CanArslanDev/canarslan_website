@@ -82,11 +82,17 @@ class _SignalPillButtonState extends State<SignalPillButton> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  widget.label.toUpperCase(),
-                  style: widget.compact
-                      ? SignalType.labelSmall(foreground)
-                      : SignalType.label(foreground),
+                // Flexible so a long label ellipsises inside a narrow column
+                // instead of pushing the pill off the edge of a phone.
+                Flexible(
+                  child: Text(
+                    widget.label.toUpperCase(),
+                    style: widget.compact
+                        ? SignalType.labelSmall(foreground)
+                        : SignalType.label(foreground),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 if (widget.trailing != null) ...[
                   const SizedBox(width: SignalSpace.x2),

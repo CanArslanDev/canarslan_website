@@ -21,6 +21,7 @@ export 'components/signal_marquee.dart';
 export 'components/signal_nav.dart';
 export 'components/signal_reveal.dart';
 export 'components/signal_scramble_text.dart';
+export 'components/signal_spec_strip.dart';
 export 'components/signal_surfaces.dart';
 export 'components/signal_text.dart';
 export 'theme/signal_theme.dart';

@@ -1,0 +1,186 @@
+import 'package:canarslan_website/data/site_models.dart';
+import 'package:canarslan_website/data/site_repository.dart';
+import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/pages/about/about_page.dart';
+import 'package:canarslan_website/pages/contact/contact_page.dart';
+import 'package:canarslan_website/pages/home/home_page.dart';
+import 'package:canarslan_website/pages/not_found/not_found_page.dart';
+import 'package:canarslan_website/pages/packages/packages_page.dart';
+import 'package:canarslan_website/pages/work/work_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// Every page, at every width, with assertions on.
+///
+/// Release builds strip `assert`, so a page can look fine in a browser while
+/// quietly overflowing. These tests are the only place that shows up.
+void main() {
+  const desktop = Size(1440, 1000);
+  const tablet = Size(900, 1000);
+  const phone = Size(390, 844);
+
+  final pages = <String, Widget Function()>{
+    'home': HomePage.new,
+    'work': WorkPage.new,
+    'packages': PackagesPage.new,
+    'about': AboutPage.new,
+    'contact': ContactPage.new,
+    '404': NotFoundPage.new,
+  };
+
+  setUp(() {
+    // Pages must never reach the network in a test. Seeding also pins the
+    // content, so a failure is about layout rather than about what GitHub
+    // happened to return.
+    SiteRepository.instance.seed(
+      packages: const [
+        PackageInfo(
+          name: 'liquid_glass',
+          url: 'https://pub.dev/packages/liquid_glass',
+          description: 'iOS 26 sıvı cam efektini Flutter’a taşıyan katman.',
+          publisher: 'canarslan.me',
+          publishedAgo: '2 months ago',
+          platforms: ['Android', 'iOS', 'Web'],
+          likes: '42',
+          points: '160',
+          downloads: '1.2k',
+        ),
+        PackageInfo(
+          name: 'offline_sync_kit',
+          url: 'https://pub.dev/packages/offline_sync_kit',
+          description: 'Çevrimdışı-önce veri senkronizasyonu.',
+          publisher: 'canarslan.me',
+          publishedAgo: '5 months ago',
+          platforms: ['Android', 'iOS'],
+          likes: '31',
+          points: '150',
+          downloads: '900',
+        ),
+      ],
+      repositories: const [
+        RepoInfo(
+          name: 'canarslan_website',
+          description: 'Bu sitenin kendisi — Flutter web, açık kaynak.',
+          language: 'Dart',
+          languageColor: Color(0xFF00B4AB),
+          stars: 27,
+        ),
+        RepoInfo(
+          name: 'liquid_glass',
+          description: '',
+          language: 'Dart',
+          languageColor: Color(0xFF00B4AB),
+          stars: 42,
+        ),
+        RepoInfo(
+          name: 'some_tool',
+          description: 'Bir yardımcı araç.',
+          language: 'Swift',
+          languageColor: null,
+          stars: 4,
+        ),
+      ],
+    );
+  });
+
+  Future<void> pumpPage(
+    WidgetTester tester,
+    Widget page, {
+    required Size size,
+  }) async {
+    tester.view
+      ..physicalSize = size
+      ..devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    final previousOnError = FlutterError.onError;
+    FlutterError.onError = (details) {
+      FlutterError.dumpErrorToConsole(details, forceReport: true);
+      previousOnError?.call(details);
+    };
+    addTearDown(() => FlutterError.onError = previousOnError);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: SignalTheme.instrument,
+        home: page,
+        debugShowCheckedModeBanner: false,
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 1200));
+  }
+
+  Future<void> teardownTree(WidgetTester tester) async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(milliseconds: 50));
+  }
+
+  for (final entry in pages.entries) {
+    group(entry.key, () {
+      for (final (label, size) in [
+        ('desktop', desktop),
+        ('tablet', tablet),
+        ('phone', phone),
+      ]) {
+        testWidgets('builds at $label without exceptions', (tester) async {
+          await pumpPage(tester, entry.value(), size: size);
+          final error = tester.takeException();
+          expect(
+            error,
+            isNull,
+            reason: '${entry.key} at ${size.width}px -> $error',
+          );
+          await teardownTree(tester);
+        });
+      }
+
+      testWidgets('fits a phone screen', (tester) async {
+        await pumpPage(tester, entry.value(), size: phone);
+
+        // A box wider than the screen raises nothing — Wrap and Stack place it
+        // happily and it runs off the edge. Geometry is the only signal.
+        final tooWide = <String>[];
+        void walk(RenderObject node) {
+          final name = node.runtimeType.toString();
+          // Content inside a clip or overflow box is deliberately larger than
+          // its slot; the marquee track is the obvious one.
+          if (name.contains('Clip') || name.contains('Overflow')) return;
+          if (node is RenderBox &&
+              node.hasSize &&
+              node.size.width > phone.width + 0.5) {
+            tooWide.add('$name ${node.size.width.toStringAsFixed(0)}px');
+          }
+          node.visitChildren(walk);
+        }
+
+        walk(tester.binding.renderViews.first);
+
+        expect(
+          tooWide.toSet().toList(),
+          isEmpty,
+          reason: '${entry.key} overflows a phone:\n${tooWide.toSet().join(
+                '\n',
+              )}',
+        );
+        await teardownTree(tester);
+      });
+    });
+  }
+
+  group('work page', () {
+    testWidgets('filtering narrows the list', (tester) async {
+      await pumpPage(tester, const WorkPage(), size: desktop);
+
+      expect(find.text('canarslan_website'), findsOneWidget);
+      expect(find.text('some_tool'), findsOneWidget);
+
+      await tester.tap(find.text('Swift'));
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('some_tool'), findsOneWidget);
+      expect(find.text('canarslan_website'), findsNothing);
+
+      await teardownTree(tester);
+    });
+  });
+}

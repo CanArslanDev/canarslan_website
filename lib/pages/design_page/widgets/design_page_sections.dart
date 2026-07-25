@@ -59,7 +59,17 @@ class _Hero extends StatelessWidget {
             ],
           ),
           const SizedBox(height: SignalSpace.x6),
-          const _SpecStrip(),
+          const SignalSpecStrip(
+            entries: [
+              SignalSpecEntry(label: 'Packages', value: '05'),
+              SignalSpecEntry(label: 'pub.dev', value: 'Publisher'),
+              SignalSpecEntry(label: 'Open', value: 'Source'),
+              SignalSpecEntry(
+                label: 'Live',
+                child: SignalLiveClock(utcOffsetHours: 3),
+              ),
+            ],
+          ),
         ],
       ),
     );

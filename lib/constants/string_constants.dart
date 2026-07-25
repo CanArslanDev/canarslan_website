@@ -5,7 +5,7 @@ abstract class StringConstants {
   static const framework = 'Flutter';
   static DateTime birthYear = DateTime(2006, 9, 29);
   static const tag = '@CanArslanDev';
-  static const location = 'Turkey';
+  static const location = 'Türkiye';
   static const email = 'canarslanx@gmail.com';
   static const linkedin = 'linkedin.com/in/can-arslann';
   static const x = 'x.com/futuristcan';

@@ -76,30 +76,38 @@ lib/
     theme/                ThemeExtension + ThemeData
     components/           the component library
   pages/
+    app_shell.dart        nav + scrolling body + footer; every page uses it
+    home/ work/ packages/ about/ contact/ not_found/
     design_page/        ← the /design storybook
-    home_page/  projects_page/  contact_page/  main_page/  not_found_page/
-                        ← legacy, pre-redesign, not yet migrated
-  controllers/  bindings/  routes/  services/  ui/   ← legacy
+    widgets/              RepoList and PackageGrid, shared between pages
+  data/                   typed models + the cached SiteRepository
+  routes/                 route table; Routes.navigation drives the nav bar
+  services/               pub.dev, GitHub, storage, navigation
 assets/fonts/           Clash Display, General Sans, JetBrains Mono (bundled)
 test/
-  design_system_test.dart   builds the storybook at three widths
+  pages_test.dart           every page at three widths, plus a portrait check
+  design_system_test.dart   the storybook at three widths
   design_rules_test.dart    enforces DESIGN.md against the source
 ```
 
+## Routing
+
+Each section is a real route, not an anchor: `/`, `/work`, `/packages`,
+`/about`, `/contact`, plus `/design` and a 404. Tapping a nav item changes the
+route; the page starts at the top with its own data and its own URL.
+
+`Routes.navigation` is the single list the nav bar renders from — add a route
+there and the bar picks it up. `RouteService.go` replaces rather than pushes,
+because top-level sections are siblings; back should leave the site, not walk a
+pile of visited tabs. Deep links work through `RouteService.initialRoute`, and
+an unknown path lands on the 404 page rather than silently redirecting.
+
 ## Migration status
 
-The site is mid-redesign. The design system and `/design` are done; the
-visitor-facing pages have not been rebuilt on it yet.
-
-Until they are, the old pages keep their old theme, `responsive_sizer` and
-`google_fonts`. They are listed in the `legacy` allowlist in
-`test/design_rules_test.dart`, which exempts them from the rules.
-
-**That list only ever shrinks.** When you rebuild a page on SIGNAL, delete its
-entry — do not add to it. New code is covered by default.
-
-Planned order: `AppShell` and routes → home → work → packages → about → contact
-→ 404. Then `responsive_sizer` and `google_fonts` come out of `pubspec.yaml`.
+Done. Every page runs on the design system, the pre-redesign tree is deleted,
+and the `legacy` allowlist in `test/design_rules_test.dart` is empty — meaning
+every rule in `DESIGN.md` applies to every file with no exemptions. Keep it
+that way: the list exists to be deleted from, not added to.
 
 ## Conventions
 
@@ -117,14 +125,19 @@ Planned order: `AppShell` and routes → home → work → packages → about �
 
 ## Data
 
-Package and repository data is scraped from pub.dev's HTML through a public CORS
-proxy and pulled from the GitHub API unauthenticated, then cached in
-`localStorage` with no expiry. This is fragile — it breaks whenever pub.dev
-changes a class name — and is scheduled to be replaced by a build-time fetch
-committed as JSON. Don't build new features on the scraper.
+Two public JSON APIs, both read straight from the browser:
 
-## Assets
+- **pub.dev** — `/api/packages/<name>` and `/api/packages/<name>/score`. Both
+  send `Access-Control-Allow-Origin: *`. The publisher's *list* of packages
+  cannot be fetched this way (the search endpoint sends no CORS header), so the
+  names live in `PackageConstants.published`. **Publishing a new package means
+  adding one line there.**
+- **GitHub** — `/users/<name>/repos`, unauthenticated and therefore rate-limited
+  per IP, cached in `localStorage` for six hours.
 
-`assets/web/video/video_original.mp4` (12 MB) is shipped but unused; the ASCII
-player only reads `video.mp4`. Both are candidates for removal or re-encoding
-when the projects page is rebuilt.
+Both loaders swallow failure and return an empty list; a page that cannot fetch
+shows a quiet line rather than an error state.
+
+This replaced scraping pub.dev's HTML through a public CORS proxy, which broke:
+the proxy now answers 522 after twenty seconds. If you find yourself reaching
+for a proxy or an HTML parser again, check for a JSON endpoint with CORS first.

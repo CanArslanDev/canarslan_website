@@ -1,11 +1,31 @@
 abstract class Routes {
-  static const String mainPage = '/';
-  static const String homePage = '/home';
-  static const String contactPage = '/contact';
-  static const String projectsPage = '/projects';
-  static const String notFoundPage = '/not-found';
+  static const String home = '/';
+  static const String work = '/work';
+  static const String packages = '/packages';
+  static const String about = '/about';
+  static const String contact = '/contact';
+  static const String notFound = '/not-found';
 
-  /// Internal storybook for the SIGNAL design system. Not linked from the
-  /// navigation; registered so the route guard does not bounce it to 404.
-  static const String designPage = '/design';
+  /// Internal storybook for the SIGNAL design system. Deliberately absent from
+  /// [navigation] — it is a working tool, not part of the site.
+  static const String design = '/design';
+
+  /// The routes the navigation bar offers, in order.
+  static const List<(String path, String label)> navigation = [
+    (home, 'Home'),
+    (work, 'Work'),
+    (packages, 'Packages'),
+    (about, 'About'),
+    (contact, 'Contact'),
+  ];
+
+  static int navigationIndexOf(String path) {
+    final index = navigation.indexWhere((entry) => entry.$1 == path);
+    return index == -1 ? 0 : index;
+  }
+
+  static bool isKnown(String path) =>
+      path == design ||
+      path == notFound ||
+      navigation.any((entry) => entry.$1 == path);
 }

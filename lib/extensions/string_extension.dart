@@ -20,6 +20,12 @@ extension StringExtension on String {
 
   String get getGithubNameFromUrl => split('/').last;
 
+  /// `canarslanx` from `canarslanx@gmail.com`.
+  String get emailUser => split('@').first;
+
+  /// `gmail.com` from `canarslanx@gmail.com`.
+  String get emailHost => split('@').last;
+
   String get xTag {
     return replaceAll('x.com/', '');
   }
