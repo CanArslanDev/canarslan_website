@@ -167,6 +167,50 @@ percentages.
 
 ---
 
+## Portrait
+
+**Every screen is checked on a phone before it is called done.** Not "it builds
+without errors" — looked at, in portrait, scrolled end to end.
+
+This is not an afterthought in the system, because the failure is silent. A box
+wider than the screen raises no exception: `Wrap`, `Stack` and `Row`-in-a-clip
+place it happily and it simply runs off the edge. Three fixed-width panels
+shipped this way — fine at 1440px, broken at 390px — and every test was green.
+
+### Rules
+
+- **No fixed widths on layout containers.** A panel takes the width it is
+  given. If you are writing `width: 380`, reach for `SignalTileGrid` instead: it
+  derives its column count from the available width and drops to one column on a
+  phone.
+- **Fixed sizes are for graphics, not for layout** — a 64px demo swatch, a 96px
+  data column, a 7px LED. Those are fine.
+- **Every multi-column arrangement declares its collapse.** `SignalTileGrid`
+  does it by construction; a hand-built `Row` must switch on
+  `context.breakpoint`.
+- **Rows of cells stack full-width when they collapse.** A `Wrap` leaves ragged
+  half-rows and the hairlines stop lining up, which is worse than a plain
+  stack — see the hero spec strip.
+- **Gutters halve on compact** (48px → 24px), and section rhythm drops from
+  120px to 80px. Both are handled by `SignalSection` and `SignalColumn`.
+- **Watch the collapsed state, not just the narrow one.** Content pinned to the
+  bottom of a tile with a `Spacer` loses its gap once rows size to content; give
+  it a real `SizedBox` too.
+- **Display type keeps its proportions.** `fluid()` already floors the hero at
+  58px. Do not add phone-specific font sizes.
+
+### Enforcement
+
+`test/design_system_test.dart` builds the storybook at 390 × 844 and walks the
+render tree, failing on any box laid out wider than the screen. Content that is
+deliberately oversized — the marquee track — is exempted by its clip or overflow
+ancestor, so the check has no false positives to train you to ignore.
+
+Passing that test means nothing is spilling off the edge. It does not mean the
+page *reads* well. Screenshot it and look.
+
+---
+
 ## Elevation
 
 There is none. Depth is not part of this system.
@@ -220,8 +264,9 @@ Import the barrel: `package:canarslan_website/design/signal.dart`.
 | `SignalSection` | Full-bleed band, closed by a hairline, optional ASCII field behind it |
 | `SignalColumn` | The 1280 column with its grid rules |
 | `SignalCell` | Square, hairline-bordered container. Not a card: no radius, no shadow. |
+| `SignalTileGrid` | Equal-width tiles on shared rules. Column count comes from the available width, so it collapses to one on a phone. **Use this instead of a `Wrap` of fixed-width panels.** |
 | `SignalInversion` | Swaps the palette for its subtree — the museum band |
-| `SignalMuseumGrid` | 2px contact-sheet grid; rows size to their tallest tile |
+| `SignalMuseumGrid` | The same grid in 2px ink, for the paper band |
 | `SignalNavBar` | Frosted bar, hairline underneath, links from `expanded` up |
 | `SignalPillButton` | `filled` + `ghost`. They are designed to appear as a pair. |
 | `SignalChip`, `SignalTabs` | Pill controls; the active tab carries the accent glow |
@@ -239,9 +284,11 @@ Import the barrel: `package:canarslan_website/design/signal.dart`.
 2. Its radius is one of the two legal values.
 3. It has no shadow.
 4. Its text uses a `SignalType` role.
-5. It honours reduced motion if it moves.
-6. Export it from `lib/design/signal.dart`.
-7. Add it to `/design` — a component that is not in the storybook does not exist.
+5. It carries no fixed layout width, and it states how it collapses in portrait.
+6. It honours reduced motion if it moves.
+7. Export it from `lib/design/signal.dart`.
+8. Add it to `/design` — a component that is not in the storybook does not exist.
+9. Look at it on a phone.
 
 ---
 

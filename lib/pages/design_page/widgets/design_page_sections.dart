@@ -113,9 +113,9 @@ class _ShapeSection extends StatelessWidget {
                 '(hücre gridi)',
           ),
           SignalReveal(
-            child: Wrap(
-              spacing: SignalSpace.x6,
-              runSpacing: SignalSpace.x6,
+            child: SignalTileGrid(
+              minTileWidth: 330,
+              maxColumns: 3,
               children: [
                 _RuleBox(
                   label: 'Radius',
@@ -296,9 +296,9 @@ class _ComponentsSection extends StatelessWidget {
                 'kademeli radius, tek aksan.',
           ),
           SignalReveal(
-            child: Wrap(
-              spacing: SignalSpace.x6,
-              runSpacing: SignalSpace.x6,
+            child: SignalTileGrid(
+              minTileWidth: 330,
+              maxColumns: 2,
               children: [
                 const _RuleBox(
                   label: 'Butonlar — filled + ghost, daima ikili',

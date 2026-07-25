@@ -8,8 +8,11 @@ class _SpecStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.signal;
 
-    Widget field(Widget child, {bool last = false}) => Container(
-          constraints: const BoxConstraints(minWidth: 150),
+    Widget field(Widget child, {bool last = false, bool stacked = false}) =>
+        Container(
+          width: stacked ? double.infinity : null,
+          constraints:
+              stacked ? null : const BoxConstraints(minWidth: 150),
           padding: const EdgeInsets.symmetric(
             horizontal: SignalSpace.x4,
             vertical: 10,
@@ -17,7 +20,14 @@ class _SpecStrip extends StatelessWidget {
           decoration: BoxDecoration(
             border: last
                 ? null
-                : Border(right: BorderSide(color: palette.line)),
+                : Border(
+                    right: stacked
+                        ? BorderSide.none
+                        : BorderSide(color: palette.line),
+                    bottom: stacked
+                        ? BorderSide(color: palette.line)
+                        : BorderSide.none,
+                  ),
           ),
           child: child,
         );
@@ -64,13 +74,19 @@ class _SpecStrip extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: palette.line),
       ),
-      // Four equal columns only where they actually fit; below that the cells
-      // wrap rather than squeezing the clock past its own width.
+      // Four equal columns only where they actually fit. Below that the cells
+      // stack full-width — a wrap leaves ragged half-rows and the rules stop
+      // lining up.
       child: !context.breakpoint.isExpanded
-          ? Wrap(
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 for (var i = 0; i < entries.length; i++)
-                  field(entries[i], last: i == entries.length - 1),
+                  field(
+                    entries[i],
+                    stacked: true,
+                    last: i == entries.length - 1,
+                  ),
               ],
             )
           : Row(
@@ -215,18 +231,13 @@ class _SwatchGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.signal;
 
-    return Wrap(
+    return SignalTileGrid(
+      minTileWidth: 216,
+      maxColumns: 5,
       children: [
         for (final (color, name, role) in _swatches(palette))
-          Container(
-            width: 232,
-            // Fixed so the swatch grid stays a regular contact sheet — with
-            // intrinsic heights the rows step and the hairlines stop aligning.
-            height: 268,
-            decoration: BoxDecoration(
-              color: palette.surface,
-              border: Border.all(color: palette.line),
-            ),
+          ColoredBox(
+            color: palette.surface,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -269,22 +280,20 @@ class _TypeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.signal;
 
-    Widget specimen(String label, Widget sample, String meta) => Container(
-          width: 460,
-          padding: const EdgeInsets.all(SignalSpace.x6),
-          decoration: BoxDecoration(
-            color: palette.surface,
-            border: Border.all(color: palette.line),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SignalMicro(label),
-              const SizedBox(height: SignalSpace.x3),
-              ClipRect(child: sample),
-              const SizedBox(height: SignalSpace.x3),
-              Text(meta, style: SignalType.eyebrow(palette.muted)),
-            ],
+    Widget specimen(String label, Widget sample, String meta) => ColoredBox(
+          color: palette.surface,
+          child: Padding(
+            padding: const EdgeInsets.all(SignalSpace.x6),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SignalMicro(label),
+                const SizedBox(height: SignalSpace.x3),
+                ClipRect(child: sample),
+                const SizedBox(height: SignalSpace.x3),
+                Text(meta, style: SignalType.eyebrow(palette.muted)),
+              ],
+            ),
           ),
         );
 
@@ -302,9 +311,9 @@ class _TypeSection extends StatelessWidget {
                 '(mono) // leonardo.ai (display kütlesi)',
           ),
           SignalReveal(
-            child: Wrap(
-              spacing: SignalSpace.x6,
-              runSpacing: SignalSpace.x6,
+            child: SignalTileGrid(
+              minTileWidth: 420,
+              maxColumns: 2,
               children: [
                 specimen(
                   'Clash Display 700 — kütle',
@@ -356,20 +365,18 @@ class _RuleBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 380,
-      padding: const EdgeInsets.all(SignalSpace.x6),
-      decoration: BoxDecoration(
-        color: context.signal.surface,
-        border: Border.all(color: context.signal.line),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SignalMicro(label),
-          const SizedBox(height: SignalSpace.x4),
-          child,
-        ],
+    return ColoredBox(
+      color: context.signal.surface,
+      child: Padding(
+        padding: const EdgeInsets.all(SignalSpace.x6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SignalMicro(label),
+            const SizedBox(height: SignalSpace.x4),
+            child,
+          ],
+        ),
       ),
     );
   }
@@ -545,6 +552,10 @@ class _MuseumTile extends StatelessWidget {
         ),
         const SizedBox(height: SignalSpace.x2),
         Text(title, style: SignalType.cellTitle(palette.fg)),
+        // A fixed gap under the Spacer: rows size to their tallest tile, so in
+        // a short row the Spacer collapses to nothing and the organisation
+        // would sit flush against the title.
+        const SizedBox(height: SignalSpace.x6),
         const Spacer(),
         Text(organisation, style: SignalType.caption(palette.fg)),
       ],

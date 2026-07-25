@@ -68,6 +68,57 @@ void main() {
     });
   });
 
+  group('SIGNAL storybook — portrait', () {
+    testWidgets('nothing is laid out wider than a phone screen',
+        (tester) async {
+      const width = 390.0;
+      tester.view
+        ..physicalSize = const Size(width, 844)
+        ..devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: SignalTheme.instrument,
+          home: const DesignPage(),
+          debugShowCheckedModeBanner: false,
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 1200));
+
+      // A box wider than the screen does not raise an exception — `Wrap` and
+      // `Stack` place it happily and it simply runs off the edge. That is how
+      // three fixed-width panels shipped looking fine on desktop and broken on
+      // a phone, so the check is on measured geometry, not on errors.
+      final tooWide = <String>[];
+
+      void walk(RenderObject node) {
+        final name = node.runtimeType.toString();
+        // Content inside a clip or an overflow box is deliberately larger than
+        // its slot — the marquee track, for one.
+        if (name.contains('Clip') || name.contains('Overflow')) return;
+        if (node is RenderBox &&
+            node.hasSize &&
+            node.size.width > width + 0.5) {
+          tooWide.add('$name is ${node.size.width.toStringAsFixed(0)}px wide');
+        }
+        node.visitChildren(walk);
+      }
+
+      walk(tester.binding.renderViews.first);
+
+      expect(
+        tooWide.toSet().toList(),
+        isEmpty,
+        reason: 'These overflow a ${width.toInt()}px screen:\n'
+            '${tooWide.toSet().join('\n')}',
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(milliseconds: 50));
+    });
+  });
+
   group('SIGNAL components', () {
     testWidgets('column fills its width rather than shrink-wrapping',
         (tester) async {

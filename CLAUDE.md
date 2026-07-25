@@ -54,6 +54,14 @@ desktop, tablet and phone widths with assertions on, and have already caught
 several bugs a release build rendered without complaint. Run them before
 claiming anything works.
 
+**Portrait is part of done.** Every screen gets looked at on a phone — not just
+built at 390px, looked at. A box wider than the screen raises no exception, so
+green tests are necessary and not sufficient. One test walks the render tree at
+390 × 844 and fails on anything spilling off the edge; that catches the silent
+class of bug, but only a screenshot tells you whether the page reads. The rules
+are in `DESIGN.md` § Portrait — the short version is: no fixed widths on layout
+containers, use `SignalTileGrid`.
+
 Tests run on the Dart VM, which is why `JavascriptService` uses a conditional
 import — keep web-only APIs behind that pattern so the widget tree stays
 testable.

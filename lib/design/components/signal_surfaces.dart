@@ -214,10 +214,92 @@ class SignalInversion extends StatelessWidget {
   }
 }
 
-/// The 2px-ruled contact-sheet grid used inside the paper band.
+/// A contact-sheet grid: equal-width tiles bound by shared rules.
 ///
-/// Container draws top and left, children draw right and bottom, so shared
+/// Column count is derived from the available width, so a tile never carries a
+/// fixed width — that is what makes the grid survive a phone. Rows size to
+/// their tallest tile rather than to an aspect ratio, because a ratio has to
+/// guess how long the longest line of copy is, and at narrow widths that guess
+/// clips.
+///
+/// The container draws top and left, tiles draw right and bottom, so shared
 /// edges stay a single stroke instead of doubling up.
+class SignalTileGrid extends StatelessWidget {
+  const SignalTileGrid({
+    required this.children,
+    super.key,
+    this.minTileWidth = 240,
+    this.maxColumns = 4,
+    this.strokeWidth = SignalStroke.hairline,
+    this.strokeColor,
+    this.tilePadding = EdgeInsets.zero,
+  });
+
+  final List<Widget> children;
+
+  /// Tiles never render narrower than this; the column count falls instead.
+  final double minTileWidth;
+
+  final int maxColumns;
+  final double strokeWidth;
+
+  /// Defaults to the palette hairline.
+  final Color? strokeColor;
+
+  final EdgeInsetsGeometry tilePadding;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.signal;
+    final side = BorderSide(
+      color: strokeColor ?? palette.line,
+      width: strokeWidth,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final fit = constraints.hasBoundedWidth
+            ? (constraints.maxWidth / minTileWidth).floor()
+            : maxColumns;
+        final columns = fit.clamp(1, maxColumns);
+
+        Widget tile(Widget? child) => DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border(right: side, bottom: side),
+              ),
+              child: Padding(
+                padding: tilePadding,
+                child: child ?? const SizedBox.shrink(),
+              ),
+            );
+
+        final rows = <Widget>[];
+        for (var start = 0; start < children.length; start += columns) {
+          final end = math.min(start + columns, children.length);
+          final slice = children.sublist(start, end);
+          rows.add(
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (var i = 0; i < columns; i++)
+                    Expanded(child: tile(i < slice.length ? slice[i] : null)),
+                ],
+              ),
+            ),
+          );
+        }
+
+        return DecoratedBox(
+          decoration: BoxDecoration(border: Border(top: side, left: side)),
+          child: Column(children: rows),
+        );
+      },
+    );
+  }
+}
+
+/// The museum band's grid: the same contact sheet in 2px ink.
 class SignalMuseumGrid extends StatelessWidget {
   const SignalMuseumGrid({
     required this.children,
@@ -230,53 +312,12 @@ class SignalMuseumGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.signal;
-    final side = BorderSide(color: palette.fg, width: SignalStroke.cell);
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final columns =
-            (constraints.maxWidth / minTileWidth).floor().clamp(1, 4);
-
-        Widget tile(Widget? child) => DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border(right: side, bottom: side),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(SignalSpace.x6),
-                child: child ?? const SizedBox.shrink(),
-              ),
-            );
-
-        final rows = <Widget>[];
-        for (var start = 0; start < children.length; start += columns) {
-          final end = math.min(start + columns, children.length);
-          final slice = children.sublist(start, end);
-          rows.add(
-            // Rows size to their tallest tile instead of a fixed aspect
-            // ratio. A ratio has to guess how long the longest plaque title
-            // is; at narrow widths that guess clips the organisation line.
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (var i = 0; i < columns; i++)
-                    Expanded(
-                      child: tile(i < slice.length ? slice[i] : null),
-                    ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border(top: side, left: side),
-          ),
-          child: Column(children: rows),
-        );
-      },
+    return SignalTileGrid(
+      minTileWidth: minTileWidth,
+      strokeWidth: SignalStroke.cell,
+      strokeColor: context.signal.fg,
+      tilePadding: const EdgeInsets.all(SignalSpace.x6),
+      children: children,
     );
   }
 }
