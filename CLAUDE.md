@@ -77,7 +77,7 @@ lib/
     components/           the component library
   pages/
     app_shell.dart        nav + scrolling body + footer; every page uses it
-    home/ work/ packages/ about/ contact/ not_found/
+    home/ projects/ packages/ about/ contact/ not_found/
     design_page/        ← the /design storybook
     widgets/              RepoList and PackageGrid, shared between pages
   data/                   typed models + the cached SiteRepository
@@ -93,7 +93,7 @@ test/
 
 ## Routing
 
-Each section is a real route, not an anchor: `/`, `/work`, `/packages`,
+Each section is a real route, not an anchor: `/`, `/projects`, `/packages`,
 `/about`, `/contact`, plus `/design` and a 404. Tapping a nav item changes the
 route; the page starts at the top with its own data and its own URL.
 
@@ -101,7 +101,10 @@ route; the page starts at the top with its own data and its own URL.
 there and the bar picks it up. `RouteService.go` replaces rather than pushes,
 because top-level sections are siblings; back should leave the site, not walk a
 pile of visited tabs. Deep links work through `RouteService.initialRoute`, and
-an unknown path lands on the 404 page rather than silently redirecting.
+an unknown path lands on the 404 page rather than silently redirecting — with
+one exception, `Routes.moved`: `/work` was the projects section before it was
+renamed, and a link someone already shared should not break for a rename of
+ours.
 
 The bar shows the links only from `expanded` (≥1100) up. Below that its action
 becomes a menu toggle and `SignalNavPanel` takes the body's place with all five

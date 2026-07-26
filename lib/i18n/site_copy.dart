@@ -77,11 +77,7 @@ abstract class CommonCopy {
 abstract class SectionCopy {
   static const home = Copy('Home', 'ANASAYFA');
 
-  /// Keyed to `Routes.work` and to `/work`, which stay as they are: a path is
-  /// an address someone may have bookmarked, and renaming it would break
-  /// every link to it. The identifier names the route; the value names it to
-  /// the reader.
-  static const work = Copy('Projects', 'PROJELER');
+  static const projects = Copy('Projects', 'PROJELER');
   static const packages = Copy('Packages', 'PAKETLER');
   static const about = Copy('About', 'HAKKIMDA');
   static const contact = Copy('Contact', 'İLETİŞİM');
@@ -120,8 +116,8 @@ abstract class HomeCopy {
     Copy('Web', 'WEB'),
   ];
 
-  static const workEyebrow = Copy('Repositories', 'REPOLAR');
-  static const workLede = Copy(
+  static const projectsEyebrow = Copy('Repositories', 'REPOLAR');
+  static const projectsLede = Copy(
     'My four most-starred projects on GitHub.'
         '\nThe full list is on the Projects page.',
     "GitHub'da en çok yıldız alan dört projem."
@@ -154,7 +150,7 @@ abstract class HomeCopy {
   );
 }
 
-abstract class WorkCopy {
+abstract class ProjectsCopy {
   static const lede = Copy(
     'Every public repository, sorted by stars.'
         '\nYou can filter them by language.',

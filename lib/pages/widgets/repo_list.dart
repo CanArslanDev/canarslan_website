@@ -5,7 +5,8 @@ import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
 import 'package:flutter/widgets.dart';
 
-/// Repositories as wireframe rows. Shared by the home preview and `/work` so
+/// Repositories as wireframe rows. Shared by the home preview and
+/// `/projects` so
 /// the two never drift into different-looking lists of the same thing.
 class RepoList extends StatelessWidget {
   const RepoList({required this.repos, super.key});

@@ -9,8 +9,8 @@ import 'package:canarslan_website/pages/contact/contact_page.dart';
 import 'package:canarslan_website/pages/home/home_page.dart';
 import 'package:canarslan_website/pages/not_found/not_found_page.dart';
 import 'package:canarslan_website/pages/packages/packages_page.dart';
+import 'package:canarslan_website/pages/projects/projects_page.dart';
 import 'package:canarslan_website/pages/widgets/package_grid.dart';
-import 'package:canarslan_website/pages/work/work_page.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/storage_service.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ void main() {
 
   final pages = <String, Widget Function()>{
     'home': HomePage.new,
-    'work': WorkPage.new,
+    'projects': ProjectsPage.new,
     'packages': PackagesPage.new,
     'about': AboutPage.new,
     'contact': ContactPage.new,
@@ -282,7 +282,7 @@ void main() {
     // placed happily and simply sits in from the edge, and it only shows up
     // when one row in a list has more to say than the others.
     for (final (label, page) in [
-      ('work', WorkPage.new),
+      ('projects', ProjectsPage.new),
       ('contact', ContactPage.new),
     ]) {
       testWidgets('on $label all share one left edge', (tester) async {
@@ -454,9 +454,9 @@ void main() {
     });
   });
 
-  group('work page', () {
+  group('projects page', () {
     testWidgets('filtering narrows the list', (tester) async {
-      await pumpPage(tester, const WorkPage(), size: desktop);
+      await pumpPage(tester, const ProjectsPage(), size: desktop);
 
       expect(find.text('canarslan_website'), findsOneWidget);
       expect(find.text('some_tool'), findsOneWidget);

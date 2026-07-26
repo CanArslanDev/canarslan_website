@@ -68,7 +68,7 @@ class DesignPage extends StatelessWidget {
                       _ShapeSection(),
                       _MotionSection(),
                       _ComponentsSection(),
-                      _WorkSection(),
+                      _ProjectsSection(),
                       _AboutSection(),
                       SignalFooter(
                         name: StringConstants.name,

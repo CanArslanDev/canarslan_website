@@ -70,7 +70,7 @@ class _Hero extends StatelessWidget {
               SignalPillButton(
                 label: HomeCopy.myProjects.of(context),
                 variant: SignalButtonVariant.filled,
-                onPressed: () => RouteService.go(Routes.work),
+                onPressed: () => RouteService.go(Routes.projects),
               ),
               SignalPillButton(
                 label: CommonCopy.getInTouch.of(context),

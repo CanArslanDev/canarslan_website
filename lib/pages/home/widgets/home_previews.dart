@@ -1,8 +1,8 @@
 part of '../home_page.dart';
 
-/// The four most-starred repositories, as a taste of `/work`.
-class _WorkPreview extends StatelessWidget {
-  const _WorkPreview();
+/// The four most-starred repositories, as a taste of `/projects`.
+class _ProjectsPreview extends StatelessWidget {
+  const _ProjectsPreview();
 
   static const _limit = 4;
 
@@ -16,9 +16,9 @@ class _WorkPreview extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PageHeading(
-            eyebrow: HomeCopy.workEyebrow.of(context),
+            eyebrow: HomeCopy.projectsEyebrow.of(context),
             stamp: HomeCopy.myProjects.of(context),
-            lede: HomeCopy.workLede.of(context),
+            lede: HomeCopy.projectsLede.of(context),
             rule: true,
           ),
           FutureBuilder<List<RepoInfo>>(
@@ -43,7 +43,7 @@ class _WorkPreview extends StatelessWidget {
                   SignalPillButton(
                     label: HomeCopy.allProjects.of(context),
                     trailing: '->',
-                    onPressed: () => RouteService.go(Routes.work),
+                    onPressed: () => RouteService.go(Routes.projects),
                   ),
                 ],
               );

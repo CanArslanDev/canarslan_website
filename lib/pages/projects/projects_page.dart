@@ -8,16 +8,16 @@ import 'package:canarslan_website/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 /// Everything public, filterable by language.
-class WorkPage extends StatefulWidget {
-  const WorkPage({super.key});
+class ProjectsPage extends StatefulWidget {
+  const ProjectsPage({super.key});
 
   @override
-  State<WorkPage> createState() => _WorkPageState();
+  State<ProjectsPage> createState() => _ProjectsPageState();
 }
 
-class _WorkPageState extends State<WorkPage> {
+class _ProjectsPageState extends State<ProjectsPage> {
   /// Identifies the "no filter" tab. Never shown — the visible label comes
-  /// from [WorkCopy.filterAll] — so switching language cannot drop the
+  /// from [ProjectsCopy.filterAll] — so switching language cannot drop the
   /// selection the way a translated sentinel would.
   static const _all = '';
 
@@ -26,7 +26,7 @@ class _WorkPageState extends State<WorkPage> {
   @override
   Widget build(BuildContext context) {
     return AppShell(
-      route: Routes.work,
+      route: Routes.projects,
       slivers: [
         SignalSection(
           field: SignalFieldMode.wave,
@@ -41,8 +41,8 @@ class _WorkPageState extends State<WorkPage> {
             children: [
               PageHeading(
                 eyebrow: 'github.com/CanArslanDev',
-                stamp: SectionCopy.work.of(context),
-                lede: WorkCopy.lede.of(context),
+                stamp: SectionCopy.projects.of(context),
+                lede: ProjectsCopy.lede.of(context),
                 rule: true,
               ),
               FutureBuilder<List<RepoInfo>>(
@@ -99,10 +99,10 @@ class _Results extends StatelessWidget {
 
     // The first tab is the sentinel; every other one is a language, which is
     // data and never translated.
-    final values = [_WorkPageState._all, ...languages];
-    final labels = [WorkCopy.filterAll.of(context), ...languages];
+    final values = [_ProjectsPageState._all, ...languages];
+    final labels = [ProjectsCopy.filterAll.of(context), ...languages];
     final selected = values.indexOf(filter).clamp(0, values.length - 1);
-    final visible = filter == _WorkPageState._all
+    final visible = filter == _ProjectsPageState._all
         ? repos
         : repos.where((r) => r.language == filter).toList();
 
@@ -119,7 +119,7 @@ class _Results extends StatelessWidget {
         const SizedBox(height: SignalSpace.x6),
         SignalMicro(
           '${visible.length} / ${repos.length} '
-          '${WorkCopy.repoUnit.of(context)}',
+          '${ProjectsCopy.repoUnit.of(context)}',
         ),
       ],
     );

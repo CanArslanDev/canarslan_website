@@ -16,6 +16,8 @@ abstract class RouteService {
   /// than silently redirecting, so a broken link stays visible.
   static String get initialRoute {
     final path = currentPath;
+    final moved = Routes.moved[path];
+    if (moved != null) return moved;
     return Routes.isKnown(path) ? path : Routes.notFound;
   }
 

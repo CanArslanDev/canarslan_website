@@ -4,7 +4,7 @@ import 'package:canarslan_website/pages/design_page/design_page.dart';
 import 'package:canarslan_website/pages/home/home_page.dart';
 import 'package:canarslan_website/pages/not_found/not_found_page.dart';
 import 'package:canarslan_website/pages/packages/packages_page.dart';
-import 'package:canarslan_website/pages/work/work_page.dart';
+import 'package:canarslan_website/pages/projects/projects_page.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +14,7 @@ abstract class Pages {
   /// scroll position and its own data.
   static final List<GetPage<void>> pages = [
     GetPage(name: Routes.home, page: HomePage.new),
-    GetPage(name: Routes.work, page: WorkPage.new),
+    GetPage(name: Routes.projects, page: ProjectsPage.new),
     GetPage(name: Routes.packages, page: PackagesPage.new),
     GetPage(name: Routes.about, page: AboutPage.new),
     GetPage(name: Routes.contact, page: ContactPage.new),

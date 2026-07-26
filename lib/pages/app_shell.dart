@@ -25,7 +25,7 @@ class AppShell extends StatefulWidget {
   final String route;
 
   /// The page's bands. Slivers rather than a Column so long lists on
-  /// `/work` and `/packages` stay lazy.
+  /// `/projects` and `/packages` stay lazy.
   final List<Widget> slivers;
 
   @override

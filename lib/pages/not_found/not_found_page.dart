@@ -40,9 +40,9 @@ class NotFoundPage extends StatelessWidget {
                     onPressed: () => RouteService.go(Routes.home),
                   ),
                   SignalPillButton(
-                    label: SectionCopy.work.of(context),
+                    label: SectionCopy.projects.of(context),
                     trailing: '->',
-                    onPressed: () => RouteService.go(Routes.work),
+                    onPressed: () => RouteService.go(Routes.projects),
                   ),
                 ],
               ),

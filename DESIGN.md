@@ -368,9 +368,9 @@ reason `ripple` exists: the home page had already spent the other three.
 
 Across pages a mode belongs to the surface, not to the route. Paper ripples
 wherever it appears — as the home page's band and as the whole of `/about` —
-and the accent wave runs behind a repository list on both `/work` and its
-preview. Opacity is what changes: a field behind a full page is held well below
-the same field behind a four-row excerpt, because at that height atmosphere
+and the accent wave runs behind a repository list on both `/projects` and
+its preview. Opacity is what changes: a field behind a full page is held well
+below the same field behind a four-row excerpt, because at that height atmosphere
 starts competing with the reading.
 
 ---

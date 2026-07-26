@@ -398,8 +398,8 @@ class _ComponentsSection extends StatelessWidget {
   }
 }
 
-class _WorkSection extends StatelessWidget {
-  const _WorkSection();
+class _ProjectsSection extends StatelessWidget {
+  const _ProjectsSection();
 
   static const _projects = <List<String>>[
     [

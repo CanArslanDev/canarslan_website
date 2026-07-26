@@ -21,7 +21,7 @@ part 'widgets/home_hero.dart';
 part 'widgets/home_previews.dart';
 
 /// The landing page: who this is, what they made, and proof it is still
-/// running. Work and packages appear here as short previews — the full lists
+/// running. Projects and packages appear here as short previews — the full
 /// live on their own routes.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
             for (final item in HomeCopy.marquee) item.of(context),
           ],
         ).asSliver,
-        const _WorkPreview().asSliver,
+        const _ProjectsPreview().asSliver,
         const _PackagesPreview().asSliver,
         const _AboutBand().asSliver,
         const _Contributions().asSliver,
