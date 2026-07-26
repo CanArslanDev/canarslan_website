@@ -311,10 +311,24 @@ detail screen. What earns motion here is a section arriving as you scroll to it,
 not the page arriving because you asked for it.
 
 The ASCII fields run at **~11fps on purpose** — it reads as a terminal
-refreshing rather than a smooth shader, and costs almost nothing. Rendering goes
-through a pre-baked glyph atlas and one `drawAtlas` call per frame; laying out a
+refreshing rather than a smooth shader. Rendering goes through a glyph atlas
+baked once for the whole app and one `drawRawAtlas` call per frame; laying out a
 `TextPainter` for each of ~2000 cells would cost far more than the effect is
 worth.
+
+A page carries up to five fields at once, so the per-step cost is the thing
+that matters, and four decisions keep it near zero. The clock is a **timer, not
+a ticker** — a ticker asks the scheduler for a frame every vsync, and at 85ms a
+step five of every six did nothing. It drives a `ValueNotifier` handed to the
+painter as its `repaint`, so a step runs **`paint` and nothing else**: no
+rebuild, no layout. The sprite buffers are **typed arrays reused between
+frames** rather than three growable lists thrown away every 85ms. And the
+layer's opacity is **multiplied into each glyph's alpha** instead of wrapping
+the field in an `Opacity` — the cells tile exactly and the atlas rects clip each
+glyph to its own cell, so nothing overlaps and the result is the same composite
+without a full-screen `saveLayer` per field per frame.
+
+If you touch the field, keep those four. They are why the effect is affordable.
 
 Every animated component honours `MediaQuery.disableAnimationsOf`.
 
