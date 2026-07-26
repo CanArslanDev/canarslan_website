@@ -274,6 +274,41 @@ void main() {
     });
   });
 
+  group('data rows', () {
+    // The phone-overflow walk catches boxes that are too wide. This is the
+    // mirror failure and just as silent: a row narrower than its column is
+    // placed happily and simply sits in from the edge, and it only shows up
+    // when one row in a list has more to say than the others.
+    for (final (label, page) in [
+      ('work', WorkPage.new),
+      ('contact', ContactPage.new),
+    ]) {
+      testWidgets('on $label all share one left edge', (tester) async {
+        await pumpPage(tester, page(), size: phone);
+
+        final rows = find.byType(SignalDataRow);
+        expect(rows, findsWidgets);
+
+        final boxes = [
+          for (var i = 0; i < tester.widgetList(rows).length; i++)
+            tester.getRect(rows.at(i)),
+        ];
+        expect(
+          boxes.map((r) => r.left.round()).toSet(),
+          hasLength(1),
+          reason: 'rows start at different x: $boxes',
+        );
+        expect(
+          boxes.map((r) => r.width.round()).toSet(),
+          hasLength(1),
+          reason: 'rows are different widths: $boxes',
+        );
+
+        await teardownTree(tester);
+      });
+    }
+  });
+
   group('language', () {
     testWidgets('the site opens in English', (tester) async {
       // No stored choice: the default is a decision, not the browser's guess.

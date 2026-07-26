@@ -42,6 +42,10 @@ class ContactPage extends StatelessWidget {
                   ),
                 ),
                 child: Column(
+                  // Same reason as RepoList: a stack of data rows is
+                  // full-bleed, and a Column left to itself sizes each one to
+                  // its own content and centres it.
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     LinkRow(
                       name: 'GitHub',

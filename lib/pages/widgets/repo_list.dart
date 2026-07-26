@@ -19,6 +19,13 @@ class RepoList extends StatelessWidget {
         border: Border(top: BorderSide(color: context.signal.line)),
       ),
       child: Column(
+        // Rows are full-bleed. A Column centres by default and hands its
+        // children loose constraints, so each row took the width of its own
+        // content: the one repository with a real description filled the
+        // column and sat flush left, while the ones reading "no description"
+        // shrank and drifted inwards by different amounts. Invisible at
+        // desktop, where the row's own Row fills the width regardless.
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (final repo in repos)
             SignalDataRow(

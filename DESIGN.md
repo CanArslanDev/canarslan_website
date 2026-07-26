@@ -228,6 +228,13 @@ shipped this way — fine at 1440px, broken at 390px — and every test was gree
 - **Watch the collapsed state, not just the narrow one.** Content pinned to the
   bottom of a tile with a `Spacer` loses its gap once rows size to content; give
   it a real `SizedBox` too.
+- **A stack of full-bleed rows must say so:** `crossAxisAlignment:
+  CrossAxisAlignment.stretch`. A `Column` centres by default and hands its
+  children loose constraints, so every row takes the width of its own content
+  and sits in from the edge by a different amount. `SignalDataRow` hides this at
+  desktop, where its internal `Row` fills the width regardless — it only appears
+  in portrait, and only once one row in the list has more to say than the
+  others.
 - **Display type keeps its proportions.** `fluid()` already floors the hero at
   58px. Do not add phone-specific font sizes.
 
@@ -256,6 +263,11 @@ Adding copy means adding both sides; the test is what stops one of them from
 being the only one that was ever looked at.
 
 ### Enforcement
+
+There is a mirror failure to watch for, and it is just as quiet: a box
+**narrower** than its column. Nothing overflows, nothing is clipped, the element
+simply sits in from the edge — so `test/pages_test.dart` also checks that every
+`SignalDataRow` in a list shares one left edge and one width.
 
 `test/design_system_test.dart` builds the storybook at 390 × 844 and walks the
 render tree, failing on any box laid out wider than the screen. Content that is
