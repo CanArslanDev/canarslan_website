@@ -1,17 +1,17 @@
 import 'dart:convert';
 
 import 'package:canarslan_website/data/site_models.dart';
-import 'package:canarslan_website/services/storage_service.dart';
+import 'package:canarslan_website/services/response_cache.dart';
 import 'package:http/http.dart' as http;
 
 /// Reads public repositories from GitHub's JSON API.
 ///
 /// Unauthenticated, which is rate-limited per IP (60 requests an hour) — hence
-/// the cache. Results are kept for [_maxAge] so a repeat visit is instant and a
-/// rate-limited one still has something to show, but the list does not go stale
-/// for good the way the previous never-expiring cache did.
+/// the cache. A fresh entry is served without a request at all; a stale or
+/// missing one falls through to the network, and a failure there falls back to
+/// whatever is stored however old it is, because a list from this morning beats
+/// an empty section.
 abstract class GitHubService {
-  static const _maxAge = Duration(hours: 6);
   static const _timeout = Duration(seconds: 8);
 
   /// Colours GitHub uses for the languages that actually appear here. Anything
@@ -34,8 +34,11 @@ abstract class GitHubService {
     'Rust': '#dea584',
   };
 
+  static String _key(String username) => 'github_repos_$username';
+
   static Future<List<RepoInfo>> repositories(String username) async {
-    final cached = _readCache(username);
+    final fresh = _decode(ResponseCache.read(_key(username)));
+    if (fresh != null) return fresh;
 
     try {
       final response = await http
@@ -45,7 +48,7 @@ abstract class GitHubService {
           )
           .timeout(_timeout);
 
-      if (response.statusCode != 200) return cached ?? const [];
+      if (response.statusCode != 200) return _stale(username);
 
       final data = jsonDecode(response.body) as List;
       final repos = <Map<String, dynamic>>[
@@ -63,39 +66,32 @@ abstract class GitHubService {
               .compareTo(int.parse(a['stars'] as String)),
         );
 
-      _writeCache(username, repos);
+      ResponseCache.write(_key(username), repos);
       return repos.map(RepoInfo.fromMap).toList();
     } catch (_) {
-      return cached ?? const [];
+      return _stale(username);
     }
   }
 
-  static List<RepoInfo>? _readCache(String username) {
-    final raw = StorageService.loadGithubRepositories(username);
-    if (raw == null) return null;
+  /// The cached list at any age. Only reached once the network has already
+  /// failed, where the alternative is showing nothing.
+  static List<RepoInfo> _stale(String username) {
+    final payload = ResponseCache.read(
+      _key(username),
+      maxAge: const Duration(days: 3650),
+    );
+    return _decode(payload) ?? const [];
+  }
+
+  static List<RepoInfo>? _decode(Object? payload) {
+    if (payload is! List) return null;
     try {
-      final envelope = jsonDecode(raw) as Map<String, dynamic>;
-      final storedAt = DateTime.tryParse(envelope['storedAt'] as String? ?? '');
-      if (storedAt == null ||
-          DateTime.now().difference(storedAt) > _maxAge) {
-        return null;
-      }
       return [
-        for (final entry in envelope['repos'] as List)
+        for (final entry in payload)
           RepoInfo.fromMap(Map<String, dynamic>.from(entry as Map)),
       ];
     } catch (_) {
       return null;
     }
-  }
-
-  static void _writeCache(String username, List<Map<String, dynamic>> repos) {
-    StorageService.saveGithubRepositories(
-      username,
-      jsonEncode({
-        'storedAt': DateTime.now().toIso8601String(),
-        'repos': repos,
-      }),
-    );
   }
 }

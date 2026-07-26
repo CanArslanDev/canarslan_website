@@ -167,8 +167,21 @@ Two public JSON APIs, both read straight from the browser:
   drawn here (`ContributionCalendar`) rather than by a package, so it uses the
   accent ramp instead of GitHub green.
 
-Both loaders swallow failure and return an empty list; a page that cannot fetch
-shows a quiet line rather than an error state.
+All three loaders swallow failure and return an empty result; a page that cannot
+fetch shows a quiet line rather than an error state.
+
+**Reads are cache-first.** `ResponseCache` keeps each reduced response in
+`localStorage` under a timestamp for six hours, and a fresh entry is returned
+without a request at all. This matters most for pub.dev: seven packages at two
+endpoints each is fourteen round trips before the grid can draw. GitHub's loader
+used to read its cache and then make the request anyway, falling back only on
+failure — the cache saved a rate-limited visitor but never saved anyone any
+time. Once the network has failed, a stale entry is served at any age, because
+this morning's list beats an empty section.
+
+What is stored is the handful of fields the page shows, not the raw body: it
+keeps the entries small, and a change to an endpoint's payload cannot
+half-parse an old one.
 
 This replaced scraping pub.dev's HTML through a public CORS proxy, which broke:
 the proxy now answers 522 after twenty seconds. If you find yourself reaching
