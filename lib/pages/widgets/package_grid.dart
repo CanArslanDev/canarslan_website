@@ -6,15 +6,21 @@ import 'package:flutter/widgets.dart';
 /// Packages as tiles on a shared grid: name, what it does, and the three
 /// numbers pub.dev scores them by.
 class PackageGrid extends StatelessWidget {
-  const PackageGrid({required this.packages, super.key});
+  const PackageGrid({required this.packages, super.key, this.maxRows});
 
   final List<PackageInfo> packages;
+
+  /// Set on a preview to show whole rows only. Pass every package and let the
+  /// grid decide how many fit — trimming the list here would guess at a column
+  /// count that depends on the width.
+  final int? maxRows;
 
   @override
   Widget build(BuildContext context) {
     return SignalTileGrid(
       minTileWidth: 320,
       maxColumns: 3,
+      maxRows: maxRows,
       children: [
         for (final package in packages) _PackageTile(package: package),
       ],

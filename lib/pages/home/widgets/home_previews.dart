@@ -54,11 +54,15 @@ class _WorkPreview extends StatelessWidget {
   }
 }
 
-/// Four packages, then a route to the rest.
+/// Two rows of packages, then a route to the rest.
+///
+/// Rows, not a count: the grid takes its column count from the width, so a
+/// fixed limit of four left a dangling tile beside two empty cells on desktop
+/// — three published packages simply never appeared.
 class _PackagesPreview extends StatelessWidget {
   const _PackagesPreview();
 
-  static const _limit = 4;
+  static const _rows = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +92,7 @@ class _PackagesPreview extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PackageGrid(packages: packages.take(_limit).toList()),
+                  PackageGrid(packages: packages, maxRows: _rows),
                   const SizedBox(height: SignalSpace.x8),
                   SignalPillButton(
                     label: 'All packages',

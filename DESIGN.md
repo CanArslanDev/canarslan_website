@@ -199,6 +199,18 @@ shipped this way — fine at 1440px, broken at 390px — and every test was gree
 - **Display type keeps its proportions.** `fluid()` already floors the hero at
   58px. Do not add phone-specific font sizes.
 
+### Excerpts
+
+A grid on a preview shows **whole rows, never a fixed number of tiles.**
+
+The column count is derived from the width, so the caller does not know it. A
+preview that trims its own list to four leaves one tile beside two empty cells
+at 1440px and hides the rest of the content for good — which is exactly what
+the home page's package preview did. Pass the full list and a `maxRows`; the
+grid trims once it knows how many columns it has.
+
+Lists are different: `RepoList` has no columns, so `take(4)` there is honest.
+
 ### Enforcement
 
 `test/design_system_test.dart` builds the storybook at 390 × 844 and walks the
@@ -280,7 +292,7 @@ Import the barrel: `package:canarslan_website/design/signal.dart`.
 | `SignalSection` | Full-bleed band, closed by a hairline, optional ASCII field behind it |
 | `SignalColumn` | The 1280 column with its grid rules |
 | `SignalCell` | Square, hairline-bordered container. Not a card: no radius, no shadow. |
-| `SignalTileGrid` | Equal-width tiles on shared rules. Column count comes from the available width, so it collapses to one on a phone. **Use this instead of a `Wrap` of fixed-width panels.** |
+| `SignalTileGrid` | Equal-width tiles on shared rules. Column count comes from the available width, so it collapses to one on a phone. **Use this instead of a `Wrap` of fixed-width panels.** A preview passes `maxRows` and the full list; see § Excerpts. |
 | `SignalInversion` | Swaps the palette for its subtree — the museum band |
 | `SignalMuseumGrid` | The same grid in 2px ink, for the paper band |
 | `SignalNavBar` | Frosted bar, hairline underneath, links from `expanded` up |

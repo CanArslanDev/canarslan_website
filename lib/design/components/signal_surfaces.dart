@@ -230,6 +230,7 @@ class SignalTileGrid extends StatelessWidget {
     super.key,
     this.minTileWidth = 240,
     this.maxColumns = 4,
+    this.maxRows,
     this.strokeWidth = SignalStroke.hairline,
     this.strokeColor,
     this.tilePadding = EdgeInsets.zero,
@@ -241,6 +242,16 @@ class SignalTileGrid extends StatelessWidget {
   final double minTileWidth;
 
   final int maxColumns;
+
+  /// Caps a preview at whole rows.
+  ///
+  /// The column count is only known once the width is, so a caller that trims
+  /// its own list to a fixed number of tiles is guessing: four tiles across
+  /// three columns leaves a dangling half-row, which reads as missing content
+  /// rather than as a deliberate excerpt. Trimming here — after the columns are
+  /// known — keeps the sheet rectangular at every width.
+  final int? maxRows;
+
   final double strokeWidth;
 
   /// Defaults to the palette hairline.
@@ -262,6 +273,10 @@ class SignalTileGrid extends StatelessWidget {
             ? (constraints.maxWidth / minTileWidth).floor()
             : maxColumns;
         final columns = fit.clamp(1, maxColumns);
+        final rowCap = maxRows;
+        final visible = rowCap == null
+            ? children
+            : children.take(columns * rowCap).toList();
 
         Widget tile(Widget? child) => DecoratedBox(
               decoration: BoxDecoration(
@@ -274,9 +289,9 @@ class SignalTileGrid extends StatelessWidget {
             );
 
         final rows = <Widget>[];
-        for (var start = 0; start < children.length; start += columns) {
-          final end = math.min(start + columns, children.length);
-          final slice = children.sublist(start, end);
+        for (var start = 0; start < visible.length; start += columns) {
+          final end = math.min(start + columns, visible.length);
+          final slice = visible.sublist(start, end);
           rows.add(
             IntrinsicHeight(
               child: Row(

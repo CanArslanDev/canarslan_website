@@ -6,6 +6,7 @@ import 'package:canarslan_website/pages/contact/contact_page.dart';
 import 'package:canarslan_website/pages/home/home_page.dart';
 import 'package:canarslan_website/pages/not_found/not_found_page.dart';
 import 'package:canarslan_website/pages/packages/packages_page.dart';
+import 'package:canarslan_website/pages/widgets/package_grid.dart';
 import 'package:canarslan_website/pages/work/work_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,35 +29,39 @@ void main() {
     '404': NotFoundPage.new,
   };
 
+  // Seven, matching the real publisher listing. The count matters: the home
+  // preview trims to whole rows, and a seed with fewer packages than fit would
+  // never exercise the trim.
+  final seededPackages = [
+    for (final (name, description) in const [
+      ('flutter_liquid_glass', 'iOS 26 sıvı cam efektini Flutter’a taşıyan '
+          'katman.'),
+      ('offline_sync_kit', 'Çevrimdışı-önce veri senkronizasyonu.'),
+      ('contributions_chart', 'GitHub katkı takvimini çizen widget.'),
+      ('simple_painter', 'Tuval üstünde basit çizim araçları.'),
+      ('simple_animation_progress_bar', 'Animasyonlu ilerleme çubuğu.'),
+      ('flutter_blend_mask', 'Karışım modlarını widget ağacına taşır.'),
+      ('rune', 'Küçük bir yardımcı araç seti.'),
+    ])
+      PackageInfo(
+        name: name,
+        url: 'https://pub.dev/packages/$name',
+        description: description,
+        publisher: 'canarslan.me',
+        publishedAgo: '2 months ago',
+        platforms: const ['Android', 'iOS', 'Web'],
+        likes: '42',
+        points: '160',
+        downloads: '1.2k',
+      ),
+  ];
+
   setUp(() {
     // Pages must never reach the network in a test. Seeding also pins the
     // content, so a failure is about layout rather than about what GitHub
     // happened to return.
     SiteRepository.instance.seed(
-      packages: const [
-        PackageInfo(
-          name: 'liquid_glass',
-          url: 'https://pub.dev/packages/liquid_glass',
-          description: 'iOS 26 sıvı cam efektini Flutter’a taşıyan katman.',
-          publisher: 'canarslan.me',
-          publishedAgo: '2 months ago',
-          platforms: ['Android', 'iOS', 'Web'],
-          likes: '42',
-          points: '160',
-          downloads: '1.2k',
-        ),
-        PackageInfo(
-          name: 'offline_sync_kit',
-          url: 'https://pub.dev/packages/offline_sync_kit',
-          description: 'Çevrimdışı-önce veri senkronizasyonu.',
-          publisher: 'canarslan.me',
-          publishedAgo: '5 months ago',
-          platforms: ['Android', 'iOS'],
-          likes: '31',
-          points: '150',
-          downloads: '900',
-        ),
-      ],
+      packages: seededPackages,
       repositories: const [
         RepoInfo(
           name: 'canarslan_website',
@@ -201,6 +206,53 @@ void main() {
         await teardownTree(tester);
       });
     }
+  });
+
+  group('packages', () {
+    /// One per tile, and nothing else in the grid uses it.
+    Finder tiles() => find.descendant(
+          of: find.byType(PackageGrid),
+          matching: find.byType(SignalScrambleText),
+        );
+
+    /// The home grid sits well below the fold, and a viewport does not lay out
+    /// what it cannot reach — the tiles do not exist until it is scrolled to.
+    Future<void> scrollToGrid(WidgetTester tester) async {
+      await tester.dragUntilVisible(
+        find.byType(PackageGrid),
+        find.byType(Scrollable).first,
+        const Offset(0, -400),
+        maxIteration: 60,
+      );
+      await tester.pump(const Duration(milliseconds: 200));
+    }
+
+    testWidgets('the home preview fills whole rows', (tester) async {
+      await pumpPage(tester, const HomePage(), size: desktop);
+      await scrollToGrid(tester);
+
+      // Three columns at this width, two rows deep. The preview used to take
+      // a fixed four, which left one tile beside two empty cells and hid
+      // three published packages for good.
+      expect(tiles(), findsNWidgets(6));
+      await teardownTree(tester);
+    });
+
+    testWidgets('the home preview drops a row on a tablet', (tester) async {
+      await pumpPage(tester, const HomePage(), size: tablet);
+      await scrollToGrid(tester);
+
+      // Two columns here — the trim follows the grid rather than a constant.
+      expect(tiles(), findsNWidgets(4));
+      await teardownTree(tester);
+    });
+
+    testWidgets('the packages page shows every package', (tester) async {
+      await pumpPage(tester, const PackagesPage(), size: desktop);
+
+      expect(tiles(), findsNWidgets(seededPackages.length));
+      await teardownTree(tester);
+    });
   });
 
   group('work page', () {
