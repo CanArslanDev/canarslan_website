@@ -17,7 +17,7 @@ class _WorkPreview extends StatelessWidget {
         children: [
           PageHeading(
             eyebrow: HomeCopy.workEyebrow.of(context),
-            stamp: HomeCopy.selectedWork.of(context),
+            stamp: HomeCopy.myProjects.of(context),
             lede: HomeCopy.workLede.of(context),
             rule: true,
           ),
@@ -41,7 +41,7 @@ class _WorkPreview extends StatelessWidget {
                   RepoList(repos: repos.take(_limit).toList()),
                   const SizedBox(height: SignalSpace.x8),
                   SignalPillButton(
-                    label: HomeCopy.allWork.of(context),
+                    label: HomeCopy.allProjects.of(context),
                     trailing: '->',
                     onPressed: () => RouteService.go(Routes.work),
                   ),

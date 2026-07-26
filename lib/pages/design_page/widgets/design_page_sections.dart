@@ -45,7 +45,7 @@ class _Hero extends StatelessWidget {
             runSpacing: SignalSpace.x3,
             children: [
               const SignalPillButton(
-                label: 'Selected work',
+                label: 'My projects',
                 variant: SignalButtonVariant.filled,
                 onPressed: _noop,
               ),
@@ -246,7 +246,7 @@ class _MotionSection extends StatelessWidget {
                     ),
                     (
                       'Wave field',
-                      'Selected work',
+                      'My projects',
                       'Tamamen aksan renginde ilerleyen dalga',
                     ),
                     (
@@ -271,7 +271,7 @@ class _MotionSection extends StatelessWidget {
                     ),
                     (
                       'Drawline',
-                      'Selected work',
+                      'My projects',
                       'Aksan hairline soldan sağa çizilir',
                     ),
                     (
@@ -457,7 +457,7 @@ class _WorkSection extends StatelessWidget {
         children: [
           const _Head(
             eyebrow: 'Repositories & packages',
-            stamp: 'Selected work',
+            stamp: 'My projects',
             lede: 'Kart yok. Her proje, hover’da içeri kayan bir wireframe '
                 'satır. Bu bölümün arkasındaki ASCII dalgası tamamen aksan '
                 'renginde — rengin alanı ele geçirdiği tek yer.',

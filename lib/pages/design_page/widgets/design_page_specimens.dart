@@ -148,7 +148,7 @@ class _TypeSection extends StatelessWidget {
                 specimen(
                   'Clash Display 700 — kütle',
                   const SignalDisplayLine(
-                    'Selected work',
+                    'My projects',
                     weight: SignalDisplayWeight.mass,
                     section: true,
                   ),
@@ -157,7 +157,7 @@ class _TypeSection extends StatelessWidget {
                 specimen(
                   'Clash Display 200 — hairline',
                   const SignalDisplayLine(
-                    'Selected work',
+                    'My projects',
                     weight: SignalDisplayWeight.hair,
                     section: true,
                   ),

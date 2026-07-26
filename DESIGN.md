@@ -313,7 +313,7 @@ durations, one curve.
 | Effect | Where | Behaviour |
 |---|---|---|
 | Vortex field | Hero | Polar interference — arms turning around a centre |
-| Wave field | Selected work | A travelling wave, entirely in accent. The one place colour takes a surface. |
+| Wave field | My projects | A travelling wave, entirely in accent. The one place colour takes a surface. |
 | Scan field | Quiet sections, footer | Sparse lines drifting upward |
 | Ripple field | The paper band and `/about` | Rings breathing out from the centre. Slower and more ordered than the vortex, because the museum should not feel like the cockpit. |
 | Scramble | Every section stamp | Characters settle out of noise on reveal |

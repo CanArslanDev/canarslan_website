@@ -68,7 +68,7 @@ class _Hero extends StatelessWidget {
             runSpacing: SignalSpace.x3,
             children: [
               SignalPillButton(
-                label: HomeCopy.selectedWork.of(context),
+                label: HomeCopy.myProjects.of(context),
                 variant: SignalButtonVariant.filled,
                 onPressed: () => RouteService.go(Routes.work),
               ),

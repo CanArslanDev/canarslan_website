@@ -76,7 +76,12 @@ abstract class CommonCopy {
 /// thing in the bar and another at the top of itself.
 abstract class SectionCopy {
   static const home = Copy('Home', 'ANASAYFA');
-  static const work = Copy('Work', 'İŞLER');
+
+  /// Keyed to `Routes.work` and to `/work`, which stay as they are: a path is
+  /// an address someone may have bookmarked, and renaming it would break
+  /// every link to it. The identifier names the route; the value names it to
+  /// the reader.
+  static const work = Copy('Projects', 'PROJELER');
   static const packages = Copy('Packages', 'PAKETLER');
   static const about = Copy('About', 'HAKKIMDA');
   static const contact = Copy('Contact', 'İLETİŞİM');
@@ -95,7 +100,8 @@ abstract class HomeCopy {
     'I share my open source work on GitHub and pub.dev.',
     "Open source projelerimi GitHub ve pub.dev'de paylaşıyorum.",
   );
-  static const selectedWork = Copy('Selected work', 'SEÇME İŞLER');
+  /// The home page's own four, where [allProjects] leads to all of them.
+  static const myProjects = Copy('My projects', 'PROJELERİM');
 
   static const specPackages = Copy('Packages', 'PAKET');
   static const specPublisherLabel = Copy('pub.dev', 'pub.dev');
@@ -117,11 +123,11 @@ abstract class HomeCopy {
   static const workEyebrow = Copy('Repositories', 'REPOLAR');
   static const workLede = Copy(
     'My four most-starred projects on GitHub.'
-        '\nThe full list is on the Work page.',
+        '\nThe full list is on the Projects page.',
     "GitHub'da en çok yıldız alan dört projem."
-        '\nTamamına İşler sayfasından ulaşabilirsiniz.',
+        '\nTamamına Projeler sayfasından ulaşabilirsiniz.',
   );
-  static const allWork = Copy('All work', 'TÜM İŞLER');
+  static const allProjects = Copy('All projects', 'TÜM PROJELER');
 
   static const packagesLede = Copy(
     'The open source packages I publish on GitHub and pub.dev.'
