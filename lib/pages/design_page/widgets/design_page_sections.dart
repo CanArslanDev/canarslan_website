@@ -9,7 +9,6 @@ class _Hero extends StatelessWidget {
 
     return SignalSection(
       field: SignalFieldMode.vortex,
-      fieldOpacity: 0.62,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -220,7 +219,6 @@ class _MotionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SignalSection(
       field: SignalFieldMode.scan,
-      fieldOpacity: 0.3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -450,7 +448,6 @@ class _ProjectsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SignalSection(
       field: SignalFieldMode.wave,
-      fieldOpacity: 0.42,
       fieldTintAccent: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

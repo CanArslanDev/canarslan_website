@@ -10,21 +10,38 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 /// The four behaviours of the ASCII atmosphere. All four are the same character
-/// ramp on a monospace grid — only the field function differs.
+/// ramp on a monospace grid — only the field function and its strength differ.
+///
+/// **Strength belongs to the mode, not to the section.** It used to be a
+/// parameter every band passed for itself, and thirteen call sites had drifted
+/// to nine different values: the paper band sat at 0.55 against the About
+/// page's 0.32, the accent wave at 0.42 behind four rows and 0.16 behind the
+/// full list, and `scan` had picked a different number in all five places it
+/// appeared. The same texture read as a different texture depending on which
+/// page you were on, which is the opposite of what a design system is for.
 enum SignalFieldMode {
   /// Polar interference: arms sweeping around a centre. The hero.
-  vortex,
+  vortex(0.62),
 
-  /// A horizontal travelling wave. Used once, in accent, behind the work list.
-  wave,
+  /// A horizontal travelling wave, entirely in accent. The one place colour
+  /// takes a surface.
+  wave(0.22),
 
   /// Sparse lines drifting upward. Quiet sections and the footer.
-  scan,
+  scan(0.3),
 
   /// Concentric rings breathing out from the centre. Slower and more ordered
-  /// than [vortex], which is why it suits the paper band: the museum should
-  /// not feel like the cockpit.
-  ripple,
+  /// than [vortex], which is why it suits paper: the museum should not feel
+  /// like the cockpit.
+  ripple(0.32);
+
+  const SignalFieldMode(this.strength);
+
+  /// How strongly the layer sits behind content, wherever it appears.
+  ///
+  /// `vortex`, `wave` and `scan` carry the values the prototype was signed off
+  /// at. `ripple` postdates it and carries the paper page's.
+  final double strength;
 }
 
 const String _ramp = ' .·:-=+*o#%@';
@@ -104,14 +121,13 @@ class SignalAsciiField extends StatefulWidget {
   const SignalAsciiField({
     required this.mode,
     super.key,
-    this.opacity = 0.5,
     this.tintAccent = false,
   });
 
+  /// Carries its own strength — see [SignalFieldMode.strength]. There is no
+  /// per-instance override, on purpose: that knob is how the site ended up
+  /// with nine different opacities for four fields.
   final SignalFieldMode mode;
-
-  /// Overall strength of the layer.
-  final double opacity;
 
   /// When true the whole field is drawn in the accent colour instead of the
   /// resting [SignalPalette.dim] tone. Reserved for a single section.
@@ -186,7 +202,7 @@ class _SignalAsciiFieldState extends State<SignalAsciiField> {
           atlas: atlas,
           clock: _time,
           mode: widget.mode,
-          opacity: widget.opacity,
+          opacity: widget.mode.strength,
           // accentText, not accent: on the paper palette the raw accent
           // reaches 1.3:1 against the ground and the field would vanish. On
           // the dark canvas the two are the same colour, so nothing changes

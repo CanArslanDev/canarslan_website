@@ -30,11 +30,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
       slivers: [
         SignalSection(
           field: SignalFieldMode.wave,
-          // Quieter than the home preview's 0.42. There the accent wave sits
-          // behind four rows; here it runs the length of the full list, and at
-          // that height it stops being atmosphere and starts eating the
-          // descriptions.
-          fieldOpacity: 0.16,
           fieldTintAccent: true,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

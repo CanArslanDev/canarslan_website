@@ -129,7 +129,6 @@ class SignalSection extends StatelessWidget {
     required this.child,
     super.key,
     this.field,
-    this.fieldOpacity = 0.4,
     this.fieldTintAccent = false,
     this.ruled = true,
     this.dense = false,
@@ -137,9 +136,9 @@ class SignalSection extends StatelessWidget {
 
   final Widget child;
 
-  /// Behaviour of the ASCII layer behind this band, if any.
+  /// Behaviour of the ASCII layer behind this band, if any. Its strength comes
+  /// with the mode — a band does not get to pick one.
   final SignalFieldMode? field;
-  final double fieldOpacity;
   final bool fieldTintAccent;
   final bool ruled;
 
@@ -168,7 +167,6 @@ class SignalSection extends StatelessWidget {
                 child: IgnorePointer(
                   child: SignalAsciiField(
                     mode: field!,
-                    opacity: fieldOpacity,
                     tintAccent: fieldTintAccent,
                   ),
                 ),

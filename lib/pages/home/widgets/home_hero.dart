@@ -33,7 +33,6 @@ class _Hero extends StatelessWidget {
 
     return SignalSection(
       field: SignalFieldMode.vortex,
-      fieldOpacity: 0.62,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

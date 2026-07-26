@@ -22,7 +22,6 @@ class _AboutBand extends StatelessWidget {
     return SignalInversion(
       child: SignalSection(
         field: SignalFieldMode.ripple,
-        fieldOpacity: 0.55,
         ruled: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

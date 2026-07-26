@@ -14,9 +14,8 @@ import 'package:flutter/material.dart';
 ///
 /// It carries the same [SignalFieldMode.ripple] as the home page's paper band,
 /// because they are the same room seen twice — the band is the excerpt and this
-/// is the page. Quieter here, for the same reason `/projects` is quieter than
-/// its own preview: the field runs the whole length of a much taller section,
-/// and at that height atmosphere turns into noise behind the reading.
+/// is the page, and they read identically — the strength comes with the mode,
+/// so neither can be tuned away from the other.
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
@@ -28,7 +27,6 @@ class AboutPage extends StatelessWidget {
         SignalInversion(
           child: SignalSection(
             field: SignalFieldMode.ripple,
-            fieldOpacity: 0.32,
             ruled: false,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -20,7 +20,6 @@ class PackagesPage extends StatelessWidget {
       slivers: [
         SignalSection(
           field: SignalFieldMode.scan,
-          fieldOpacity: 0.3,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

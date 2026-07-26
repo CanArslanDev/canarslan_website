@@ -21,7 +21,6 @@ class ContactPage extends StatelessWidget {
       slivers: [
         SignalSection(
           field: SignalFieldMode.vortex,
-          fieldOpacity: 0.45,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

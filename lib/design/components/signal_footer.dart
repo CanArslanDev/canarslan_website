@@ -102,10 +102,7 @@ class _SignalFooterState extends State<SignalFooter> {
           children: [
             const Positioned.fill(
               child: IgnorePointer(
-                child: SignalAsciiField(
-                  mode: SignalFieldMode.scan,
-                  opacity: 0.25,
-                ),
+                child: SignalAsciiField(mode: SignalFieldMode.scan),
               ),
             ),
             Padding(

@@ -358,7 +358,7 @@ not symmetrical:
   ground. Paper needs the mirror of that, one step *darker*, and `dim` there is
   a light grey sitting almost on top of the ground — the same token produces a
   field you cannot see. On paper the field rests at `fg`, held back by the
-  section's opacity.
+  mode's own strength.
 - **Hot glyphs** are `accentText`, not `accent`. On the dark canvas the two are
   the same colour; on paper the raw accent reaches 1.3:1 against the ground and
   the highlights would disappear.
@@ -368,10 +368,30 @@ reason `ripple` exists: the home page had already spent the other three.
 
 Across pages a mode belongs to the surface, not to the route. Paper ripples
 wherever it appears — as the home page's band and as the whole of `/about` —
-and the accent wave runs behind a repository list on both `/projects` and
-its preview. Opacity is what changes: a field behind a full page is held well
-below the same field behind a four-row excerpt, because at that height atmosphere
-starts competing with the reading.
+and the accent wave runs behind a repository list on both `/projects` and its
+preview.
+
+**Strength belongs to the mode too, and a band cannot override it.** There is
+no `fieldOpacity` parameter, on purpose. When there was one, thirteen call sites
+had drifted to nine different values: the paper band sat at 0.55 against the
+About page's 0.32, the wave at 0.42 behind four rows and 0.16 behind the full
+list, and `scan` had picked a different number in each of the five places it
+appeared. Every one of those was somebody compensating for section height by
+eye, and the result was that the same texture read as a different texture
+depending on which page you were on.
+
+| Mode | Strength |
+|---|---|
+| `vortex` | 0.62 |
+| `wave` | 0.22 |
+| `scan` | 0.30 |
+| `ripple` | 0.32 |
+
+`vortex` and `scan` keep the values the prototype was signed off at. `ripple`
+takes the About page's. `wave` is the one that had to move to a value neither
+place used: 0.42 buries the descriptions on a full repository list, and 0.16
+leaves nothing of the one section where colour is supposed to take a surface.
+Both were checked at 1440px before the number was picked.
 
 ---
 

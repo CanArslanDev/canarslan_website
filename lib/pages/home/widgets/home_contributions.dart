@@ -11,7 +11,6 @@ class _Contributions extends StatelessWidget {
 
     return SignalSection(
       field: SignalFieldMode.scan,
-      fieldOpacity: 0.28,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

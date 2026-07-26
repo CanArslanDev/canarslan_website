@@ -10,7 +10,6 @@ class _ProjectsPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return SignalSection(
       field: SignalFieldMode.wave,
-      fieldOpacity: 0.42,
       fieldTintAccent: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
