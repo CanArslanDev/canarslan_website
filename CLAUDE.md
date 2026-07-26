@@ -102,6 +102,11 @@ because top-level sections are siblings; back should leave the site, not walk a
 pile of visited tabs. Deep links work through `RouteService.initialRoute`, and
 an unknown path lands on the 404 page rather than silently redirecting.
 
+Route changes carry **no transition** (`Transition.noTransition`,
+`Duration.zero` on the `GetMaterialApp`). Each page builds its own nav bar and
+footer, so an animated swap slides the whole frame — chrome included — across
+the window. See `DESIGN.md` § Motion.
+
 ## Migration status
 
 Done. Every page runs on the design system, the pre-redesign tree is deleted,

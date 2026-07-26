@@ -257,6 +257,14 @@ durations, one curve.
 | Glitch | Data row hover | The name scrambles for 240ms, then sets |
 | Drawn rule | Section headings | An accent hairline draws in from the left |
 | Reveal | Blocks | 14px up, 320ms, system curve |
+| Page change | Nav | **None.** The new route is simply there. |
+
+**Navigation is not animated.** The sections are siblings and the router
+replaces rather than pushes, so there is no stack for a slide to describe — and
+because every page builds its own nav bar and footer, a page transition drags
+the entire frame sideways, chrome included. It read as a phone app pushing a
+detail screen. What earns motion here is a section arriving as you scroll to it,
+not the page arriving because you asked for it.
 
 The ASCII fields run at **~11fps on purpose** — it reads as a terminal
 refreshing rather than a smooth shader, and costs almost nothing. Rendering goes
