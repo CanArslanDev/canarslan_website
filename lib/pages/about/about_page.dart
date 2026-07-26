@@ -1,6 +1,6 @@
-import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/design/signal.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
+import 'package:canarslan_website/pages/widgets/about_bio.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -11,17 +11,6 @@ import 'package:flutter/material.dart';
 /// is dark; this page is where the light gets turned on.
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
-
-  static final _birthYear = StringConstants.birthYear;
-
-  static int get _age {
-    final now = DateTime.now();
-    var age = now.year - _birthYear.year;
-    final hadBirthday = now.month > _birthYear.month ||
-        (now.month == _birthYear.month && now.day >= _birthYear.day);
-    if (!hadBirthday) age -= 1;
-    return age;
-  }
 
   static const _certificates = <(String, String)>[
     ('Computer Science', 'Harvard University'),
@@ -51,7 +40,7 @@ class AboutPage extends StatelessWidget {
                   eyebrow: 'Can Arslan // $_role',
                   stamp: 'About',
                 ),
-                _Bio(age: _age),
+                const AboutBio(),
                 const SizedBox(height: SignalSpace.x16),
                 const SignalEyebrow('Certificates'),
                 const SizedBox(height: SignalSpace.x4),
@@ -87,45 +76,6 @@ class AboutPage extends StatelessWidget {
   }
 
   static const _role = 'YAZILIM GELİŞTİRİCİ';
-}
-
-class _Bio extends StatelessWidget {
-  const _Bio({required this.age});
-
-  final int age;
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = context.signal;
-
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 620),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Merhaba, ben Can. $age yaşındayım ve yazılım geliştiriyorum.',
-            style: SignalType.lede(palette.fg)
-                .copyWith(fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: SignalSpace.x4),
-          Text(
-            'Çoğunlukla ${StringConstants.framework} ve '
-            '${StringConstants.lang} ile çalışıyorum. Mobil ve web tarafında '
-            'ürünler yazıyorum, işime yarayan bir şey çıkınca da paketleyip '
-            "pub.dev'de paylaşıyorum.",
-            style: SignalType.lede(palette.muted),
-          ),
-          const SizedBox(height: SignalSpace.x4),
-          Text(
-            'Öğrendiklerimi açık kaynak bırakmayı seviyorum. Bu sitenin kodu '
-            "da tasarımı da GitHub'da duruyor, dilerseniz bakabilirsiniz.",
-            style: SignalType.lede(palette.muted),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class _Plaque extends StatelessWidget {

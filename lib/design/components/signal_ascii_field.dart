@@ -19,6 +19,11 @@ enum SignalFieldMode {
 
   /// Sparse lines drifting upward. Quiet sections and the footer.
   scan,
+
+  /// Concentric rings breathing out from the centre. Slower and more ordered
+  /// than [vortex], which is why it suits the paper band: the museum should
+  /// not feel like the cockpit.
+  ripple,
 }
 
 /// Animated ASCII texture, drawn behind content.
@@ -152,8 +157,12 @@ class _SignalAsciiFieldState extends State<SignalAsciiField>
             glyphCount: _ramp.length,
             mode: widget.mode,
             time: _t,
-            base: widget.tintAccent ? palette.accent : palette.dim,
-            hot: palette.accent,
+            // accentText, not accent: on the paper palette the raw accent
+            // reaches 1.3:1 against the ground and the field would vanish.
+            // On the dark canvas the two are the same colour, so nothing
+            // changes there.
+            base: widget.tintAccent ? palette.accentText : palette.dim,
+            hot: palette.accentText,
             tintAccent: widget.tintAccent,
           ),
           size: Size.infinite,
@@ -209,6 +218,18 @@ class _AsciiFieldPainter extends CustomPainter {
         return math.sin(y * 0.55 + time * 1.5) * 1.7 +
             math.sin(x * 0.05 - time * 0.25) -
             0.9;
+      case SignalFieldMode.ripple:
+        // Rings only — no angular term, which is what separates this from the
+        // vortex: the pattern expands rather than turns.
+        final cx = cols * 0.5;
+        final cy = rows * 0.5;
+        final dx = (x - cx) * 0.9;
+        final dy = (y - cy) * 1.9;
+        final rad = math.sqrt(dx * dx + dy * dy);
+        return math.sin(rad * 0.26 - time * 0.8) +
+            math.sin(rad * 0.1 - time * 0.35) +
+            math.sin(x * 0.05 + time * 0.15) * 0.6 +
+            0.3;
     }
   }
 
@@ -223,9 +244,12 @@ class _AsciiFieldPainter extends CustomPainter {
     final colors = <Color>[];
 
     for (var y = 0; y < rows; y++) {
-      // The vortex and scan fields dissolve as they fall; the wave holds.
-      final fade =
-          mode == SignalFieldMode.wave ? 1.0 : 1 - (y / rows) * 0.72;
+      // The vortex and scan fields dissolve as they fall. The wave and the
+      // ripple hold: a downward fade would cut one side off a pattern that is
+      // symmetrical about its centre.
+      final holds = mode == SignalFieldMode.wave ||
+          mode == SignalFieldMode.ripple;
+      final fade = holds ? 1.0 : 1 - (y / rows) * 0.72;
       for (var x = 0; x < cols; x++) {
         final n = (_value(x, y, cols, rows) + 4) / 8;
         if (n <= 0) continue;

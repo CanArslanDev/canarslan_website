@@ -240,6 +240,7 @@ durations, one curve.
 | Vortex field | Hero | Polar interference — arms turning around a centre |
 | Wave field | Selected work | A travelling wave, entirely in accent. The one place colour takes a surface. |
 | Scan field | Quiet sections, footer | Sparse lines drifting upward |
+| Ripple field | The paper band | Rings breathing out from the centre. Slower and more ordered than the vortex, because the museum should not feel like the cockpit. |
 | Scramble | Every section stamp | Characters settle out of noise on reveal |
 | Glitch | Data row hover | The name scrambles for 240ms, then sets |
 | Drawn rule | Section headings | An accent hairline draws in from the left |
@@ -252,6 +253,15 @@ through a pre-baked glyph atlas and one `drawAtlas` call per frame; laying out a
 worth.
 
 Every animated component honours `MediaQuery.disableAnimationsOf`.
+
+A field's hot glyphs are drawn in `accentText`, not `accent`. On the dark canvas
+the two are the same colour; on paper the raw accent reaches 1.3:1 against the
+ground and the field would disappear. Field opacity is also set higher on paper
+— ink reads far heavier than bone on black at the same alpha — so the paper band
+runs at 0.55 where the dark bands sit between 0.28 and 0.62.
+
+One page uses one field per band, and no page repeats a mode. That is the whole
+reason `ripple` exists: the home page had already spent the other three.
 
 ---
 
