@@ -118,9 +118,9 @@ that way: the list exists to be deleted from, not added to.
 ## Conventions
 
 - **Web interop:** `package:web` + `dart:js_interop`. `dart:html`, `dart:js` and
-  `dart:js_util` are banned everywhere, including legacy — they are removed from
-  Flutter and block a Wasm build. The Wasm dry run currently passes; keep it
-  that way.
+  `dart:js_util` are banned everywhere — they are removed from Flutter and block
+  a Wasm build. Keep it that way; see § Wasm below for why the door is worth
+  holding open even though it is currently shut.
 - **Sizing:** read constraints via `LayoutBuilder` / `SignalBreakpoint` /
   `fluid()`. Viewport-percentage sizing (`.w`, `.h`, `.sp`) is legacy only — it
   does not react to resizing and breaks at the extremes.
@@ -128,6 +128,28 @@ that way: the list exists to be deleted from, not added to.
   most of it.
 - **Text is content, not chrome:** code and identifiers are English; page copy
   is whatever `lib/i18n/site_copy.dart` says in the language in force.
+
+## Wasm
+
+`flutter build web --release --wasm` compiles, boots, and then **traps**:
+`memory access out of bounds`, one per frame, on a blank page.
+
+It is not the app's code. Measured by elimination: disable the ASCII field's
+paint and the same build renders every page perfectly with no errors at all.
+The trap is skwasm's `drawAtlas` / `drawRawAtlas` — baking the atlas with
+`Picture.toImage` is fine, drawing it is not.
+
+Worth retrying after an engine upgrade. Measured over the wire in Chrome, the
+wasm build fetches **3.45 MB** against the default's **4.14 MB** — a real but
+modest saving, most of it skwasm being smaller than CanvasKit, offset by
+`main.dart.wasm` and `main.dart.js` both shipping. The larger prize is WasmGC's
+execution speed, not the bytes.
+
+Note the download is 4.14 MB, not the 41 MB the build directory weighs.
+Chrome fetches the `chromium/` CanvasKit variant (1.6 MB) and one renderer, and
+`assets/NOTICES` is never requested. Do not size this site from `du`.
+
+Until `drawAtlas` works under skwasm, ship `flutter build web --release`.
 
 ## Language
 

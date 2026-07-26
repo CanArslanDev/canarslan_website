@@ -1,12 +1,11 @@
 {
-    "name": "canarslan_website",
-    "short_name": "canarslan_website",
+    "name": "Can Arslan",
+    "short_name": "Can Arslan",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#050605",
+    "theme_color": "#050605",
+    "description": "Software developer. Flutter and Dart, on mobile and on the web.",
     "prefer_related_applications": false,
     "icons": [
         {

@@ -23,23 +23,44 @@
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Professional Mobile & Flutter Developer.">
+  <meta name="description"
+    content="Can Arslan — software developer. Flutter and Dart, on mobile and on the web. Open source packages on pub.dev.">
+  <link rel="canonical" href="https://canarslan.me/">
+
+  <!-- Matches the instrument canvas, so the browser chrome does not flash
+       white before the app paints. -->
+  <meta name="theme-color" content="#050605">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="canarslan_website">
+  <meta name="apple-mobile-web-app-title" content="Can Arslan">
   <link rel="apple-touch-icon" href="icon.png">
 
   <!-- Favicon -->
   <link rel="icon" href="icon.png" type="image/png">
 
-  <!-- OpenGraph meta tags -->
-  <meta property="og:title" content="Can Arslan">
-  <meta property="og:description" content="Professional Mobile & Flutter Developer.">
-  <meta property="og:image" content="icon.png">
+  <!-- Social cards. Absolute URLs: a relative og:image is not resolved by
+       most crawlers and the card comes out blank. -->
+  <meta property="og:site_name" content="Can Arslan">
+  <meta property="og:title" content="Can Arslan — software developer">
+  <meta property="og:description"
+    content="Flutter and Dart, on mobile and on the web. Open source packages on pub.dev.">
+  <meta property="og:image" content="https://canarslan.me/icon.png">
+  <meta property="og:url" content="https://canarslan.me/">
   <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Can Arslan — software developer">
+  <meta name="twitter:description"
+    content="Flutter and Dart, on mobile and on the web. Open source packages on pub.dev.">
+  <meta name="twitter:image" content="https://canarslan.me/icon.png">
+
+  <!-- The engine and the fonts are on this origin; the three JSON APIs the
+       site reads are not. Warming their connections overlaps the TLS
+       handshakes with the app booting instead of following it. -->
+  <link rel="preconnect" href="https://pub.dev" crossorigin>
+  <link rel="preconnect" href="https://api.github.com" crossorigin>
+  <link rel="preconnect" href="https://github-contributions-api.jogruber.de" crossorigin>
 
   <title>Can Arslan</title>
   <link rel="manifest" href="manifest.json">

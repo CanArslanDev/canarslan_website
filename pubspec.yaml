@@ -9,12 +9,13 @@ dependencies:
     sdk: flutter
   get: ^4.6.6
   http: ^1.2.2
-  very_good_analysis: ^6.0.0
   web: ^1.1.0
 dev_dependencies:
-  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+  # The lint set analysis_options.yaml includes. A linter is a build-time tool
+  # and has no business in the dependency graph the app ships from.
+  very_good_analysis: ^6.0.0
 flutter:
   uses-material-design: true
   # SIGNAL design system faces. Clash Display + General Sans are bundled under
