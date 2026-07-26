@@ -1,3 +1,4 @@
+import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/data/site_repository.dart';
 import 'package:canarslan_website/design/signal.dart';
@@ -340,6 +341,34 @@ void main() {
         await teardownTree(tester);
       });
     }
+
+    testWidgets('the bar sits everything on one line', (tester) async {
+      await pumpPage(tester, const HomePage(), size: desktop);
+
+      // The active link's underline costs 4px below the label, and with
+      // nothing reserved above it the Row centred the label-plus-underline
+      // and left the label itself riding 2px high — visible against the
+      // language switch beside it, which is a bare line of the same type.
+      final link = tester.getRect(find.text(SectionCopy.home.en.toUpperCase()));
+      final switchLabel = tester.getRect(find.text(SiteLocale.en.label));
+      final wordmark =
+          tester.getRect(find.text(StringConstants.name.toUpperCase()));
+
+      expect(
+        link.center.dy,
+        moreOrLessEquals(switchLabel.center.dy, epsilon: 0.5),
+        reason: 'nav link and language switch are off by '
+            '${(link.center.dy - switchLabel.center.dy).abs()}px',
+      );
+      expect(
+        link.center.dy,
+        moreOrLessEquals(wordmark.center.dy, epsilon: 0.5),
+        reason: 'nav link and wordmark are off by '
+            '${(link.center.dy - wordmark.center.dy).abs()}px',
+      );
+
+      await teardownTree(tester);
+    });
 
     testWidgets('the bar keeps its links and its action on a desktop',
         (tester) async {

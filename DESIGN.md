@@ -409,6 +409,11 @@ Import the barrel: `package:canarslan_website/design/signal.dart`.
 3. It has no shadow.
 4. Its text uses a `SignalType` role.
 5. It carries no fixed layout width, and it states how it collapses in portrait.
+   If it marks state with a rule on one side — the nav link's underline — it
+   reserves the same space on the other. A `Container` folds a border's width
+   into its inset, so an underline costs its gap *plus* its own hairline; leave
+   that unbalanced and a row centres the label-plus-rule, which rides the label
+   itself high beside anything next to it.
 6. It honours reduced motion if it moves.
 7. Export it from `lib/design/signal.dart`.
 8. Add it to `/design` — a component that is not in the storybook does not exist.

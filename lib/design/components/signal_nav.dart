@@ -189,6 +189,13 @@ class _NavLink extends StatefulWidget {
 }
 
 class _NavLinkState extends State<_NavLink> {
+  /// Gap between the label and its underline.
+  static const double _underline = 3;
+
+  /// The underline itself. Container folds a border's width into the box's
+  /// inset, so it counts towards the space the device takes below the text.
+  static const double _rule = SignalStroke.hairline;
+
   bool _hovered = false;
 
   @override
@@ -208,7 +215,16 @@ class _NavLinkState extends State<_NavLink> {
           child: AnimatedContainer(
             duration: SignalMotion.state,
             curve: SignalMotion.linearish,
-            padding: const EdgeInsets.only(bottom: 3),
+            // The underline costs 4px below the text — 3 of padding and the
+            // 1px rule itself, which Container adds to the inset. Reserving
+            // the same above it centres the *text* in the bar instead of the
+            // text-plus-underline, so a link sits on the same line as the
+            // language switch and the wordmark beside it rather than 2px
+            // above them.
+            padding: const EdgeInsets.only(
+              top: _underline + _rule,
+              bottom: _underline,
+            ),
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
