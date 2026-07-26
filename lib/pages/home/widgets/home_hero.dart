@@ -44,7 +44,7 @@ class _Hero extends StatelessWidget {
           const SignalDisplayLine('Arslan', weight: SignalDisplayWeight.hair),
           const SizedBox(height: SignalSpace.x6),
           ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
+            constraints: const BoxConstraints(maxWidth: SignalSpace.measure),
             child: Text.rich(
               TextSpan(
                 children: [
@@ -113,9 +113,8 @@ class _HeroSpec extends StatelessWidget {
               label: HomeCopy.specOpenLabel.of(context),
               value: HomeCopy.specOpenValue.of(context),
             ),
-            SignalSpecEntry(
-              label: HomeCopy.specLive.of(context),
-              child: SignalLiveClock(
+            SignalSpecEntry.live(
+              SignalLiveClock(
                 utcOffsetHours: IntConstants.timezone,
                 label: HomeCopy.specLive.of(context),
               ),

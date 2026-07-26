@@ -5,6 +5,7 @@ import 'package:canarslan_website/design/signal.dart';
 import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/pages/widgets/package_grid.dart';
+import 'package:canarslan_website/pages/widgets/site_data.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
 import 'package:flutter/material.dart';
@@ -24,40 +25,29 @@ class PackagesPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PageHeading(
-                eyebrow: 'pub.dev // canarslan.me',
+                eyebrow: 'pub.dev // ${StringConstants.publisher}',
                 stamp: SectionCopy.packages.of(context),
                 lede: PackagesCopy.lede.of(context),
                 rule: true,
               ),
-              FutureBuilder<List<PackageInfo>>(
+              SiteData<List<PackageInfo>>(
                 future: SiteRepository.instance.packages(),
-                builder: (context, snapshot) {
-                  final packages = snapshot.data;
-                  if (packages == null) {
-                    return PagePlaceholder(
-                      message: CommonCopy.loadingPackages.of(context),
-                    );
-                  }
-                  if (packages.isEmpty) {
-                    return PagePlaceholder(
-                      message: CommonCopy.noPackages.of(context),
-                    );
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PackageGrid(packages: packages),
-                      const SizedBox(height: SignalSpace.x8),
-                      SignalPillButton(
-                        label: PackagesCopy.publisher.of(context),
-                        trailing: '->',
-                        onPressed: () => JavascriptService.openUrl(
-                          StringConstants.pubDevPublisher,
-                        ),
+                loading: CommonCopy.loadingPackages,
+                unavailable: CommonCopy.noPackages,
+                builder: (context, packages) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PackageGrid(packages: packages),
+                    const SizedBox(height: SignalSpace.x8),
+                    SignalPillButton(
+                      label: PackagesCopy.publisher.of(context),
+                      trailing: '->',
+                      onPressed: () => JavascriptService.openUrl(
+                        StringConstants.pubDevPublisher,
                       ),
-                    ],
-                  );
-                },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

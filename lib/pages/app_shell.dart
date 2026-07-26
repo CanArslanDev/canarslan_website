@@ -94,7 +94,7 @@ class _AppShellState extends State<AppShell> {
                           ],
                           locationLabel: StringConstants.location,
                           utcOffsetHours: IntConstants.timezone,
-                          note: 'canarslan.me',
+                          note: StringConstants.publisher,
                         ),
                       ),
                     ],

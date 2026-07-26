@@ -235,13 +235,14 @@ shipped this way — fine at 1440px, broken at 390px — and every test was gree
   all. Below `expanded` the bar's action becomes the menu toggle and
   `SignalNavPanel` carries the routes. **A hidden control without a
   replacement is a missing feature, not a responsive decision.**
-- **A stack of full-bleed rows must say so:** `crossAxisAlignment:
-  CrossAxisAlignment.stretch`. A `Column` centres by default and hands its
-  children loose constraints, so every row takes the width of its own content
-  and sits in from the edge by a different amount. `SignalDataRow` hides this at
-  desktop, where its internal `Row` fills the width regardless — it only appears
-  in portrait, and only once one row in the list has more to say than the
-  others.
+- **A stack of full-bleed rows must say so.** Reach for `SignalDataRows`, which
+  knows it. Built by hand, a `Column` centres by default and hands its children
+  loose constraints, so every row takes the width of its own content and sits in
+  from the edge by a different amount. `SignalDataRow` hides this at desktop,
+  where its internal `Row` fills the width regardless — it only appears in
+  portrait, and only once one row in the list has more to say than the others.
+  Both lists on the site had to learn it separately, which is why there is now
+  one place that knows it.
 - **Display type keeps its proportions.** `fluid()` already floors the hero at
   58px. Do not add phone-specific font sizes.
 
@@ -415,7 +416,10 @@ Import the barrel: `package:canarslan_website/design/signal.dart`.
 | `SignalEyebrow`, `SignalStamp`, `SignalLede`, `SignalMicro` | The text roles |
 | `SignalDisplayLine` | One display line; `mass` or `hair`, hero or section scale |
 | `SignalDataRow` | A project as a wireframe row, not a card |
-| `SignalSpecStrip` | The wireframe readout of facts under a hero. Splits into columns only where they fit; stacks full-width below that. |
+| `SignalDataRows` | A stack of them, closed by a hairline and stretched full-bleed. Use this rather than a `Column` — see § Portrait. |
+| `SignalLabelledBlock` | An eyebrow with a block under it, at the system's gap |
+| `SignalTextLink` | The one inline link treatment: mono, uppercase, accent |
+| `SignalSpecStrip` | The wireframe readout of facts under a hero. Splits into columns only where they fit; stacks full-width below that. Cells are `SignalSpecEntry(label:, value:)` or `SignalSpecEntry.live(…)` — never both. |
 | `SignalLiveClock` | Blinking accent LED beside the local time — one of the three permitted accent appearances |
 | `SignalMarquee` | Edge-to-edge ticker with accent `//` separators |
 | `SignalDrawnRule`, `SignalReveal`, `SignalOnVisible`, `SignalScrambleText` | Motion primitives |

@@ -80,20 +80,16 @@ class _Certificates extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SignalEyebrow(AboutCopy.certificates.of(context)),
-        const SizedBox(height: SignalSpace.x4),
-        // Narrower than the About page's grid: in half a column the plaques
-        // need to be allowed to sit two across rather than falling into one
-        // tall stack.
-        const CredentialGrid(
-          entries: AboutCredentials.certificates,
-          plaque: AboutCopy.certificate,
-          minTileWidth: 220,
-        ),
-      ],
+    return SignalLabelledBlock(
+      label: AboutCopy.certificates.of(context),
+      // Narrower than the About page's grid: in half a column the plaques
+      // need to be allowed to sit two across rather than falling into one
+      // tall stack.
+      child: const CredentialGrid(
+        entries: AboutCredentials.certificates,
+        plaque: AboutCopy.certificate,
+        minTileWidth: 220,
+      ),
     );
   }
 }

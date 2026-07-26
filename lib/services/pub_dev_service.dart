@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/services/response_cache.dart';
 import 'package:http/http.dart' as http;
@@ -79,7 +80,7 @@ abstract class PubDevService {
       name: name,
       url: 'https://pub.dev/packages/$name',
       description: fields['description'] as String? ?? '',
-      publisher: 'canarslan.me',
+      publisher: StringConstants.publisher,
       published: DateTime.tryParse(fields['published'] as String? ?? ''),
       platforms: [
         for (final platform in fields['platforms'] as List? ?? const [])

@@ -120,3 +120,31 @@ class _SignalDataRowState extends State<SignalDataRow> {
     );
   }
 }
+
+/// A stack of [SignalDataRow]s, closed at the top by a hairline.
+///
+/// Stretch, not the `Column` default: rows are full-bleed, and a centring
+/// column hands each one loose constraints so it takes the width of its own
+/// content. The row with the longest description then sits flush left while
+/// the short ones drift inwards by different amounts — invisible at desktop,
+/// where the row's internal `Row` fills the width regardless, and obvious in
+/// portrait. Both lists on the site had to learn this separately, which is why
+/// there is now one place that knows it.
+class SignalDataRows extends StatelessWidget {
+  const SignalDataRows({required this.children, super.key});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: context.signal.line)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
+    );
+  }
+}

@@ -37,18 +37,20 @@ class AboutPage extends StatelessWidget {
                 ),
                 const AboutBio(),
                 const SizedBox(height: SignalSpace.x16),
-                SignalEyebrow(AboutCopy.certificates.of(context)),
-                const SizedBox(height: SignalSpace.x4),
-                const CredentialGrid(
-                  entries: AboutCredentials.certificates,
-                  plaque: AboutCopy.certificate,
+                SignalLabelledBlock(
+                  label: AboutCopy.certificates.of(context),
+                  child: const CredentialGrid(
+                    entries: AboutCredentials.certificates,
+                    plaque: AboutCopy.certificate,
+                  ),
                 ),
                 const SizedBox(height: SignalSpace.x16),
-                SignalEyebrow(AboutCopy.competitions.of(context)),
-                const SizedBox(height: SignalSpace.x4),
-                const CredentialGrid(
-                  entries: AboutCredentials.competitions,
-                  plaque: AboutCopy.projectManager,
+                SignalLabelledBlock(
+                  label: AboutCopy.competitions.of(context),
+                  child: const CredentialGrid(
+                    entries: AboutCredentials.competitions,
+                    plaque: AboutCopy.projectManager,
+                  ),
                 ),
               ],
             ),

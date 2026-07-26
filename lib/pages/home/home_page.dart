@@ -10,6 +10,7 @@ import 'package:canarslan_website/pages/widgets/about_credentials.dart';
 import 'package:canarslan_website/pages/widgets/contribution_calendar.dart';
 import 'package:canarslan_website/pages/widgets/package_grid.dart';
 import 'package:canarslan_website/pages/widgets/repo_list.dart';
+import 'package:canarslan_website/pages/widgets/site_data.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
 import 'package:canarslan_website/services/route_service.dart';

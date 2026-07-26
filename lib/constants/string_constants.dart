@@ -15,6 +15,10 @@ abstract class StringConstants {
   static const x = 'x.com/futuristcan';
   static const github = 'github.com/CanArslanDev';
   static const instagram = 'instagram.com/futuristcan';
+  /// The pub.dev publisher, which is also the domain. Used as an eyebrow on
+  /// two pages and as the publisher on every package record.
+  static const publisher = 'canarslan.me';
+
   static const pubDevPublisher =
       'https://pub.dev/publishers/canarslan.me/packages';
 }

@@ -20,7 +20,7 @@ class _Hero extends StatelessWidget {
           const SignalDisplayLine('Arslan', weight: SignalDisplayWeight.hair),
           const SizedBox(height: SignalSpace.x6),
           ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
+            constraints: const BoxConstraints(maxWidth: SignalSpace.measure),
             child: Text.rich(
               TextSpan(
                 children: [
@@ -63,10 +63,7 @@ class _Hero extends StatelessWidget {
               SignalSpecEntry(label: 'Packages', value: '05'),
               SignalSpecEntry(label: 'pub.dev', value: 'Publisher'),
               SignalSpecEntry(label: 'Open', value: 'Source'),
-              SignalSpecEntry(
-                label: 'Live',
-                child: SignalLiveClock(utcOffsetHours: 3),
-              ),
+              SignalSpecEntry.live(SignalLiveClock(utcOffsetHours: 3)),
             ],
           ),
         ],
@@ -355,6 +352,22 @@ class _ComponentsSection extends StatelessWidget {
                   label: 'Nav paneli — expanded altında bağlantıların yerini '
                       'alır. Gövdenin üstünde yüzmez, yerine geçer.',
                   child: _NavPanelDemo(),
+                ),
+                const _RuleBox(
+                  label: 'Etiketli blok — eyebrow + 16px + içerik. Sertifika '
+                      'gridleri ve iletişim listesi bunu kullanır.',
+                  child: SignalLabelledBlock(
+                    label: 'Certificates',
+                    child: SignalChip('Harvard University'),
+                  ),
+                ),
+                const _RuleBox(
+                  label: 'Metin bağlantısı — sitedeki tek satır içi link '
+                      'biçimi. Aksan rengi, mono, imleç değişir.',
+                  child: SignalTextLink(
+                    label: 'github.com/CanArslanDev ->',
+                    onTap: _noop,
+                  ),
                 ),
                 const _RuleBox(
                   label: 'Etiketler',

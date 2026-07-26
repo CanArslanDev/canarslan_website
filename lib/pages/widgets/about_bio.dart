@@ -29,7 +29,7 @@ class AboutBio extends StatelessWidget {
     final palette = context.signal;
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 620),
+      constraints: const BoxConstraints(maxWidth: SignalSpace.measure),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

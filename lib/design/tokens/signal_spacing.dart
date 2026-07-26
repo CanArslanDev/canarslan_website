@@ -16,6 +16,13 @@ abstract class SignalSpace {
 
   /// Content column width. Sections run full-bleed; their contents do not.
   static const double column = 1280;
+
+  /// The widest a paragraph is allowed to run, in logical pixels.
+  ///
+  /// Roughly 65 characters at the `lede` size, which is where a line stops
+  /// being comfortable to track back from. Every block of prose on the site
+  /// takes this, so they all break at the same place.
+  static const double measure = 560;
 }
 
 /// Corner radius has exactly two legal values.

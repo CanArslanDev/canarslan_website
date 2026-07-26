@@ -3,6 +3,7 @@ import 'package:canarslan_website/design/components/signal_scramble_text.dart';
 import 'package:canarslan_website/design/theme/signal_tokens.dart';
 import 'package:canarslan_website/design/tokens/signal_breakpoints.dart';
 import 'package:canarslan_website/design/tokens/signal_motion.dart';
+import 'package:canarslan_website/design/tokens/signal_spacing.dart';
 import 'package:canarslan_website/design/tokens/signal_typography.dart';
 import 'package:flutter/widgets.dart';
 
@@ -70,7 +71,7 @@ class SignalLede extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 560),
+      constraints: const BoxConstraints(maxWidth: SignalSpace.measure),
       child: Text(
         text,
         style: SignalType.lede(color ?? context.signal.muted),
@@ -168,6 +169,70 @@ class _SignalDrawnRuleState extends State<SignalDrawnRule> {
             color: widget.color ?? context.signal.accent,
           );
         },
+      ),
+    );
+  }
+}
+
+/// An eyebrow with a block under it.
+///
+/// The pair appears wherever a section needs a second-level heading: the
+/// certificate and competition grids, the contact page's list of elsewheres.
+/// Four hand-written copies had the same 16px gap between the two, which is
+/// four chances for one of them to be 12.
+class SignalLabelledBlock extends StatelessWidget {
+  const SignalLabelledBlock({
+    required this.label,
+    required this.child,
+    super.key,
+  });
+
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SignalEyebrow(label),
+        const SizedBox(height: SignalSpace.x4),
+        child,
+      ],
+    );
+  }
+}
+
+/// A line of mono text that goes somewhere, in the accent.
+///
+/// The site's inline link treatment: uppercase eyebrow type, accent colour,
+/// pointer cursor. It was written by hand inside the contributions section and
+/// nowhere else, which meant the one interactive text style on the site lived
+/// in a page rather than in the system.
+class SignalTextLink extends StatelessWidget {
+  const SignalTextLink({
+    required this.label,
+    required this.onTap,
+    super.key,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      link: true,
+      label: label,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Text(
+            label.toUpperCase(),
+            style: SignalType.eyebrow(context.signal.accentText),
+          ),
+        ),
       ),
     );
   }

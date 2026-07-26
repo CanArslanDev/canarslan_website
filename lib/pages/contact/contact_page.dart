@@ -32,19 +32,9 @@ class ContactPage extends StatelessWidget {
               ),
               const _EmailBlock(),
               const SizedBox(height: SignalSpace.x16),
-              SignalEyebrow(ContactCopy.elsewhere.of(context)),
-              const SizedBox(height: SignalSpace.x4),
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: context.signal.line),
-                  ),
-                ),
-                child: Column(
-                  // Same reason as RepoList: a stack of data rows is
-                  // full-bleed, and a Column left to itself sizes each one to
-                  // its own content and centres it.
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+              SignalLabelledBlock(
+                label: ContactCopy.elsewhere.of(context),
+                child: SignalDataRows(
                   children: [
                     LinkRow(
                       name: 'GitHub',
@@ -84,9 +74,8 @@ class ContactPage extends StatelessWidget {
                     label: ContactCopy.repliesLabel.of(context),
                     value: ContactCopy.repliesValue.of(context),
                   ),
-                  SignalSpecEntry(
-                    label: ContactCopy.localTime.of(context),
-                    child: SignalLiveClock(
+                  SignalSpecEntry.live(
+                    SignalLiveClock(
                       utcOffsetHours: IntConstants.timezone,
                       label: ContactCopy.now.of(context),
                     ),

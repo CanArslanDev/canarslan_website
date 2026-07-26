@@ -20,33 +20,15 @@ class _ProjectsPreview extends StatelessWidget {
             lede: HomeCopy.projectsLede.of(context),
             rule: true,
           ),
-          FutureBuilder<List<RepoInfo>>(
+          SiteData<List<RepoInfo>>(
             future: SiteRepository.instance.repositories(),
-            builder: (context, snapshot) {
-              final repos = snapshot.data;
-              if (repos == null) {
-                return PagePlaceholder(
-                  message: CommonCopy.loadingRepos.of(context),
-                );
-              }
-              if (repos.isEmpty) {
-                return PagePlaceholder(
-                  message: CommonCopy.noRepos.of(context),
-                );
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RepoList(repos: repos.take(_limit).toList()),
-                  const SizedBox(height: SignalSpace.x8),
-                  SignalPillButton(
-                    label: HomeCopy.allProjects.of(context),
-                    trailing: '->',
-                    onPressed: () => RouteService.go(Routes.projects),
-                  ),
-                ],
-              );
-            },
+            loading: CommonCopy.loadingRepos,
+            unavailable: CommonCopy.noRepos,
+            builder: (context, repos) => _PreviewBlock(
+              label: HomeCopy.allProjects.of(context),
+              onPressed: () => RouteService.go(Routes.projects),
+              child: RepoList(repos: repos.take(_limit).toList()),
+            ),
           ),
         ],
       ),
@@ -71,40 +53,50 @@ class _PackagesPreview extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PageHeading(
-            eyebrow: 'pub.dev // canarslan.me',
+            eyebrow: 'pub.dev // ${StringConstants.publisher}',
             stamp: SectionCopy.packages.of(context),
             lede: HomeCopy.packagesLede.of(context),
           ),
-          FutureBuilder<List<PackageInfo>>(
+          SiteData<List<PackageInfo>>(
             future: SiteRepository.instance.packages(),
-            builder: (context, snapshot) {
-              final packages = snapshot.data;
-              if (packages == null) {
-                return PagePlaceholder(
-                  message: CommonCopy.loadingPackages.of(context),
-                );
-              }
-              if (packages.isEmpty) {
-                return PagePlaceholder(
-                  message: CommonCopy.noPackages.of(context),
-                );
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PackageGrid(packages: packages, maxRows: _rows),
-                  const SizedBox(height: SignalSpace.x8),
-                  SignalPillButton(
-                    label: HomeCopy.allPackages.of(context),
-                    trailing: '->',
-                    onPressed: () => RouteService.go(Routes.packages),
-                  ),
-                ],
-              );
-            },
+            loading: CommonCopy.loadingPackages,
+            unavailable: CommonCopy.noPackages,
+            builder: (context, packages) => _PreviewBlock(
+              label: HomeCopy.allPackages.of(context),
+              onPressed: () => RouteService.go(Routes.packages),
+              child: PackageGrid(packages: packages, maxRows: _rows),
+            ),
           ),
         ],
       ),
+    );
+  }
+}
+
+/// An excerpt with the route to the whole of it underneath.
+///
+/// Both previews on the home page are this shape: some of the list, a gap, and
+/// a ghost button that goes to the page holding the rest.
+class _PreviewBlock extends StatelessWidget {
+  const _PreviewBlock({
+    required this.label,
+    required this.onPressed,
+    required this.child,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        child,
+        const SizedBox(height: SignalSpace.x8),
+        SignalPillButton(label: label, trailing: '->', onPressed: onPressed),
+      ],
     );
   }
 }

@@ -91,6 +91,44 @@ test/
   design_rules_test.dart    enforces DESIGN.md against the source
 ```
 
+## Composition
+
+Four rules, each of them written down because the codebase broke them first.
+
+**One widget per thing, even when it appears twice.** Everything on the home
+page is an excerpt of a page that exists in full elsewhere, and every time the
+two were built separately they drifted: the repository rows aligned differently
+in portrait on one but not the other, the paper band ran at a different opacity
+from `/about`, the package grid trimmed to a count on one and to rows on the
+other. `RepoList`, `PackageGrid`, `AboutBio`, `CredentialGrid` and `SiteData`
+all exist for this reason. **If the home page shows it, the page shows it
+through the same widget.**
+
+**A value that every caller passes differently belongs to the type.** The ASCII
+field took a `fieldOpacity` and thirteen sections had drifted to nine values;
+the paragraph measure was `560` in three files. Both are now a single
+declaration — `SignalFieldMode.strength`, `SignalSpace.measure` — and the
+parameter that allowed the drift is gone. A knob nobody sets consistently is
+not a feature.
+
+**Nullable fields that are only valid in combination want named constructors.**
+`SignalSpecEntry` took a required label beside an optional child and rendered
+the child *instead*, so the contact page passed "Local time" and the strip threw
+it away with no error and no visible effect. It is now
+`SignalSpecEntry(label:, value:)` or `SignalSpecEntry.live(widget)`, and the
+dead copy string went with it. **If an argument can be silently ignored, the
+type is wrong.**
+
+**A literal that repeats a constant is a bug waiting for one of them to
+change.** `github.com/CanArslanDev` was hard-coded in three places next to
+`StringConstants.github`, and `canarslan.me` in four with no constant at all.
+Grep for a value before typing it.
+
+Extraction is not free, so the bar is real duplication or a real trap, not
+symmetry. `_HeroSpec` keeps its own `FutureBuilder` because it renders a
+placeholder value rather than a placeholder widget, and forcing it into
+`SiteData` would have meant a flag that exists for one caller.
+
 ## Routing
 
 Each section is a real route, not an anchor: `/`, `/projects`, `/packages`,

@@ -6,19 +6,31 @@ import 'package:canarslan_website/design/tokens/signal_spacing.dart';
 import 'package:canarslan_website/design/tokens/signal_typography.dart';
 import 'package:flutter/widgets.dart';
 
-/// One cell of a [SignalSpecStrip].
+/// One cell of a [SignalSpecStrip]: either a label and a value, or a live
+/// widget that brings its own.
+///
+/// Two constructors rather than three nullable fields. The old shape took a
+/// required `label` alongside an optional `child` and then rendered the child
+/// instead — so the contact page passed "Local time", the strip silently threw
+/// it away, and the cell read as the clock's own label. A caller could not
+/// tell from the API that half of what it passed was dead.
 @immutable
 class SignalSpecEntry {
-  const SignalSpecEntry({required this.label, this.value, this.child});
+  const SignalSpecEntry({required this.label, required this.value})
+      : child = null;
+
+  /// A cell that is a widget — the live clock, and so far nothing else. It
+  /// carries its own label, which is why this constructor does not take one.
+  const SignalSpecEntry.live(this.child)
+      : label = null,
+        value = null;
 
   /// The quiet half of the pair.
-  final String label;
+  final String? label;
 
-  /// The loud half. Rendered in foreground, before or after [label] depending
-  /// on which reads better — pass it as part of [label] when order matters.
+  /// The loud half, drawn in foreground beside [label].
   final String? value;
 
-  /// Replaces the text pair entirely, for a live cell.
   final Widget? child;
 }
 
@@ -44,12 +56,11 @@ class SignalSpecStrip extends StatelessWidget {
             TextSpan(
               style: SignalType.eyebrow(palette.muted),
               children: [
-                TextSpan(text: entry.label.toUpperCase()),
-                if (entry.value != null)
-                  TextSpan(
-                    text: '  ${entry.value!.toUpperCase()}',
-                    style: SignalType.eyebrow(palette.fg),
-                  ),
+                TextSpan(text: entry.label!.toUpperCase()),
+                TextSpan(
+                  text: '  ${entry.value!.toUpperCase()}',
+                  style: SignalType.eyebrow(palette.fg),
+                ),
               ],
             ),
             maxLines: 1,

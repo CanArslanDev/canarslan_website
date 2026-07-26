@@ -1,9 +1,11 @@
+import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/data/site_repository.dart';
 import 'package:canarslan_website/design/signal.dart';
 import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/pages/widgets/repo_list.dart';
+import 'package:canarslan_website/pages/widgets/site_data.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -35,31 +37,20 @@ class _ProjectsPageState extends State<ProjectsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PageHeading(
-                eyebrow: 'github.com/CanArslanDev',
+                eyebrow: StringConstants.github,
                 stamp: SectionCopy.projects.of(context),
                 lede: ProjectsCopy.lede.of(context),
                 rule: true,
               ),
-              FutureBuilder<List<RepoInfo>>(
+              SiteData<List<RepoInfo>>(
                 future: SiteRepository.instance.repositories(),
-                builder: (context, snapshot) {
-                  final repos = snapshot.data;
-                  if (repos == null) {
-                    return PagePlaceholder(
-                      message: CommonCopy.loadingRepos.of(context),
-                    );
-                  }
-                  if (repos.isEmpty) {
-                    return PagePlaceholder(
-                      message: CommonCopy.noRepos.of(context),
-                    );
-                  }
-                  return _Results(
-                    repos: repos,
-                    filter: _filter,
-                    onFilter: (value) => setState(() => _filter = value),
-                  );
-                },
+                loading: CommonCopy.loadingRepos,
+                unavailable: CommonCopy.noRepos,
+                builder: (context, repos) => _Results(
+                  repos: repos,
+                  filter: _filter,
+                  onFilter: (value) => setState(() => _filter = value),
+                ),
               ),
             ],
           ),

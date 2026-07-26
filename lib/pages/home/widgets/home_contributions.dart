@@ -7,49 +7,29 @@ class _Contributions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.signal;
-
     return SignalSection(
       field: SignalFieldMode.scan,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PageHeading(
-            eyebrow: 'github.com/CanArslanDev',
+            eyebrow: StringConstants.github,
             stamp: HomeCopy.contributionsStamp.of(context),
             lede: HomeCopy.contributionsLede.of(context),
           ),
-          FutureBuilder<ContributionYear>(
+          SiteData<ContributionYear>(
             future: SiteRepository.instance.contributions(),
-            builder: (context, snapshot) {
-              final year = snapshot.data;
-              if (year == null) {
-                return PagePlaceholder(
-                  message: HomeCopy.loadingCalendar.of(context),
-                );
-              }
-              if (year.isEmpty) {
-                return PagePlaceholder(
-                  message: HomeCopy.noCalendar.of(context),
-                );
-              }
-              return SignalReveal(
-                child: SignalCell(
-                  child: ContributionCalendar(year: year),
-                ),
-              );
-            },
+            loading: HomeCopy.loadingCalendar,
+            unavailable: HomeCopy.noCalendar,
+            isEmpty: (year) => year.isEmpty,
+            builder: (context, year) => SignalReveal(
+              child: SignalCell(child: ContributionCalendar(year: year)),
+            ),
           ),
           const SizedBox(height: SignalSpace.x6),
-          MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              onTap: () => JavascriptService.openUrl(StringConstants.github),
-              child: Text(
-                'github.com/CanArslanDev ->'.toUpperCase(),
-                style: SignalType.eyebrow(palette.accentText),
-              ),
-            ),
+          SignalTextLink(
+            label: '${StringConstants.github} ->',
+            onTap: () => JavascriptService.openUrl(StringConstants.github),
           ),
         ],
       ),

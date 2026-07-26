@@ -279,7 +279,6 @@ abstract class ContactCopy {
   static const basedIn = Copy('Based in', 'MERKEZ');
   static const repliesLabel = Copy('Usually replies', 'GENELDE YANIT');
   static const repliesValue = Copy('Same day', 'AYNI GÜN');
-  static const localTime = Copy('Local time', 'YEREL SAAT');
   static const now = Copy('Now', 'ŞİMDİ');
 
   static const sendEmail = Copy('Send an email', 'E-POSTA GÖNDERİN');
