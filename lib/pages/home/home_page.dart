@@ -5,6 +5,7 @@ import 'package:canarslan_website/data/site_repository.dart';
 import 'package:canarslan_website/design/signal.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/pages/widgets/about_bio.dart';
+import 'package:canarslan_website/pages/widgets/about_credentials.dart';
 import 'package:canarslan_website/pages/widgets/contribution_calendar.dart';
 import 'package:canarslan_website/pages/widgets/package_grid.dart';
 import 'package:canarslan_website/pages/widgets/repo_list.dart';

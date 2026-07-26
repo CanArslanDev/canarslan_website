@@ -1,6 +1,7 @@
 import 'package:canarslan_website/design/signal.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/pages/widgets/about_bio.dart';
+import 'package:canarslan_website/pages/widgets/about_credentials.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -12,100 +13,40 @@ import 'package:flutter/material.dart';
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
-  static const _certificates = <(String, String)>[
-    ('Computer Science', 'Harvard University'),
-    ('Artificial Intelligence', 'Harvard University'),
-    ('Computer Science for Business Professionals', 'Harvard University'),
-    ('Elements of AI', 'University of Helsinki'),
-  ];
-
-  static const _competitions = <(String, String)>[
-    ('Efficiency Challenge', 'Delta Cells'),
-    ('Efficiency Challenge', 'Alaz'),
-    ('Technology for the Benefit of Humanity', 'AKUS'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return AppShell(
       route: Routes.about,
       slivers: [
-        SignalInversion(
+        const SignalInversion(
           child: SignalSection(
             ruled: false,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const PageHeading(
-                  eyebrow: 'Can Arslan // $_role',
+                PageHeading(
+                  eyebrow: 'Can Arslan // YAZILIM GELİŞTİRİCİ',
                   stamp: 'About',
                 ),
-                const AboutBio(),
-                const SizedBox(height: SignalSpace.x16),
-                const SignalEyebrow('Certificates'),
-                const SizedBox(height: SignalSpace.x4),
-                SignalMuseumGrid(
-                  children: [
-                    for (final (title, org) in _certificates)
-                      _Plaque(
-                        plaque: 'Certificate',
-                        title: title,
-                        organisation: org,
-                      ),
-                  ],
+                AboutBio(),
+                SizedBox(height: SignalSpace.x16),
+                SignalEyebrow('Certificates'),
+                SizedBox(height: SignalSpace.x4),
+                CredentialGrid(
+                  entries: AboutCredentials.certificates,
+                  plaque: 'Certificate',
                 ),
-                const SizedBox(height: SignalSpace.x16),
-                const SignalEyebrow('Competitions'),
-                const SizedBox(height: SignalSpace.x4),
-                SignalMuseumGrid(
-                  children: [
-                    for (final (title, org) in _competitions)
-                      _Plaque(
-                        plaque: 'Project manager',
-                        title: title,
-                        organisation: org,
-                      ),
-                  ],
+                SizedBox(height: SignalSpace.x16),
+                SignalEyebrow('Competitions'),
+                SizedBox(height: SignalSpace.x4),
+                CredentialGrid(
+                  entries: AboutCredentials.competitions,
+                  plaque: 'Project manager',
                 ),
               ],
             ),
           ),
         ).asSliver,
-      ],
-    );
-  }
-
-  static const _role = 'YAZILIM GELİŞTİRİCİ';
-}
-
-class _Plaque extends StatelessWidget {
-  const _Plaque({
-    required this.plaque,
-    required this.title,
-    required this.organisation,
-  });
-
-  final String plaque;
-  final String title;
-  final String organisation;
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = context.signal;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          plaque.toUpperCase(),
-          style: SignalType.micro(palette.muted),
-        ),
-        const SizedBox(height: SignalSpace.x2),
-        Text(title, style: SignalType.cellTitle(palette.fg)),
-        // Rows size to their tallest tile, so in a short row the Spacer
-        // collapses and the organisation would sit flush against the title.
-        const SizedBox(height: SignalSpace.x6),
-        const Spacer(),
-        Text(organisation, style: SignalType.caption(palette.fg)),
       ],
     );
   }
