@@ -17,6 +17,15 @@ class SignalMarquee extends StatefulWidget {
   final List<String> items;
   final Duration duration;
 
+  static const double _verticalPadding = 16;
+
+  /// The band's height at a given viewport width.
+  ///
+  /// Exposed because a page that wants the strip to land exactly on the fold
+  /// has to know how much room it takes — see the home hero.
+  static double heightFor(double width) =>
+      fluid(width, min: 26, max: 48) * 1.15 + _verticalPadding * 2;
+
   @override
   State<SignalMarquee> createState() => _SignalMarqueeState();
 }
@@ -90,7 +99,7 @@ class _SignalMarqueeState extends State<SignalMarquee>
       child: SizedBox(
         // Explicit height, because the track below is laid out unbounded and
         // can no longer report an intrinsic one.
-        height: size * 1.15 + 32,
+        height: SignalMarquee.heightFor(context.screenWidth),
         child: ClipRect(
           child: OverflowBox(
             alignment: Alignment.centerLeft,

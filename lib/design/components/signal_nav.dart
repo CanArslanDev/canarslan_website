@@ -35,6 +35,10 @@ class SignalNavBar extends StatelessWidget {
   final String actionLabel;
   final VoidCallback onAction;
 
+  /// Fixed, and exposed: a page that needs to know how much of the window is
+  /// left below the bar has to be able to ask.
+  static const double height = 64;
+
   @override
   Widget build(BuildContext context) {
     final palette = context.signal;
@@ -52,7 +56,7 @@ class SignalNavBar extends StatelessWidget {
             border: Border(bottom: BorderSide(color: palette.line)),
           ),
           child: SizedBox(
-            height: 64,
+            height: SignalNavBar.height,
             child: SignalColumn(
               ruled: false,
               child: Row(

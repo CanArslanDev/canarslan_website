@@ -167,6 +167,42 @@ void main() {
     });
   }
 
+  group('home page', () {
+    for (final (label, size) in [
+      ('desktop', desktop),
+      ('tablet', tablet),
+      ('phone', phone),
+    ]) {
+      testWidgets('the hero fills the first screen at $label', (tester) async {
+        await pumpPage(tester, const HomePage(), size: size);
+
+        // The hero is content-sized by nature, which on a tall window left a
+        // strip of dead canvas under the marquee and made the page look like
+        // it had stopped early. It now grows to fill whatever the window has
+        // left, so the strip closes the first screen instead of floating above
+        // the fold.
+        //
+        // Measured on the hero rather than on the marquee: the hero may
+        // legitimately grow past the fold when the copy is tall — that is why
+        // it takes a minimum height and not a fixed one — and then the marquee
+        // is off-screen and never built.
+        final available = size.height -
+            SignalNavBar.height -
+            SignalMarquee.heightFor(size.width);
+        final hero = tester.getRect(find.byType(SignalAsciiField).first);
+
+        expect(
+          hero.height,
+          greaterThanOrEqualTo(available - 1),
+          reason: 'hero is ${hero.height} tall, needs at least $available '
+              'to close the fold',
+        );
+
+        await teardownTree(tester);
+      });
+    }
+  });
+
   group('work page', () {
     testWidgets('filtering narrows the list', (tester) async {
       await pumpPage(tester, const WorkPage(), size: desktop);

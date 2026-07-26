@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
     return AppShell(
       route: Routes.home,
       slivers: [
-        const _Hero().asSliver,
+        const _HeroViewport().asSliver,
         const SignalMarquee(
           items: [
             'Flutter',

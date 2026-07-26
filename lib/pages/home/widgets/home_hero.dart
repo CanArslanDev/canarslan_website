@@ -1,5 +1,29 @@
 part of '../home_page.dart';
 
+/// Grows the hero to fill whatever the window has left, so the marquee lands
+/// exactly on the fold rather than a little above it with dead space beneath.
+///
+/// The hero is content-sized by nature; on a tall window that left a strip of
+/// empty canvas under the strip, which read as the page having stopped early.
+/// A minimum — not a fixed height — so a short window or long copy still lets
+/// the hero grow past the fold instead of clipping.
+class _HeroViewport extends StatelessWidget {
+  const _HeroViewport();
+
+  @override
+  Widget build(BuildContext context) {
+    final window = MediaQuery.sizeOf(context);
+    final available = window.height -
+        SignalNavBar.height -
+        SignalMarquee.heightFor(window.width);
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: available > 0 ? available : 0),
+      child: const _Hero(),
+    );
+  }
+}
+
 class _Hero extends StatelessWidget {
   const _Hero();
 
