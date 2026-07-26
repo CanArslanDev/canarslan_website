@@ -45,6 +45,10 @@ abstract class CommonCopy {
   static const role = Copy('SOFTWARE DEVELOPER', 'YAZILIM GELİŞTİRİCİ');
   static const getInTouch = Copy('Get in touch', 'İLETİŞİME GEÇİN');
 
+  /// The nav bar's action once the links no longer fit beside it.
+  static const menu = Copy('Menu', 'MENÜ');
+  static const close = Copy('Close', 'KAPAT');
+
   static const loadingRepos = Copy(
     'Loading repositories',
     'Repolar yükleniyor',

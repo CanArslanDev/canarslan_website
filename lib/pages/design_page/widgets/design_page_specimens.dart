@@ -377,6 +377,31 @@ class _SwitchDemoState extends State<_SwitchDemo> {
   }
 }
 
+class _NavPanelDemo extends StatelessWidget {
+  const _NavPanelDemo();
+
+  @override
+  Widget build(BuildContext context) {
+    // A fixed height because this is a specimen, not layout: the panel fills
+    // the body in use, and the tile grid measures its rows with an
+    // IntrinsicHeight that the panel's own LayoutBuilder cannot answer.
+    return SizedBox(
+      height: 300,
+      child: SignalNavPanel(
+        selectedIndex: 1,
+        items: [
+          for (final (path, label) in Routes.navigation)
+            SignalNavItem(
+              label: label.of(context),
+              meta: path,
+              onTap: () => RouteService.go(path),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 /// One museum plaque inside the paper band.
 class _MuseumTile extends StatelessWidget {
   const _MuseumTile({

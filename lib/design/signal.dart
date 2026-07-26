@@ -20,6 +20,7 @@ export 'components/signal_footer.dart';
 export 'components/signal_label_switch.dart';
 export 'components/signal_marquee.dart';
 export 'components/signal_nav.dart';
+export 'components/signal_nav_panel.dart';
 export 'components/signal_reveal.dart';
 export 'components/signal_scramble_text.dart';
 export 'components/signal_spec_strip.dart';

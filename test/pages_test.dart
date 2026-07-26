@@ -10,6 +10,7 @@ import 'package:canarslan_website/pages/not_found/not_found_page.dart';
 import 'package:canarslan_website/pages/packages/packages_page.dart';
 import 'package:canarslan_website/pages/widgets/package_grid.dart';
 import 'package:canarslan_website/pages/work/work_page.dart';
+import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -307,6 +308,68 @@ void main() {
         await teardownTree(tester);
       });
     }
+  });
+
+  group('navigation', () {
+    // Below `expanded` the bar drops the links, and for a while nothing took
+    // their place: a phone or a tablet could reach exactly one of the five
+    // routes. That the menu covers all of them is the point of it, so it is
+    // asserted rather than assumed.
+    for (final (label, size) in [('phone', phone), ('tablet', tablet)]) {
+      testWidgets('every route is reachable on a $label', (tester) async {
+        await pumpPage(tester, const HomePage(), size: size);
+
+        expect(
+          find.byType(SignalNavPanel),
+          findsNothing,
+          reason: 'the menu should start closed',
+        );
+
+        await tester.tap(find.text(CommonCopy.menu.en.toUpperCase()));
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.byType(SignalNavPanel), findsOneWidget);
+        for (final (path, section) in Routes.navigation) {
+          expect(
+            find.text(section.en.toUpperCase()),
+            findsWidgets,
+            reason: '$path is missing from the menu',
+          );
+        }
+
+        await teardownTree(tester);
+      });
+    }
+
+    testWidgets('the bar keeps its links and its action on a desktop',
+        (tester) async {
+      await pumpPage(tester, const HomePage(), size: desktop);
+
+      expect(find.text(CommonCopy.getInTouch.en.toUpperCase()), findsWidgets);
+      expect(find.text(CommonCopy.menu.en.toUpperCase()), findsNothing);
+      await teardownTree(tester);
+    });
+
+    testWidgets('widening past the breakpoint puts the page back',
+        (tester) async {
+      await pumpPage(tester, const HomePage(), size: phone);
+      await tester.tap(find.text(CommonCopy.menu.en.toUpperCase()));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byType(SignalNavPanel), findsOneWidget);
+
+      // The links are visible again at this width, so a panel standing in for
+      // them has nothing left to stand in for.
+      tester.view.physicalSize = desktop;
+      await tester.pump();
+
+      expect(find.byType(SignalNavPanel), findsNothing);
+
+      // Then drain the reveal's delayed re-checks. The body is built fresh by
+      // the frame above, so its 120/400/1000ms callbacks are scheduled from
+      // that instant and would still be pending at teardown.
+      await tester.pump(const Duration(milliseconds: 1200));
+      await teardownTree(tester);
+    });
   });
 
   group('language', () {

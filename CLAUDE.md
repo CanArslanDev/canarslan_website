@@ -103,6 +103,11 @@ because top-level sections are siblings; back should leave the site, not walk a
 pile of visited tabs. Deep links work through `RouteService.initialRoute`, and
 an unknown path lands on the 404 page rather than silently redirecting.
 
+The bar shows the links only from `expanded` (≥1100) up. Below that its action
+becomes a menu toggle and `SignalNavPanel` takes the body's place with all five
+routes — so every route is reachable at every width. `test/pages_test.dart`
+asserts that at phone and tablet size rather than trusting it.
+
 Route changes carry **no transition** (`Transition.noTransition`,
 `Duration.zero` on the `GetMaterialApp`). Each page builds its own nav bar and
 footer, so an animated swap slides the whole frame — chrome included — across

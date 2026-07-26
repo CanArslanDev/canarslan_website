@@ -354,6 +354,11 @@ class _ComponentsSection extends StatelessWidget {
                   child: _SwitchDemo(),
                 ),
                 const _RuleBox(
+                  label: 'Nav paneli — expanded altında bağlantıların yerini '
+                      'alır. Gövdenin üstünde yüzmez, yerine geçer.',
+                  child: _NavPanelDemo(),
+                ),
+                const _RuleBox(
                   label: 'Etiketler',
                   child: Wrap(
                     spacing: SignalSpace.x2,

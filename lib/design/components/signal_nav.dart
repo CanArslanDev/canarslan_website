@@ -11,10 +11,34 @@ import 'package:canarslan_website/design/tokens/signal_typography.dart';
 import 'package:flutter/widgets.dart';
 
 class SignalNavItem {
-  const SignalNavItem({required this.label, required this.onTap});
+  const SignalNavItem({required this.label, required this.onTap, this.meta});
 
   final String label;
   final VoidCallback onTap;
+
+  /// Shown beside the label in `SignalNavPanel` — the route's own path. A
+  /// menu that names where each row goes is the instrument voice applied to
+  /// navigation, and it is true information rather than decoration.
+  final String? meta;
+}
+
+/// The menu that stands in for the nav links once they no longer fit.
+///
+/// Passing one is what makes the bar's action a menu toggle below `expanded`;
+/// without it the bar keeps its call to action at every width, which is right
+/// for a surface you do not navigate within.
+class SignalNavMenu {
+  const SignalNavMenu({
+    required this.openLabel,
+    required this.closeLabel,
+    required this.isOpen,
+    required this.onToggle,
+  });
+
+  final String openLabel;
+  final String closeLabel;
+  final bool isOpen;
+  final VoidCallback onToggle;
 }
 
 /// Frosted top bar: blurred canvas, one hairline underneath, wordmark left,
@@ -28,6 +52,7 @@ class SignalNavBar extends StatelessWidget {
     required this.onAction,
     super.key,
     this.compactActionLabel,
+    this.menu,
     this.trailing,
   });
 
@@ -42,7 +67,17 @@ class SignalNavBar extends StatelessWidget {
   /// The full phrase and a language switch do not both fit beside the wordmark
   /// on a phone. Naming the destination rather than the invitation is the
   /// cheaper of the two things to give up.
+  /// Used only when there is no [menu] to put in the action's place.
   final String? compactActionLabel;
+
+  /// Replaces the action with a menu toggle below `expanded`.
+  ///
+  /// The links fold away there, and until this existed nothing took their
+  /// place: on a phone and on a tablet the bar offered one destination and the
+  /// other four routes could not be reached at all. Handing the pill over is
+  /// what makes room — the call to action is itself one of the five rows in
+  /// the panel, so nothing is lost but a tap.
+  final SignalNavMenu? menu;
 
   /// Sits between the links and the action, at every width.
   ///
@@ -63,6 +98,9 @@ class SignalNavBar extends StatelessWidget {
     // wordmark, the switch and the CTA alone rather than crushing the links.
     final showLinks = context.breakpoint.isExpanded;
     final compact = context.breakpoint.isCompact;
+    // Wherever the links are gone, the action hands its place to the menu —
+    // otherwise the bar would offer one destination and hide the rest.
+    final asMenu = !showLinks && menu != null;
 
     return ClipRect(
       child: BackdropFilter(
@@ -114,14 +152,22 @@ class SignalNavBar extends StatelessWidget {
                       width: compact ? SignalSpace.x4 : SignalSpace.x6,
                     ),
                   ],
-                  SignalPillButton(
-                    label: compact
-                        ? (compactActionLabel ?? actionLabel)
-                        : actionLabel,
-                    onPressed: onAction,
-                    variant: SignalButtonVariant.filled,
-                    compact: true,
-                  ),
+                  if (asMenu)
+                    SignalPillButton(
+                      label: menu!.isOpen ? menu!.closeLabel : menu!.openLabel,
+                      onPressed: menu!.onToggle,
+                      variant: SignalButtonVariant.filled,
+                      compact: true,
+                    )
+                  else
+                    SignalPillButton(
+                      label: compact
+                          ? (compactActionLabel ?? actionLabel)
+                          : actionLabel,
+                      onPressed: onAction,
+                      variant: SignalButtonVariant.filled,
+                      compact: true,
+                    ),
                 ],
               ),
             ),

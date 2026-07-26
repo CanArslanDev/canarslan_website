@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 /// Each route builds its own [AppShell]. Pages are siblings, not sections of
 /// one scrolling document — tapping a nav item changes the route and the page
 /// starts at the top with its own content.
-class AppShell extends StatelessWidget {
+class AppShell extends StatefulWidget {
   const AppShell({
     required this.route,
     required this.slivers,
@@ -29,8 +29,32 @@ class AppShell extends StatelessWidget {
   final List<Widget> slivers;
 
   @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  bool _menuOpen = false;
+
+  @override
   Widget build(BuildContext context) {
     final palette = context.signal;
+    final route = widget.route;
+
+    // Below `expanded` the bar cannot hold the links, so the menu carries
+    // them. Above it the links are back and any open state is simply ignored
+    // — a window widened while the panel was open shows the page again
+    // rather than a menu that no longer has a reason to exist.
+    final canMenu = !context.breakpoint.isExpanded;
+    final showMenu = canMenu && _menuOpen;
+
+    final items = [
+      for (final (path, label) in Routes.navigation)
+        SignalNavItem(
+          label: label.of(context),
+          meta: path,
+          onTap: () => RouteService.go(path),
+        ),
+    ];
 
     return Scaffold(
       backgroundColor: palette.canvas,
@@ -39,38 +63,42 @@ class AppShell extends StatelessWidget {
           SignalNavBar(
             wordmark: StringConstants.name,
             selectedIndex: Routes.navigationIndexOf(route),
-            items: [
-              for (final (path, label) in Routes.navigation)
-                SignalNavItem(
-                  label: label.of(context),
-                  onTap: () => RouteService.go(path),
-                ),
-            ],
+            items: items,
             trailing: const LanguageSwitch(),
             actionLabel: CommonCopy.getInTouch.of(context),
-            compactActionLabel: SectionCopy.contact.of(context),
             onAction: () => RouteService.go(Routes.contact),
+            menu: SignalNavMenu(
+              openLabel: CommonCopy.menu.of(context),
+              closeLabel: CommonCopy.close.of(context),
+              isOpen: showMenu,
+              onToggle: () => setState(() => _menuOpen = !_menuOpen),
+            ),
           ),
           Expanded(
-            child: CustomScrollView(
-              key: PageStorageKey<String>(route),
-              slivers: [
-                ...slivers,
-                SliverToBoxAdapter(
-                  child: SignalFooter(
-                    name: StringConstants.name,
-                    role: CommonCopy.role.of(context),
-                    contactLines: const [
-                      StringConstants.email,
-                      StringConstants.github,
+            child: showMenu
+                ? SignalNavPanel(
+                    items: items,
+                    selectedIndex: Routes.navigationIndexOf(route),
+                  )
+                : CustomScrollView(
+                    key: PageStorageKey<String>(route),
+                    slivers: [
+                      ...widget.slivers,
+                      SliverToBoxAdapter(
+                        child: SignalFooter(
+                          name: StringConstants.name,
+                          role: CommonCopy.role.of(context),
+                          contactLines: const [
+                            StringConstants.email,
+                            StringConstants.github,
+                          ],
+                          locationLabel: StringConstants.location,
+                          utcOffsetHours: IntConstants.timezone,
+                          note: 'canarslan.me',
+                        ),
+                      ),
                     ],
-                    locationLabel: StringConstants.location,
-                    utcOffsetHours: IntConstants.timezone,
-                    note: 'canarslan.me',
                   ),
-                ),
-              ],
-            ),
           ),
         ],
       ),

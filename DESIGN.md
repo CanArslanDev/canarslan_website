@@ -228,6 +228,13 @@ shipped this way — fine at 1440px, broken at 390px — and every test was gree
 - **Watch the collapsed state, not just the narrow one.** Content pinned to the
   bottom of a tile with a `Spacer` loses its gap once rows size to content; give
   it a real `SizedBox` too.
+- **Navigation has to survive the collapse.** Hiding a control at a breakpoint
+  is only legitimate if something takes its job. The nav links fold away below
+  `expanded` and for a while nothing replaced them, so a phone and a tablet
+  could reach exactly one of the five routes and the site had no navigation at
+  all. Below `expanded` the bar's action becomes the menu toggle and
+  `SignalNavPanel` carries the routes. **A hidden control without a
+  replacement is a missing feature, not a responsive decision.**
 - **A stack of full-bleed rows must say so:** `crossAxisAlignment:
   CrossAxisAlignment.stretch`. A `Column` centres by default and hands its
   children loose constraints, so every row takes the width of its own content
@@ -380,7 +387,8 @@ Import the barrel: `package:canarslan_website/design/signal.dart`.
 | `SignalTileGrid` | Equal-width tiles on shared rules. Column count comes from the available width, so it collapses to one on a phone. **Use this instead of a `Wrap` of fixed-width panels.** A preview passes `maxRows` and the full list; see § Excerpts. |
 | `SignalInversion` | Swaps the palette for its subtree — the museum band |
 | `SignalMuseumGrid` | The same grid in 2px ink, for the paper band |
-| `SignalNavBar` | Frosted bar, hairline underneath, links from `expanded` up. The wordmark is the flexible child — on a very narrow screen it is what gives, never the row. |
+| `SignalNavBar` | Frosted bar, hairline underneath, links from `expanded` up. The wordmark is the flexible child — on a very narrow screen it is what gives, never the row. Below `expanded` the action becomes the menu toggle. |
+| `SignalNavPanel` | The routes, once the bar cannot hold them. Takes the body's place rather than floating over it — this system has no elevation. |
 | `SignalLabelSwitch` | `EN / TR`. Mono labels, lit against dim, no pill and no accent — see § Language |
 | `SignalPillButton` | `filled` + `ghost`. They are designed to appear as a pair. |
 | `SignalChip`, `SignalTabs` | Pill controls; the active tab carries the accent glow |
