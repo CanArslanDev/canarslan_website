@@ -1,9 +1,17 @@
 import 'package:canarslan_website/services/storage_service_stub.dart'
     if (dart.library.js_interop) 'package:canarslan_website/services/storage_service_web.dart';
 
-/// Caches remote pub.dev and GitHub responses between visits.
+/// Caches remote pub.dev and GitHub responses between visits, and remembers
+/// the one preference the site has.
 class StorageService {
   static const _publisherPackagesKey = 'publisherPackages';
+  static const _localeKey = 'locale';
+
+  // Language. Absent means the visitor has never chosen, which is not the same
+  // as choosing English — it is what the default is for.
+  static void saveLocale(String tag) => StorageBackend.write(_localeKey, tag);
+
+  static String? get loadLocale => StorageBackend.read(_localeKey);
 
   // Publisher packages
   static void savePublisherPackages(String json) =>
@@ -30,6 +38,4 @@ class StorageService {
 
   static String? loadGithubRepositories(String username) =>
       StorageBackend.read(_reposKey(username));
-
-  static void clearCache() => StorageBackend.clear();
 }

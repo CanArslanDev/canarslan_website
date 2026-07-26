@@ -8,3 +8,6 @@ void openUrlImpl(String url) {
   final target = _passThroughSchemes.any(url.startsWith) ? url : 'https://$url';
   web.window.open(target, '_blank');
 }
+
+void setDocumentLanguageImpl(String tag) =>
+    web.document.documentElement?.setAttribute('lang', tag);

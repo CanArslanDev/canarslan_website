@@ -15,11 +15,10 @@ class _WorkPreview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PageHeading(
-            eyebrow: 'Repositories',
-            stamp: 'Selected work',
-            lede: "GitHub'da en çok yıldız alan dört projem."
-                '\nTamamına Work sayfasından ulaşabilirsiniz.',
+          PageHeading(
+            eyebrow: HomeCopy.workEyebrow.of(context),
+            stamp: HomeCopy.selectedWork.of(context),
+            lede: HomeCopy.workLede.of(context),
             rule: true,
           ),
           FutureBuilder<List<RepoInfo>>(
@@ -27,11 +26,13 @@ class _WorkPreview extends StatelessWidget {
             builder: (context, snapshot) {
               final repos = snapshot.data;
               if (repos == null) {
-                return const PagePlaceholder(message: 'Repolar yükleniyor');
+                return PagePlaceholder(
+                  message: CommonCopy.loadingRepos.of(context),
+                );
               }
               if (repos.isEmpty) {
-                return const PagePlaceholder(
-                  message: 'Repolara şu anda ulaşılamıyor',
+                return PagePlaceholder(
+                  message: CommonCopy.noRepos.of(context),
                 );
               }
               return Column(
@@ -40,7 +41,7 @@ class _WorkPreview extends StatelessWidget {
                   RepoList(repos: repos.take(_limit).toList()),
                   const SizedBox(height: SignalSpace.x8),
                   SignalPillButton(
-                    label: 'All work',
+                    label: HomeCopy.allWork.of(context),
                     trailing: '->',
                     onPressed: () => RouteService.go(Routes.work),
                   ),
@@ -70,23 +71,23 @@ class _PackagesPreview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PageHeading(
+          PageHeading(
             eyebrow: 'pub.dev // canarslan.me',
-            stamp: 'Packages',
-            lede: "GitHub'da ve pub.dev'de paylaştığım açık kaynaklı "
-                'paketlerim.'
-                '\nTamamına Packages sayfasından ulaşabilirsiniz.',
+            stamp: SectionCopy.packages.of(context),
+            lede: HomeCopy.packagesLede.of(context),
           ),
           FutureBuilder<List<PackageInfo>>(
             future: SiteRepository.instance.packages(),
             builder: (context, snapshot) {
               final packages = snapshot.data;
               if (packages == null) {
-                return const PagePlaceholder(message: 'Paketler yükleniyor');
+                return PagePlaceholder(
+                  message: CommonCopy.loadingPackages.of(context),
+                );
               }
               if (packages.isEmpty) {
-                return const PagePlaceholder(
-                  message: 'Paketlere şu anda ulaşılamıyor',
+                return PagePlaceholder(
+                  message: CommonCopy.noPackages.of(context),
                 );
               }
               return Column(
@@ -95,7 +96,7 @@ class _PackagesPreview extends StatelessWidget {
                   PackageGrid(packages: packages, maxRows: _rows),
                   const SizedBox(height: SignalSpace.x8),
                   SignalPillButton(
-                    label: 'All packages',
+                    label: HomeCopy.allPackages.of(context),
                     trailing: '->',
                     onPressed: () => RouteService.go(Routes.packages),
                   ),

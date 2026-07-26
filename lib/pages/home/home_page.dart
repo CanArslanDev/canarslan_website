@@ -3,6 +3,7 @@ import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/data/site_repository.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/pages/widgets/about_bio.dart';
 import 'package:canarslan_website/pages/widgets/about_credentials.dart';
@@ -31,14 +32,9 @@ class HomePage extends StatelessWidget {
       route: Routes.home,
       slivers: [
         const _HeroViewport().asSliver,
-        const SignalMarquee(
+        SignalMarquee(
           items: [
-            'Flutter',
-            'Dart',
-            'pub.dev publisher',
-            'Open source',
-            'Mobile',
-            'Web',
+            for (final item in HomeCopy.marquee) item.of(context),
           ],
         ).asSliver,
         const _WorkPreview().asSliver,

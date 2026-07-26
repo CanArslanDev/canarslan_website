@@ -1,6 +1,7 @@
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/data/site_repository.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/pages/widgets/repo_list.dart';
 import 'package:canarslan_website/routes/routes.dart';
@@ -15,7 +16,10 @@ class WorkPage extends StatefulWidget {
 }
 
 class _WorkPageState extends State<WorkPage> {
-  static const _all = 'All';
+  /// Identifies the "no filter" tab. Never shown — the visible label comes
+  /// from [WorkCopy.filterAll] — so switching language cannot drop the
+  /// selection the way a translated sentinel would.
+  static const _all = '';
 
   String _filter = _all;
 
@@ -35,11 +39,10 @@ class _WorkPageState extends State<WorkPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const PageHeading(
+              PageHeading(
                 eyebrow: 'github.com/CanArslanDev',
-                stamp: 'Work',
-                lede: 'Açık kaynak repolarımın tamamı, yıldız sayısına göre '
-                    'sıralıdır.\nYazılım diline göre filtreleyebilirsiniz.',
+                stamp: SectionCopy.work.of(context),
+                lede: WorkCopy.lede.of(context),
                 rule: true,
               ),
               FutureBuilder<List<RepoInfo>>(
@@ -47,13 +50,13 @@ class _WorkPageState extends State<WorkPage> {
                 builder: (context, snapshot) {
                   final repos = snapshot.data;
                   if (repos == null) {
-                    return const PagePlaceholder(
-                      message: 'Repolar yükleniyor',
+                    return PagePlaceholder(
+                      message: CommonCopy.loadingRepos.of(context),
                     );
                   }
                   if (repos.isEmpty) {
-                    return const PagePlaceholder(
-                      message: 'Repolara şu anda ulaşılamıyor',
+                    return PagePlaceholder(
+                      message: CommonCopy.noRepos.of(context),
                     );
                   }
                   return _Results(
@@ -94,8 +97,11 @@ class _Results extends StatelessWidget {
     final languages = counts.keys.toList()
       ..sort((a, b) => counts[b]!.compareTo(counts[a]!));
 
-    final labels = [_WorkPageState._all, ...languages];
-    final selected = labels.indexOf(filter).clamp(0, labels.length - 1);
+    // The first tab is the sentinel; every other one is a language, which is
+    // data and never translated.
+    final values = [_WorkPageState._all, ...languages];
+    final labels = [WorkCopy.filterAll.of(context), ...languages];
+    final selected = values.indexOf(filter).clamp(0, values.length - 1);
     final visible = filter == _WorkPageState._all
         ? repos
         : repos.where((r) => r.language == filter).toList();
@@ -106,13 +112,14 @@ class _Results extends StatelessWidget {
         SignalTabs(
           labels: labels,
           selected: selected,
-          onSelected: (index) => onFilter(labels[index]),
+          onSelected: (index) => onFilter(values[index]),
         ),
         const SizedBox(height: SignalSpace.x8),
         RepoList(repos: visible),
         const SizedBox(height: SignalSpace.x6),
         SignalMicro(
-          '${visible.length} / ${repos.length} repo',
+          '${visible.length} / ${repos.length} '
+          '${WorkCopy.repoUnit.of(context)}',
         ),
       ],
     );

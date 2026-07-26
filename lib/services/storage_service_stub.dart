@@ -9,6 +9,4 @@ class StorageBackend {
   static String? read(String key) => _memory[key];
 
   static void write(String key, String value) => _memory[key] = value;
-
-  static void clear() => _memory.clear();
 }

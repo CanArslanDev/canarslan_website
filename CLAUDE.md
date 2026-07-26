@@ -81,6 +81,7 @@ lib/
     design_page/        ← the /design storybook
     widgets/              RepoList and PackageGrid, shared between pages
   data/                   typed models + the cached SiteRepository
+  i18n/                 ← every string the site says, in both languages
   routes/                 route table; Routes.navigation drives the nav bar
   services/               pub.dev, GitHub, storage, navigation
 assets/fonts/           Clash Display, General Sans, JetBrains Mono (bundled)
@@ -125,8 +126,28 @@ that way: the list exists to be deleted from, not added to.
   does not react to resizing and breaks at the extremes.
 - **Lints:** `very_good_analysis`, 80-column lines. `dart fix --apply` handles
   most of it.
-- **Text is content, not chrome:** page copy is Turkish, code and identifiers
-  are English.
+- **Text is content, not chrome:** code and identifiers are English; page copy
+  is whatever `lib/i18n/site_copy.dart` says in the language in force.
+
+## Language
+
+The site is bilingual. **English is the default** — the browser's
+`navigator.language` is deliberately not consulted — and the visitor switches
+from the nav bar, which writes the choice to `localStorage` and onto
+`<html lang>`.
+
+Every string lives in `lib/i18n/site_copy.dart` as a `Copy(en, tr)` pair, and
+pages resolve it with `.of(context)`. **Adding a string means writing both
+languages**; there is no fallback and no key lookup, so the compiler catches a
+missing side. Design-system components never see a `Copy` — they take plain
+`String`s. The full rules, including why the switch is not a pill, are in
+`DESIGN.md` § Language.
+
+Anything that comes from an API — a repository's language, a package's platform
+tags — stays as it arrives. The one exception is a package's publish date,
+which is stored as a `DateTime` and phrased at render time: the data is cached
+for the session and the language is not, so a baked "2 months ago" would be
+stuck in whichever language happened to be showing when it was fetched.
 
 ## Data
 

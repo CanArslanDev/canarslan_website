@@ -17,6 +17,7 @@ export 'components/signal_ascii_field.dart';
 export 'components/signal_buttons.dart';
 export 'components/signal_data_row.dart';
 export 'components/signal_footer.dart';
+export 'components/signal_label_switch.dart';
 export 'components/signal_marquee.dart';
 export 'components/signal_nav.dart';
 export 'components/signal_reveal.dart';

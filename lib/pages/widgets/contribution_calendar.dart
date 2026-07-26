@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
+import 'package:canarslan_website/i18n/site_locale.dart';
 import 'package:flutter/widgets.dart';
 
 /// A year of commits as a contact sheet of days.
@@ -51,6 +53,7 @@ class ContributionCalendar extends StatelessWidget {
                   cell: cell,
                   gap: _gap,
                   labelBand: _labelBand,
+                  months: CalendarCopy.months(context.locale),
                   empty: palette.recess,
                   line: palette.line,
                   accent: palette.accent,
@@ -92,21 +95,18 @@ class _CalendarPainter extends CustomPainter {
     required this.cell,
     required this.gap,
     required this.labelBand,
+    required this.months,
     required this.empty,
     required this.line,
     required this.accent,
     required this.label,
   });
 
-  static const _months = [
-    'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-    'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
-  ];
-
   final List<List<ContributionDay?>> weeks;
   final double cell;
   final double gap;
   final double labelBand;
+  final List<String> months;
   final Color empty;
   final Color line;
   final Color accent;
@@ -163,7 +163,7 @@ class _CalendarPainter extends CustomPainter {
         lastMonth = first.date.month;
         final painter = TextPainter(
           text: TextSpan(
-            text: _months[first.date.month - 1],
+            text: months[first.date.month - 1],
             style: SignalType.micro(label),
           ),
           textDirection: TextDirection.ltr,
@@ -185,7 +185,8 @@ class _CalendarPainter extends CustomPainter {
       old.weeks != weeks ||
       old.cell != cell ||
       old.accent != accent ||
-      old.empty != empty;
+      old.empty != empty ||
+      old.months != months;
 }
 
 class _Legend extends StatelessWidget {
@@ -216,16 +217,22 @@ class _Legend extends StatelessWidget {
       runSpacing: SignalSpace.x2,
       children: [
         Text(
-          '$total katkı // son bir yıl'.toUpperCase(),
+          CalendarCopy.total(total).of(context).toUpperCase(),
           style: SignalType.eyebrow(palette.muted),
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Less'.toUpperCase(), style: SignalType.micro(palette.dim)),
+            Text(
+              CalendarCopy.less.of(context).toUpperCase(),
+              style: SignalType.micro(palette.dim),
+            ),
             for (final alpha in _CalendarPainter.ramp) swatch(alpha),
             const SizedBox(width: SignalSpace.x2),
-            Text('More'.toUpperCase(), style: SignalType.micro(palette.dim)),
+            Text(
+              CalendarCopy.more.of(context).toUpperCase(),
+              style: SignalType.micro(palette.dim),
+            ),
           ],
         ),
       ],

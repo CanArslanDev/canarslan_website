@@ -147,7 +147,10 @@ void main() {
     test('type comes from SignalType, never from a raw TextStyle', () {
       expectClean(
         scan(
-          (l) => l.contains('TextStyle('),
+          // Constructing a TextStyle, not merely naming one: `TextStyle(` also
+          // appears inside `AnimatedDefaultTextStyle(`, which builds no style
+          // of its own and is not what this rule is about.
+          (l) => RegExp(r'(?<![A-Za-z])TextStyle\(').hasMatch(l),
           exempt: [
             ...tokenFiles,
             // Paints glyphs into the ASCII atlas, below the widget layer.

@@ -1,6 +1,7 @@
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
 import 'package:flutter/widgets.dart';
 
@@ -24,7 +25,7 @@ class RepoList extends StatelessWidget {
               name: repo.name,
               description: repo.hasDescription
                   ? repo.description
-                  : 'Açıklama yok.',
+                  : CommonCopy.noDescription.of(context),
               meta: [
                 repo.language,
                 '* ${repo.stars}',

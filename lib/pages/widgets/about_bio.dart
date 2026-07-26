@@ -1,5 +1,6 @@
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:flutter/widgets.dart';
 
 /// The bio, written once.
@@ -33,24 +34,19 @@ class AboutBio extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Merhaba, ben Can. $age yaşındayım ve yazılım geliştiriyorum.',
+            AboutCopy.greeting(age).of(context),
             style: SignalType.lede(palette.fg)
                 .copyWith(fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: SignalSpace.x4),
           Text(
-            'Çoğunlukla ${StringConstants.framework} ve '
-            '${StringConstants.lang} ile çalışıyorum. Mobil ve web tarafında '
-            'ürünler yazıyorum, işime yarayan bir şey çıkınca da paketleyip '
-            "pub.dev'de paylaşıyorum.",
+            AboutCopy.work.of(context),
             style: SignalType.lede(palette.muted),
           ),
           if (!short) ...[
             const SizedBox(height: SignalSpace.x4),
             Text(
-              'Öğrendiklerimi açık kaynak bırakmayı seviyorum. Bu sitenin '
-              "kodu da tasarımı da GitHub'da duruyor, dilerseniz "
-              'bakabilirsiniz.',
+              AboutCopy.openSource.of(context),
               style: SignalType.lede(palette.muted),
             ),
           ],

@@ -27,6 +27,8 @@ class SignalNavBar extends StatelessWidget {
     required this.actionLabel,
     required this.onAction,
     super.key,
+    this.compactActionLabel,
+    this.trailing,
   });
 
   final String wordmark;
@@ -34,6 +36,20 @@ class SignalNavBar extends StatelessWidget {
   final int selectedIndex;
   final String actionLabel;
   final VoidCallback onAction;
+
+  /// A shorter form of [actionLabel], used once the bar runs out of room.
+  ///
+  /// The full phrase and a language switch do not both fit beside the wordmark
+  /// on a phone. Naming the destination rather than the invitation is the
+  /// cheaper of the two things to give up.
+  final String? compactActionLabel;
+
+  /// Sits between the links and the action, at every width.
+  ///
+  /// The links fold away below `expanded`; whatever goes here does not, which
+  /// is why the language switch lives in this slot rather than among them — a
+  /// visitor on a phone still has to be able to change language.
+  final Widget? trailing;
 
   /// Fixed, and exposed: a page that needs to know how much of the window is
   /// left below the bar has to be able to ask.
@@ -44,8 +60,9 @@ class SignalNavBar extends StatelessWidget {
     final palette = context.signal;
     // Links only appear once there is genuinely room for them beside the
     // wordmark and the action. Between phone and desktop the bar carries the
-    // wordmark and the CTA alone rather than crushing the links.
+    // wordmark, the switch and the CTA alone rather than crushing the links.
     final showLinks = context.breakpoint.isExpanded;
+    final compact = context.breakpoint.isCompact;
 
     return ClipRect(
       child: BackdropFilter(
@@ -61,12 +78,26 @@ class SignalNavBar extends StatelessWidget {
               ruled: false,
               child: Row(
                 children: [
-                  Text(
-                    wordmark.toUpperCase(),
-                    style: SignalType.caption(palette.fg)
-                        .copyWith(fontWeight: FontWeight.w500),
+                  // Expanded rather than a Spacer beside a fixed label: the
+                  // wordmark is the one thing in the bar that is identity
+                  // rather than function, so it is the one that gives when a
+                  // very narrow screen runs the row out of width. Everything
+                  // to its right keeps its size, and the bar cannot overflow.
+                  Expanded(
+                    child: Text(
+                      wordmark.toUpperCase(),
+                      // One step down the mono scale on a phone. Chrome can
+                      // afford the smallest role, and that is what buys the
+                      // switch its place beside the action.
+                      style: (compact
+                              ? SignalType.micro(palette.fg)
+                              : SignalType.caption(palette.fg))
+                          .copyWith(fontWeight: FontWeight.w500),
+                      maxLines: 1,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  const Spacer(),
                   if (showLinks) ...[
                     for (var i = 0; i < items.length; i++)
                       Padding(
@@ -77,8 +108,16 @@ class SignalNavBar extends StatelessWidget {
                         ),
                       ),
                   ],
+                  if (trailing != null) ...[
+                    trailing!,
+                    SizedBox(
+                      width: compact ? SignalSpace.x4 : SignalSpace.x6,
+                    ),
+                  ],
                   SignalPillButton(
-                    label: actionLabel,
+                    label: compact
+                        ? (compactActionLabel ?? actionLabel)
+                        : actionLabel,
                     onPressed: onAction,
                     variant: SignalButtonVariant.filled,
                     compact: true,

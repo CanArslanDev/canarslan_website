@@ -122,7 +122,9 @@ either — it would turn *MOBILE* into *MOBİLE* in the same mixed-language line
 
 **Author Turkish words already uppercase in the source** (`TÜRKİYE`,
 `GELİŞTİRİCİ`). `toUpperCase()` leaves `İ` untouched, so the label survives the
-transform intact.
+transform intact. In `lib/i18n/site_copy.dart` this is generalised: any string
+headed for an uppercase slot is written uppercase in *both* languages, so the
+file reads as what the page shows and the trap cannot be re-entered.
 
 ### The stamp is the only H2
 
@@ -132,6 +134,36 @@ above it. Reach for `SignalStamp`.
 
 **Do:** use a `SignalType` role.
 **Don't:** construct a `TextStyle` in a widget.
+
+---
+
+## Language
+
+The site speaks English and Turkish. English is the default; the visitor
+switches from the nav bar and the choice is remembered.
+
+**Components take `String`s and know nothing about language.** `SignalStamp`
+does not import copy, and no design-system file does. Pages resolve a `Copy`
+at the point of use — `SectionCopy.about.of(context)` — and that call is also
+what subscribes them to the switch, so the widgets that rebuild on a change are
+exactly the ones showing words.
+
+Every string lives in `lib/i18n/site_copy.dart` as a `Copy(en, tr)` pair on
+adjacent lines. There is no key lookup and no missing-key fallback: a string
+cannot be added or edited in one language without the other being right there,
+and a typo is a compile error rather than a key echoed onto the page.
+
+Prose uses ability forms and addresses the reader as *siz* —
+*yazabilirsiniz*, not *yazın*. Buttons are the exception: a control names its
+action.
+
+Data is never translated. A repository's language, a package's platform tags, a
+Harvard certificate's title and a team's name read the same in both.
+
+The switch is `SignalLabelSwitch`, and it is deliberately **not a pill.** The
+bar's accent is already spent twice — the filled action and the active link's
+underline — and a third mark there would break the rationing rule. It speaks
+the nav link's language instead: lit foreground against dim.
 
 ---
 
@@ -210,6 +242,18 @@ the home page's package preview did. Pass the full list and a `maxRows`; the
 grid trims once it knows how many columns it has.
 
 Lists are different: `RepoList` has no columns, so `take(4)` there is honest.
+
+### Both languages, every time
+
+Turkish is the longer language nearly everywhere — *Get in touch* becomes
+*İletişime geçin* — so a phone that fits in English proves nothing. The nav
+bar is where this bites first: adding the language switch put the bar 83px
+over at 390px in English and a further 3px over in Turkish, and both were
+invisible until the geometry test ran.
+
+`test/pages_test.dart` walks every page at 390 × 844 in **both** languages.
+Adding copy means adding both sides; the test is what stops one of them from
+being the only one that was ever looked at.
 
 ### Enforcement
 
@@ -310,7 +354,8 @@ Import the barrel: `package:canarslan_website/design/signal.dart`.
 | `SignalTileGrid` | Equal-width tiles on shared rules. Column count comes from the available width, so it collapses to one on a phone. **Use this instead of a `Wrap` of fixed-width panels.** A preview passes `maxRows` and the full list; see § Excerpts. |
 | `SignalInversion` | Swaps the palette for its subtree — the museum band |
 | `SignalMuseumGrid` | The same grid in 2px ink, for the paper band |
-| `SignalNavBar` | Frosted bar, hairline underneath, links from `expanded` up |
+| `SignalNavBar` | Frosted bar, hairline underneath, links from `expanded` up. The wordmark is the flexible child — on a very narrow screen it is what gives, never the row. |
+| `SignalLabelSwitch` | `EN / TR`. Mono labels, lit against dim, no pill and no accent — see § Language |
 | `SignalPillButton` | `filled` + `ghost`. They are designed to appear as a pair. |
 | `SignalChip`, `SignalTabs` | Pill controls; the active tab carries the accent glow |
 | `SignalEyebrow`, `SignalStamp`, `SignalLede`, `SignalMicro` | The text roles |

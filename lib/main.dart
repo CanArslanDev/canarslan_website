@@ -1,5 +1,6 @@
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_locale.dart';
 import 'package:canarslan_website/routes/pages.dart';
 import 'package:canarslan_website/services/route_service.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,17 @@ void main() {
 
 class CanArslanSite extends StatelessWidget {
   const CanArslanSite({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Above the router, so changing page keeps the language and changing
+    // language does not disturb the route.
+    return const SiteLocaleScope(child: _App());
+  }
+}
+
+class _App extends StatelessWidget {
+  const _App();
 
   @override
   Widget build(BuildContext context) {

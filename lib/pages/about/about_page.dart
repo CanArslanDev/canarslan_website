@@ -1,4 +1,5 @@
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/pages/widgets/about_bio.dart';
 import 'package:canarslan_website/pages/widgets/about_credentials.dart';
@@ -24,7 +25,7 @@ class AboutPage extends StatelessWidget {
     return AppShell(
       route: Routes.about,
       slivers: [
-        const SignalInversion(
+        SignalInversion(
           child: SignalSection(
             field: SignalFieldMode.ripple,
             fieldOpacity: 0.32,
@@ -33,23 +34,23 @@ class AboutPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 PageHeading(
-                  eyebrow: 'Can Arslan // YAZILIM GELİŞTİRİCİ',
-                  stamp: 'About',
+                  eyebrow: AboutCopy.eyebrow.of(context),
+                  stamp: SectionCopy.about.of(context),
                 ),
-                AboutBio(),
-                SizedBox(height: SignalSpace.x16),
-                SignalEyebrow('Certificates'),
-                SizedBox(height: SignalSpace.x4),
-                CredentialGrid(
+                const AboutBio(),
+                const SizedBox(height: SignalSpace.x16),
+                SignalEyebrow(AboutCopy.certificates.of(context)),
+                const SizedBox(height: SignalSpace.x4),
+                const CredentialGrid(
                   entries: AboutCredentials.certificates,
-                  plaque: 'Certificate',
+                  plaque: AboutCopy.certificate,
                 ),
-                SizedBox(height: SignalSpace.x16),
-                SignalEyebrow('Competitions'),
-                SizedBox(height: SignalSpace.x4),
-                CredentialGrid(
+                const SizedBox(height: SignalSpace.x16),
+                SignalEyebrow(AboutCopy.competitions.of(context)),
+                const SizedBox(height: SignalSpace.x4),
+                const CredentialGrid(
                   entries: AboutCredentials.competitions,
-                  plaque: 'Project manager',
+                  plaque: AboutCopy.projectManager,
                 ),
               ],
             ),

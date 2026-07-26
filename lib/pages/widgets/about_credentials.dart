@@ -1,4 +1,5 @@
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:flutter/widgets.dart';
 
 /// Certificates and competitions, written once.
@@ -6,18 +7,38 @@ import 'package:flutter/widgets.dart';
 /// Both the About page and the home page's paper band show them, so the lists
 /// and the tile live here rather than in whichever page happened to need them
 /// first.
+///
+/// Titles are [Copy] because some of them have a real name in each language
+/// and some do not: a Harvard certificate is called what the certificate says
+/// in either language, while a TEKNOFEST category has an actual Turkish name.
+/// Organisations and team names are never translated.
 abstract class AboutCredentials {
-  static const certificates = <(String, String)>[
-    ('Computer Science', 'Harvard University'),
-    ('Artificial Intelligence', 'Harvard University'),
-    ('Computer Science for Business Professionals', 'Harvard University'),
-    ('Elements of AI', 'University of Helsinki'),
+  static const certificates = <(Copy, String)>[
+    (Copy('Computer Science', 'Computer Science'), 'Harvard University'),
+    (
+      Copy('Artificial Intelligence', 'Artificial Intelligence'),
+      'Harvard University',
+    ),
+    (
+      Copy(
+        'Computer Science for Business Professionals',
+        'Computer Science for Business Professionals',
+      ),
+      'Harvard University',
+    ),
+    (Copy('Elements of AI', 'Elements of AI'), 'University of Helsinki'),
   ];
 
-  static const competitions = <(String, String)>[
-    ('Efficiency Challenge', 'Delta Cells'),
-    ('Efficiency Challenge', 'Alaz'),
-    ('Technology for the Benefit of Humanity', 'AKUS'),
+  static const competitions = <(Copy, String)>[
+    (Copy('Efficiency Challenge', 'Efficiency Challenge'), 'Delta Cells'),
+    (Copy('Efficiency Challenge', 'Efficiency Challenge'), 'Alaz'),
+    (
+      Copy(
+        'Technology for the Benefit of Humanity',
+        'İnsanlık Yararına Teknoloji',
+      ),
+      'AKUS',
+    ),
   ];
 }
 
@@ -30,10 +51,10 @@ class CredentialGrid extends StatelessWidget {
     this.minTileWidth = 255,
   });
 
-  final List<(String, String)> entries;
+  final List<(Copy, String)> entries;
 
   /// The small label above each title, e.g. `Certificate`.
-  final String plaque;
+  final Copy plaque;
 
   final double minTileWidth;
 
@@ -44,8 +65,8 @@ class CredentialGrid extends StatelessWidget {
       children: [
         for (final (title, organisation) in entries)
           _Plaque(
-            plaque: plaque,
-            title: title,
+            plaque: plaque.of(context),
+            title: title.of(context),
             organisation: organisation,
           ),
       ],

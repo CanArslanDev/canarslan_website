@@ -1,6 +1,8 @@
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/data/site_repository.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
+import 'package:canarslan_website/i18n/site_locale.dart';
 import 'package:canarslan_website/pages/about/about_page.dart';
 import 'package:canarslan_website/pages/contact/contact_page.dart';
 import 'package:canarslan_website/pages/home/home_page.dart';
@@ -8,6 +10,7 @@ import 'package:canarslan_website/pages/not_found/not_found_page.dart';
 import 'package:canarslan_website/pages/packages/packages_page.dart';
 import 'package:canarslan_website/pages/widgets/package_grid.dart';
 import 'package:canarslan_website/pages/work/work_page.dart';
+import 'package:canarslan_website/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -48,7 +51,7 @@ void main() {
         url: 'https://pub.dev/packages/$name',
         description: description,
         publisher: 'canarslan.me',
-        publishedAgo: '2 months ago',
+        published: DateTime.utc(2026, 5),
         platforms: const ['Android', 'iOS', 'Web'],
         likes: '42',
         points: '160',
@@ -92,6 +95,7 @@ void main() {
     WidgetTester tester,
     Widget page, {
     required Size size,
+    SiteLocale locale = SiteLocale.en,
   }) async {
     tester.view
       ..physicalSize = size
@@ -105,14 +109,38 @@ void main() {
     };
     addTearDown(() => FlutterError.onError = previousOnError);
 
+    // The scope reads its starting language from storage, so setting it here
+    // exercises the restore path as well as the layout.
+    StorageService.saveLocale(locale.tag);
+
     await tester.pumpWidget(
       MaterialApp(
         theme: SignalTheme.instrument,
-        home: page,
+        home: SiteLocaleScope(child: page),
         debugShowCheckedModeBanner: false,
       ),
     );
     await tester.pump(const Duration(milliseconds: 1200));
+  }
+
+  /// Every box laid out wider than the screen. A box that overflows raises
+  /// nothing — `Wrap`, `Stack` and a clipped `Row` place it happily — so
+  /// geometry is the only signal.
+  List<String> spillage(WidgetTester tester, double width) {
+    final tooWide = <String>[];
+    void walk(RenderObject node) {
+      final name = node.runtimeType.toString();
+      // Content inside a clip or overflow box is deliberately larger than its
+      // slot; the marquee track is the obvious one.
+      if (name.contains('Clip') || name.contains('Overflow')) return;
+      if (node is RenderBox && node.hasSize && node.size.width > width + 0.5) {
+        tooWide.add('$name ${node.size.width.toStringAsFixed(0)}px');
+      }
+      node.visitChildren(walk);
+    }
+
+    walk(tester.binding.renderViews.first);
+    return tooWide.toSet().toList();
   }
 
   Future<void> teardownTree(WidgetTester tester) async {
@@ -139,36 +167,27 @@ void main() {
         });
       }
 
-      testWidgets('fits a phone screen', (tester) async {
-        await pumpPage(tester, entry.value(), size: phone);
+      // Turkish is the longer language almost everywhere — the nav bar's
+      // "Get in touch" becomes "İletişime geçin" — so a phone that fits in
+      // English proves nothing about the site a Turkish visitor sees.
+      for (final locale in SiteLocale.values) {
+        testWidgets('fits a phone screen in ${locale.tag}', (tester) async {
+          await pumpPage(tester, entry.value(), size: phone, locale: locale);
 
-        // A box wider than the screen raises nothing — Wrap and Stack place it
-        // happily and it runs off the edge. Geometry is the only signal.
-        final tooWide = <String>[];
-        void walk(RenderObject node) {
-          final name = node.runtimeType.toString();
-          // Content inside a clip or overflow box is deliberately larger than
-          // its slot; the marquee track is the obvious one.
-          if (name.contains('Clip') || name.contains('Overflow')) return;
-          if (node is RenderBox &&
-              node.hasSize &&
-              node.size.width > phone.width + 0.5) {
-            tooWide.add('$name ${node.size.width.toStringAsFixed(0)}px');
-          }
-          node.visitChildren(walk);
-        }
+          expect(
+            spillage(tester, phone.width),
+            isEmpty,
+            reason: '${entry.key} overflows a phone in ${locale.tag}',
+          );
+          await teardownTree(tester);
+        });
 
-        walk(tester.binding.renderViews.first);
-
-        expect(
-          tooWide.toSet().toList(),
-          isEmpty,
-          reason: '${entry.key} overflows a phone:\n${tooWide.toSet().join(
-                '\n',
-              )}',
-        );
-        await teardownTree(tester);
-      });
+        testWidgets('builds in ${locale.tag} on a phone', (tester) async {
+          await pumpPage(tester, entry.value(), size: phone, locale: locale);
+          expect(tester.takeException(), isNull);
+          await teardownTree(tester);
+        });
+      }
     });
   }
 
@@ -251,6 +270,59 @@ void main() {
       await pumpPage(tester, const PackagesPage(), size: desktop);
 
       expect(tiles(), findsNWidgets(seededPackages.length));
+      await teardownTree(tester);
+    });
+  });
+
+  group('language', () {
+    testWidgets('the site opens in English', (tester) async {
+      // No stored choice: the default is a decision, not the browser's guess.
+      StorageService.saveLocale('');
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: SiteLocaleScope(child: AboutPage()),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 1200));
+
+      expect(find.text(AboutCopy.certificates.en.toUpperCase()), findsWidgets);
+      expect(find.text(AboutCopy.certificates.tr.toUpperCase()), findsNothing);
+      await teardownTree(tester);
+    });
+
+    testWidgets('the switch turns the whole page over', (tester) async {
+      await pumpPage(tester, const AboutPage(), size: desktop);
+
+      expect(find.text(SectionCopy.about.en.toUpperCase()), findsWidgets);
+
+      await tester.tap(find.text(SiteLocale.tr.label));
+      await tester.pump(const Duration(milliseconds: 400));
+
+      // The stamp, an eyebrow and a plaque — three separate widgets that never
+      // hear about each other, all following the one switch.
+      expect(find.text(SectionCopy.about.tr.toUpperCase()), findsWidgets);
+      expect(find.text(AboutCopy.certificates.tr.toUpperCase()), findsWidgets);
+      expect(find.text(AboutCopy.certificate.tr.toUpperCase()), findsWidgets);
+      expect(find.text(AboutCopy.certificates.en.toUpperCase()), findsNothing);
+
+      await teardownTree(tester);
+    });
+
+    testWidgets('a stored choice survives a reload', (tester) async {
+      await pumpPage(tester, const AboutPage(), size: desktop);
+      await tester.tap(find.text(SiteLocale.tr.label));
+      await tester.pump(const Duration(milliseconds: 200));
+      await teardownTree(tester);
+
+      // A fresh tree, as a reload would build — reading the same storage.
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: SiteLocaleScope(child: AboutPage()),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 1200));
+
+      expect(find.text(AboutCopy.certificates.tr.toUpperCase()), findsWidgets);
       await teardownTree(tester);
     });
   });

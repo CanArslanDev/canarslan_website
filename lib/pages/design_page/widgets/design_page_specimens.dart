@@ -357,6 +357,26 @@ class _TabsDemoState extends State<_TabsDemo> {
   }
 }
 
+class _SwitchDemo extends StatefulWidget {
+  const _SwitchDemo();
+
+  @override
+  State<_SwitchDemo> createState() => _SwitchDemoState();
+}
+
+class _SwitchDemoState extends State<_SwitchDemo> {
+  int _selected = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SignalLabelSwitch(
+      labels: const ['EN', 'TR'],
+      selected: _selected,
+      onSelected: (index) => setState(() => _selected = index),
+    );
+  }
+}
+
 /// One museum plaque inside the paper band.
 class _MuseumTile extends StatelessWidget {
   const _MuseumTile({

@@ -39,7 +39,7 @@ class _Hero extends StatelessWidget {
         children: [
           // Turkish words are authored uppercase: Dart's toUpperCase() is
           // locale-independent and would render "Türkiye" as "TÜRKIYE".
-          const SignalEyebrow('Mobile engineer // Flutter & Dart // TÜRKİYE'),
+          SignalEyebrow(HomeCopy.heroEyebrow.of(context)),
           const SizedBox(height: SignalSpace.x6),
           const SignalDisplayLine('Can', weight: SignalDisplayWeight.mass),
           const SignalDisplayLine('Arslan', weight: SignalDisplayWeight.hair),
@@ -50,13 +50,12 @@ class _Hero extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Yazılım geliştiriciyim ve ürünler yapıyorum.',
+                    text: HomeCopy.heroLede.of(context),
                     style: SignalType.lede(palette.fg)
                         .copyWith(fontWeight: FontWeight.w500),
                   ),
                   TextSpan(
-                    text: '\nOpen source projelerimi GitHub ve '
-                        "pub.dev'de paylaşıyorum.",
+                    text: '\n${HomeCopy.heroSecondLine.of(context)}',
                     style: SignalType.lede(palette.muted),
                   ),
                 ],
@@ -69,12 +68,12 @@ class _Hero extends StatelessWidget {
             runSpacing: SignalSpace.x3,
             children: [
               SignalPillButton(
-                label: 'Selected work',
+                label: HomeCopy.selectedWork.of(context),
                 variant: SignalButtonVariant.filled,
                 onPressed: () => RouteService.go(Routes.work),
               ),
               SignalPillButton(
-                label: 'Get in touch',
+                label: CommonCopy.getInTouch.of(context),
                 trailing: '->',
                 onPressed: () => RouteService.go(Routes.contact),
               ),
@@ -102,16 +101,25 @@ class _HeroSpec extends StatelessWidget {
         return SignalSpecStrip(
           entries: [
             SignalSpecEntry(
-              label: 'Packages',
+              label: HomeCopy.specPackages.of(context),
               // `--` rather than an em dash: it reads as an empty readout on a
               // mono strip, and the copy elsewhere has no em dashes either.
               value: count == null ? '--' : count.toString().padLeft(2, '0'),
             ),
-            const SignalSpecEntry(label: 'pub.dev', value: 'Publisher'),
-            const SignalSpecEntry(label: 'Open', value: 'Source'),
             SignalSpecEntry(
-              label: 'Live',
-              child: SignalLiveClock(utcOffsetHours: IntConstants.timezone),
+              label: HomeCopy.specPublisherLabel.of(context),
+              value: HomeCopy.specPublisherValue.of(context),
+            ),
+            SignalSpecEntry(
+              label: HomeCopy.specOpenLabel.of(context),
+              value: HomeCopy.specOpenValue.of(context),
+            ),
+            SignalSpecEntry(
+              label: HomeCopy.specLive.of(context),
+              child: SignalLiveClock(
+                utcOffsetHours: IntConstants.timezone,
+                label: HomeCopy.specLive.of(context),
+              ),
             ),
           ],
         );

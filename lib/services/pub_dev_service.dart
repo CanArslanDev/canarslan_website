@@ -45,7 +45,7 @@ abstract class PubDevService {
         url: 'https://pub.dev/packages/$name',
         description: (pubspec['description'] as String? ?? '').trim(),
         publisher: 'canarslan.me',
-        publishedAgo: _relative(latest['published'] as String?),
+        published: DateTime.tryParse(latest['published'] as String? ?? ''),
         platforms: _platforms(metrics['tags']),
         likes: (metrics['likeCount'] ?? 0).toString(),
         points: (metrics['grantedPoints'] ?? 0).toString(),
@@ -74,21 +74,4 @@ abstract class PubDevService {
     ];
   }
 
-  static String _relative(String? iso) {
-    if (iso == null) return '';
-    final published = DateTime.tryParse(iso);
-    if (published == null) return '';
-
-    final days = DateTime.now().toUtc().difference(published.toUtc()).inDays;
-    if (days >= 365) {
-      final years = days ~/ 365;
-      return '$years year${years > 1 ? 's' : ''} ago';
-    }
-    if (days >= 30) {
-      final months = days ~/ 30;
-      return '$months month${months > 1 ? 's' : ''} ago';
-    }
-    if (days >= 1) return '$days day${days > 1 ? 's' : ''} ago';
-    return 'today';
-  }
 }

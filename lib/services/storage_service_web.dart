@@ -6,6 +6,4 @@ class StorageBackend {
 
   static void write(String key, String value) =>
       web.window.localStorage.setItem(key, value);
-
-  static void clear() => web.window.localStorage.clear();
 }

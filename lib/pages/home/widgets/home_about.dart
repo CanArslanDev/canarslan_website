@@ -27,9 +27,9 @@ class _AboutBand extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const PageHeading(
-              eyebrow: 'Can Arslan // YAZILIM GELİŞTİRİCİ',
-              stamp: 'About',
+            PageHeading(
+              eyebrow: AboutCopy.eyebrow.of(context),
+              stamp: SectionCopy.about.of(context),
             ),
             if (wide)
               const Row(
@@ -67,7 +67,7 @@ class _Bio extends StatelessWidget {
         const AboutBio(short: true),
         const SizedBox(height: SignalSpace.x8),
         SignalPillButton(
-          label: 'More about me',
+          label: HomeCopy.moreAboutMe.of(context),
           trailing: '->',
           onPressed: () => RouteService.go(Routes.about),
         ),
@@ -81,17 +81,17 @@ class _Certificates extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SignalEyebrow('Certificates'),
-        SizedBox(height: SignalSpace.x4),
+        SignalEyebrow(AboutCopy.certificates.of(context)),
+        const SizedBox(height: SignalSpace.x4),
         // Narrower than the About page's grid: in half a column the plaques
         // need to be allowed to sit two across rather than falling into one
         // tall stack.
-        CredentialGrid(
+        const CredentialGrid(
           entries: AboutCredentials.certificates,
-          plaque: 'Certificate',
+          plaque: AboutCopy.certificate,
           minTileWidth: 220,
         ),
       ],

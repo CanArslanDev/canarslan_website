@@ -1,4 +1,5 @@
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/route_service.dart';
@@ -19,31 +20,27 @@ class NotFoundPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SignalEyebrow('Error // 404'),
+              SignalEyebrow(NotFoundCopy.eyebrow.of(context)),
               const SizedBox(height: SignalSpace.x6),
               const SignalDisplayLine('404', weight: SignalDisplayWeight.mass),
-              const SignalDisplayLine(
-                'Not found',
+              SignalDisplayLine(
+                NotFoundCopy.title.of(context),
                 weight: SignalDisplayWeight.hair,
               ),
               const SizedBox(height: SignalSpace.x6),
-              const SignalLede(
-                'Aradığınız sayfa burada değil. Taşınmış ya da hiç var '
-                'olmamış olabilir.'
-                '\nAşağıdaki bağlantılardan devam edebilirsiniz.',
-              ),
+              SignalLede(NotFoundCopy.lede.of(context)),
               const SizedBox(height: SignalSpace.x8),
               Wrap(
                 spacing: SignalSpace.x3,
                 runSpacing: SignalSpace.x3,
                 children: [
                   SignalPillButton(
-                    label: 'Home',
+                    label: SectionCopy.home.of(context),
                     variant: SignalButtonVariant.filled,
                     onPressed: () => RouteService.go(Routes.home),
                   ),
                   SignalPillButton(
-                    label: 'Work',
+                    label: SectionCopy.work.of(context),
                     trailing: '->',
                     onPressed: () => RouteService.go(Routes.work),
                   ),

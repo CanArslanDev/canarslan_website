@@ -1,3 +1,5 @@
+import 'package:canarslan_website/i18n/site_copy.dart';
+
 abstract class Routes {
   static const String home = '/';
   static const String work = '/work';
@@ -11,12 +13,16 @@ abstract class Routes {
   static const String design = '/design';
 
   /// The routes the navigation bar offers, in order.
-  static const List<(String path, String label)> navigation = [
-    (home, 'Home'),
-    (work, 'Work'),
-    (packages, 'Packages'),
-    (about, 'About'),
-    (contact, 'Contact'),
+  ///
+  /// The label is a [Copy], not a string: the bar and the section stamp read
+  /// the same entry, so a page cannot end up called one thing in the nav and
+  /// another at the top of itself — in either language.
+  static const List<(String path, Copy label)> navigation = [
+    (home, SectionCopy.home),
+    (work, SectionCopy.work),
+    (packages, SectionCopy.packages),
+    (about, SectionCopy.about),
+    (contact, SectionCopy.contact),
   ];
 
   static int navigationIndexOf(String path) {

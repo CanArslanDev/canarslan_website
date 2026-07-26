@@ -9,18 +9,23 @@ class PackageInfo {
     required this.url,
     required this.description,
     required this.publisher,
-    required this.publishedAgo,
     required this.platforms,
     required this.likes,
     required this.points,
     required this.downloads,
+    this.published,
   });
 
   final String name;
   final String url;
   final String description;
   final String publisher;
-  final String publishedAgo;
+
+  /// When the latest version went out, as a date rather than as "2 months
+  /// ago". The phrasing depends on the language, the data is cached for the
+  /// session and the language is not — so the sentence is built at render
+  /// time and only the fact is stored. Null when pub.dev did not say.
+  final DateTime? published;
   final List<String> platforms;
   final String likes;
   final String points;

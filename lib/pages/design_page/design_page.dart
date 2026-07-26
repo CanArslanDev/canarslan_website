@@ -1,5 +1,7 @@
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/language_switch.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
 import 'package:canarslan_website/services/route_service.dart';
@@ -34,11 +36,16 @@ class DesignPage extends StatelessWidget {
                 items: [
                   for (final (path, label) in Routes.navigation)
                     SignalNavItem(
-                      label: label,
+                      // Outside the locale scope, so this resolves to the
+                      // default. The storybook documents the system rather
+                      // than presenting the site, and does not switch.
+                      label: label.of(context),
                       onTap: () => RouteService.go(path),
                     ),
                 ],
-                actionLabel: 'Get in touch',
+                trailing: const LanguageSwitch(),
+                actionLabel: CommonCopy.getInTouch.of(context),
+                compactActionLabel: SectionCopy.contact.of(context),
                 onAction: () => RouteService.go(Routes.contact),
               ),
               const Expanded(

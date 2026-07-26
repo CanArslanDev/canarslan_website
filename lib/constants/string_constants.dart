@@ -6,6 +6,10 @@ abstract class StringConstants {
   static DateTime birthYear = DateTime(2006, 9, 29);
   static const tag = '@CanArslanDev';
   static const location = 'Türkiye';
+
+  /// The same place, authored uppercase for the slots that transform it.
+  /// `toUpperCase()` is locale-independent and would give a dotless `TÜRKIYE`.
+  static const locationLabel = 'TÜRKİYE';
   static const email = 'canarslanx@gmail.com';
   static const linkedin = 'linkedin.com/in/can-arslann';
   static const x = 'x.com/futuristcan';

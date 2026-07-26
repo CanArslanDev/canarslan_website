@@ -15,22 +15,23 @@ class _Contributions extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PageHeading(
+          PageHeading(
             eyebrow: 'github.com/CanArslanDev',
-            stamp: 'Last year',
-            lede: 'Son bir yılın katkı takvimi, canlı olarak '
-                "GitHub'dan çekiliyor.",
+            stamp: HomeCopy.contributionsStamp.of(context),
+            lede: HomeCopy.contributionsLede.of(context),
           ),
           FutureBuilder<ContributionYear>(
             future: SiteRepository.instance.contributions(),
             builder: (context, snapshot) {
               final year = snapshot.data;
               if (year == null) {
-                return const PagePlaceholder(message: 'Takvim yükleniyor');
+                return PagePlaceholder(
+                  message: HomeCopy.loadingCalendar.of(context),
+                );
               }
               if (year.isEmpty) {
-                return const PagePlaceholder(
-                  message: 'Katkı takvimine şu anda ulaşılamıyor',
+                return PagePlaceholder(
+                  message: HomeCopy.noCalendar.of(context),
                 );
               }
               return SignalReveal(

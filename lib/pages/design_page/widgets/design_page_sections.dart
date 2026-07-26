@@ -339,6 +339,11 @@ class _ComponentsSection extends StatelessWidget {
                   child: _TabsDemo(),
                 ),
                 const _RuleBox(
+                  label: 'Etiket anahtarı — nav çubuğunun dil seçimi. '
+                      'Aksan harcamaz: yanan taraf sadece foreground.',
+                  child: _SwitchDemo(),
+                ),
+                const _RuleBox(
                   label: 'Etiketler',
                   child: Wrap(
                     spacing: SignalSpace.x2,

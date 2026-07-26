@@ -2,6 +2,7 @@ import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/data/site_repository.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/pages/widgets/package_grid.dart';
 import 'package:canarslan_website/routes/routes.dart';
@@ -23,12 +24,10 @@ class PackagesPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const PageHeading(
+              PageHeading(
                 eyebrow: 'pub.dev // canarslan.me',
-                stamp: 'Packages',
-                lede: 'Kendi kullandığım teknolojilerin ve yöntemlerin '
-                    'bazılarını paket olarak paylaşıyorum.'
-                    '\nHepsi açık kaynak ve pub.dev üzerinden yayında.',
+                stamp: SectionCopy.packages.of(context),
+                lede: PackagesCopy.lede.of(context),
                 rule: true,
               ),
               FutureBuilder<List<PackageInfo>>(
@@ -36,13 +35,13 @@ class PackagesPage extends StatelessWidget {
                 builder: (context, snapshot) {
                   final packages = snapshot.data;
                   if (packages == null) {
-                    return const PagePlaceholder(
-                      message: 'Paketler yükleniyor',
+                    return PagePlaceholder(
+                      message: CommonCopy.loadingPackages.of(context),
                     );
                   }
                   if (packages.isEmpty) {
-                    return const PagePlaceholder(
-                      message: 'Paketlere şu anda ulaşılamıyor',
+                    return PagePlaceholder(
+                      message: CommonCopy.noPackages.of(context),
                     );
                   }
                   return Column(
@@ -51,7 +50,7 @@ class PackagesPage extends StatelessWidget {
                       PackageGrid(packages: packages),
                       const SizedBox(height: SignalSpace.x8),
                       SignalPillButton(
-                        label: 'Publisher on pub.dev',
+                        label: PackagesCopy.publisher.of(context),
                         trailing: '->',
                         onPressed: () => JavascriptService.openUrl(
                           StringConstants.pubDevPublisher,

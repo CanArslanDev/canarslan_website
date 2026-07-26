@@ -2,6 +2,7 @@ import 'package:canarslan_website/constants/int_constants.dart';
 import 'package:canarslan_website/constants/string_constants.dart';
 import 'package:canarslan_website/design/signal.dart';
 import 'package:canarslan_website/extensions/string_extension.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
@@ -24,17 +25,15 @@ class ContactPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const PageHeading(
-                eyebrow: 'Say hello',
-                stamp: 'Contact',
-                lede: 'Bir fikriniz, bir sorunuz ya da sadece merakınız varsa '
-                    'yazabilirsiniz.'
-                    '\nE-postalara genelde aynı gün içinde dönüyorum.',
+              PageHeading(
+                eyebrow: ContactCopy.eyebrow.of(context),
+                stamp: SectionCopy.contact.of(context),
+                lede: ContactCopy.lede.of(context),
                 rule: true,
               ),
               const _EmailBlock(),
               const SizedBox(height: SignalSpace.x16),
-              const SignalEyebrow('Elsewhere'),
+              SignalEyebrow(ContactCopy.elsewhere.of(context)),
               const SizedBox(height: SignalSpace.x4),
               DecoratedBox(
                 decoration: BoxDecoration(
@@ -42,31 +41,30 @@ class ContactPage extends StatelessWidget {
                     top: BorderSide(color: context.signal.line),
                   ),
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     LinkRow(
                       name: 'GitHub',
-                      description: 'Projelerim, paketlerim ve bu sitenin '
-                          'kaynak kodu.',
-                      meta: ['Open source'],
+                      description: ContactCopy.github.of(context),
+                      meta: [ContactCopy.githubMeta.of(context)],
                       url: StringConstants.github,
                     ),
                     LinkRow(
                       name: 'LinkedIn',
-                      description: 'İş geçmişim ve profesyonel iletişim için.',
-                      meta: ['Profile'],
+                      description: ContactCopy.linkedin.of(context),
+                      meta: [ContactCopy.linkedinMeta.of(context)],
                       url: StringConstants.linkedin,
                     ),
                     LinkRow(
                       name: 'X',
-                      description: 'Ara sıra neler yaptığımı yazdığım yer.',
-                      meta: ['Feed'],
+                      description: ContactCopy.x.of(context),
+                      meta: [ContactCopy.xMeta.of(context)],
                       url: StringConstants.x,
                     ),
                     LinkRow(
                       name: 'pub.dev',
-                      description: 'Yayımladığım Flutter ve Dart paketleri.',
-                      meta: ['Publisher'],
+                      description: ContactCopy.pubDev.of(context),
+                      meta: [ContactCopy.pubDevMeta.of(context)],
                       url: StringConstants.pubDevPublisher,
                     ),
                   ],
@@ -75,19 +73,19 @@ class ContactPage extends StatelessWidget {
               const SizedBox(height: SignalSpace.x12),
               SignalSpecStrip(
                 entries: [
-                  const SignalSpecEntry(
-                    label: 'Based in',
-                    value: 'TÜRKİYE',
-                  ),
-                  const SignalSpecEntry(
-                    label: 'Usually replies',
-                    value: 'Same day',
+                  SignalSpecEntry(
+                    label: ContactCopy.basedIn.of(context),
+                    value: StringConstants.locationLabel,
                   ),
                   SignalSpecEntry(
-                    label: 'Local time',
+                    label: ContactCopy.repliesLabel.of(context),
+                    value: ContactCopy.repliesValue.of(context),
+                  ),
+                  SignalSpecEntry(
+                    label: ContactCopy.localTime.of(context),
                     child: SignalLiveClock(
                       utcOffsetHours: IntConstants.timezone,
-                      label: 'Now',
+                      label: ContactCopy.now.of(context),
                     ),
                   ),
                 ],
@@ -149,7 +147,7 @@ class _EmailBlockState extends State<_EmailBlock> {
           runSpacing: SignalSpace.x3,
           children: [
             SignalPillButton(
-              label: 'Send an email',
+              label: ContactCopy.sendEmail.of(context),
               variant: SignalButtonVariant.filled,
               trailing: '->',
               onPressed: () => JavascriptService.openUrl(
@@ -157,7 +155,9 @@ class _EmailBlockState extends State<_EmailBlock> {
               ),
             ),
             SignalPillButton(
-              label: _copied ? 'Copied' : 'Copy address',
+              label: _copied
+                  ? ContactCopy.copied.of(context)
+                  : ContactCopy.copyAddress.of(context),
               onPressed: _copy,
             ),
           ],

@@ -1,5 +1,7 @@
 import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/i18n/site_copy.dart';
+import 'package:canarslan_website/i18n/site_locale.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
 import 'package:flutter/widgets.dart';
 
@@ -101,16 +103,33 @@ class _PackageTileState extends State<_PackageTile> {
               const SizedBox(height: SignalSpace.x4),
               Row(
                 children: [
-                  Expanded(child: metric(package.likes, 'likes')),
-                  Expanded(child: metric(package.points, 'points')),
-                  Expanded(child: metric(package.downloads, 'downloads')),
+                  Expanded(
+                    child: metric(
+                      package.likes,
+                      PackagesCopy.likes.of(context),
+                    ),
+                  ),
+                  Expanded(
+                    child: metric(
+                      package.points,
+                      PackagesCopy.points.of(context),
+                    ),
+                  ),
+                  Expanded(
+                    child: metric(
+                      package.downloads,
+                      PackagesCopy.downloads.of(context),
+                    ),
+                  ),
                 ],
               ),
-              if (package.publishedAgo.isNotEmpty &&
-                  package.publishedAgo != 'Unknown') ...[
+              if (package.published != null) ...[
                 const SizedBox(height: SignalSpace.x4),
                 Text(
-                  package.publishedAgo.toUpperCase(),
+                  PackagesCopy.publishedAgo(
+                    package.published!,
+                    context.locale,
+                  ).toUpperCase(),
                   style: SignalType.micro(palette.dim),
                 ),
               ],
