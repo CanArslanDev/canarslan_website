@@ -255,6 +255,11 @@ class _MotionSection extends StatelessWidget {
                       'Yukarı süzülen seyrek tarama satırları',
                     ),
                     (
+                      'Ripple field',
+                      'Kağıt bandı & About',
+                      'Merkezden dışarı açılan halkalar, vortex’ten yavaş',
+                    ),
+                    (
                       'Scramble',
                       'Bölüm başlıkları',
                       'Karakterler rastgeleden hedefe oturur',
@@ -273,6 +278,11 @@ class _MotionSection extends StatelessWidget {
                       'Reveal',
                       'Bloklar',
                       '14px aşağıdan, 320ms, easeOutExpo',
+                    ),
+                    (
+                      'Sayfa değişimi',
+                      'Navigation',
+                      'Yok. Bölümler kardeş, kaydıracak bir yığın yok',
                     ),
                   ])
                     _MotionRow(
