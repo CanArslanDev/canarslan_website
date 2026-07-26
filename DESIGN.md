@@ -254,11 +254,17 @@ worth.
 
 Every animated component honours `MediaQuery.disableAnimationsOf`.
 
-A field's hot glyphs are drawn in `accentText`, not `accent`. On the dark canvas
-the two are the same colour; on paper the raw accent reaches 1.3:1 against the
-ground and the field would disappear. Field opacity is also set higher on paper
-— ink reads far heavier than bone on black at the same alpha — so the paper band
-runs at 0.55 where the dark bands sit between 0.28 and 0.62.
+A field takes its colours from the palette it lands in, and the two grounds are
+not symmetrical:
+
+- **Resting tone.** `dim` on the dark canvas, which is one step lighter than the
+  ground. Paper needs the mirror of that, one step *darker*, and `dim` there is
+  a light grey sitting almost on top of the ground — the same token produces a
+  field you cannot see. On paper the field rests at `fg`, held back by the
+  section's opacity.
+- **Hot glyphs** are `accentText`, not `accent`. On the dark canvas the two are
+  the same colour; on paper the raw accent reaches 1.3:1 against the ground and
+  the highlights would disappear.
 
 One page uses one field per band, and no page repeats a mode. That is the whole
 reason `ripple` exists: the home page had already spent the other three.

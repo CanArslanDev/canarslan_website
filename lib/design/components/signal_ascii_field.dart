@@ -123,6 +123,16 @@ class _SignalAsciiFieldState extends State<SignalAsciiField>
     });
   }
 
+  /// The colour the field rests at.
+  ///
+  /// On the dark canvas that is [SignalPalette.dim] — one step lighter than the
+  /// ground. Paper needs the mirror of that, one step *darker*, and `dim` there
+  /// is a light grey that sits almost on top of the ground: the same token
+  /// produces a field you cannot see. Ink is the equivalent presence, held back
+  /// by the section's own opacity.
+  Color _restingTone(SignalPalette palette) =>
+      palette.isDark ? palette.dim : palette.fg;
+
   void _ensureTicker({required bool animate}) {
     if (!animate) {
       _ticker?.dispose();
@@ -161,7 +171,9 @@ class _SignalAsciiFieldState extends State<SignalAsciiField>
             // reaches 1.3:1 against the ground and the field would vanish.
             // On the dark canvas the two are the same colour, so nothing
             // changes there.
-            base: widget.tintAccent ? palette.accentText : palette.dim,
+            base: widget.tintAccent
+                ? palette.accentText
+                : _restingTone(palette),
             hot: palette.accentText,
             tintAccent: widget.tintAccent,
           ),
