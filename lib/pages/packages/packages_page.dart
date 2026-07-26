@@ -26,7 +26,7 @@ class PackagesPage extends StatelessWidget {
               const PageHeading(
                 eyebrow: 'pub.dev // canarslan.me',
                 stamp: 'Packages',
-                lede: 'Kendi kullandığım teknolojileri ve yöntemlerin '
+                lede: 'Kendi kullandığım teknolojilerin ve yöntemlerin '
                     'bazılarını paket olarak paylaşıyorum.'
                     '\nHepsi açık kaynak ve pub.dev üzerinden yayında.',
                 rule: true,
@@ -42,7 +42,7 @@ class PackagesPage extends StatelessWidget {
                   }
                   if (packages.isEmpty) {
                     return const PagePlaceholder(
-                      message: 'Paketler şu an getirilemedi',
+                      message: 'Paketlere şu anda ulaşılamıyor',
                     );
                   }
                   return Column(

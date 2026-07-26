@@ -31,7 +31,7 @@ class _WorkPreview extends StatelessWidget {
               }
               if (repos.isEmpty) {
                 return const PagePlaceholder(
-                  message: 'Repolar şu an getirilemedi',
+                  message: 'Repolara şu anda ulaşılamıyor',
                 );
               }
               return Column(
@@ -70,7 +70,8 @@ class _PackagesPreview extends StatelessWidget {
             eyebrow: 'pub.dev // canarslan.me',
             stamp: 'Packages',
             lede: "GitHub'da ve pub.dev'de paylaştığım açık kaynaklı "
-                'paketlerim.',
+                'paketlerim.'
+                '\nTamamına Packages sayfasından ulaşabilirsiniz.',
           ),
           FutureBuilder<List<PackageInfo>>(
             future: SiteRepository.instance.packages(),
@@ -81,7 +82,7 @@ class _PackagesPreview extends StatelessWidget {
               }
               if (packages.isEmpty) {
                 return const PagePlaceholder(
-                  message: 'Paketler şu an getirilemedi',
+                  message: 'Paketlere şu anda ulaşılamıyor',
                 );
               }
               return Column(

@@ -18,7 +18,7 @@ class _Contributions extends StatelessWidget {
           const PageHeading(
             eyebrow: 'github.com/CanArslanDev',
             stamp: 'Last year',
-            lede: 'Geçen bir yılın katkı takvimi, canlı olarak '
+            lede: 'Son bir yılın katkı takvimi, canlı olarak '
                 "GitHub'dan çekiliyor.",
           ),
           FutureBuilder<ContributionYear>(
@@ -30,7 +30,7 @@ class _Contributions extends StatelessWidget {
               }
               if (year.isEmpty) {
                 return const PagePlaceholder(
-                  message: 'Katkı takvimi şu an getirilemedi',
+                  message: 'Katkı takvimine şu anda ulaşılamıyor',
                 );
               }
               return SignalReveal(

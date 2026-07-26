@@ -50,7 +50,7 @@ class _Hero extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Yazılım geliştiriciyim ve ürünler geliştiriyorum.',
+                    text: 'Yazılım geliştiriciyim ve ürünler yapıyorum.',
                     style: SignalType.lede(palette.fg)
                         .copyWith(fontWeight: FontWeight.w500),
                   ),
@@ -103,7 +103,9 @@ class _HeroSpec extends StatelessWidget {
           entries: [
             SignalSpecEntry(
               label: 'Packages',
-              value: count == null ? '—' : count.toString().padLeft(2, '0'),
+              // `--` rather than an em dash: it reads as an empty readout on a
+              // mono strip, and the copy elsewhere has no em dashes either.
+              value: count == null ? '--' : count.toString().padLeft(2, '0'),
             ),
             const SignalSpecEntry(label: 'pub.dev', value: 'Publisher'),
             const SignalSpecEntry(label: 'Open', value: 'Source'),

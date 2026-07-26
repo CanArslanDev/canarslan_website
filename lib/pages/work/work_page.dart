@@ -53,7 +53,7 @@ class _WorkPageState extends State<WorkPage> {
                   }
                   if (repos.isEmpty) {
                     return const PagePlaceholder(
-                      message: 'Repolar şu an getirilemedi',
+                      message: 'Repolara şu anda ulaşılamıyor',
                     );
                   }
                   return _Results(
