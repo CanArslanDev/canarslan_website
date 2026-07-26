@@ -252,7 +252,7 @@ durations, one curve.
 | Vortex field | Hero | Polar interference — arms turning around a centre |
 | Wave field | Selected work | A travelling wave, entirely in accent. The one place colour takes a surface. |
 | Scan field | Quiet sections, footer | Sparse lines drifting upward |
-| Ripple field | The paper band | Rings breathing out from the centre. Slower and more ordered than the vortex, because the museum should not feel like the cockpit. |
+| Ripple field | The paper band and `/about` | Rings breathing out from the centre. Slower and more ordered than the vortex, because the museum should not feel like the cockpit. |
 | Scramble | Every section stamp | Characters settle out of noise on reveal |
 | Glitch | Data row hover | The name scrambles for 240ms, then sets |
 | Drawn rule | Section headings | An accent hairline draws in from the left |
@@ -280,6 +280,13 @@ not symmetrical:
 
 One page uses one field per band, and no page repeats a mode. That is the whole
 reason `ripple` exists: the home page had already spent the other three.
+
+Across pages a mode belongs to the surface, not to the route. Paper ripples
+wherever it appears — as the home page's band and as the whole of `/about` —
+and the accent wave runs behind a repository list on both `/work` and its
+preview. Opacity is what changes: a field behind a full page is held well below
+the same field behind a four-row excerpt, because at that height atmosphere
+starts competing with the reading.
 
 ---
 

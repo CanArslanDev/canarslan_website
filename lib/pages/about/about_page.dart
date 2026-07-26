@@ -10,6 +10,12 @@ import 'package:flutter/material.dart';
 /// Certificates and competitions read as museum plaques, which is the whole
 /// reason the inversion band exists in the system. Everything else on the site
 /// is dark; this page is where the light gets turned on.
+///
+/// It carries the same [SignalFieldMode.ripple] as the home page's paper band,
+/// because they are the same room seen twice — the band is the excerpt and this
+/// is the page. Quieter here, on the same reasoning `/work` is quieter than its
+/// preview: the field runs the whole length of a much taller section, and at
+/// that height atmosphere turns into noise behind the reading.
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
@@ -20,6 +26,8 @@ class AboutPage extends StatelessWidget {
       slivers: [
         const SignalInversion(
           child: SignalSection(
+            field: SignalFieldMode.ripple,
+            fieldOpacity: 0.32,
             ruled: false,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
