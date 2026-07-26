@@ -69,3 +69,32 @@ class RepoInfo {
   bool get hasDescription =>
       description.isNotEmpty && description != 'Unknown';
 }
+
+/// One day in the contributions calendar.
+@immutable
+class ContributionDay {
+  const ContributionDay({
+    required this.date,
+    required this.count,
+    required this.level,
+  });
+
+  final DateTime date;
+  final int count;
+
+  /// 0–4, as GitHub buckets them.
+  final int level;
+}
+
+/// A year of contributions.
+@immutable
+class ContributionYear {
+  const ContributionYear({required this.days, required this.total});
+
+  static const empty = ContributionYear(days: [], total: 0);
+
+  final List<ContributionDay> days;
+  final int total;
+
+  bool get isEmpty => days.isEmpty;
+}

@@ -134,6 +134,12 @@ Two public JSON APIs, both read straight from the browser:
   adding one line there.**
 - **GitHub** — `/users/<name>/repos`, unauthenticated and therefore rate-limited
   per IP, cached in `localStorage` for six hours.
+- **Contributions** — `github-contributions-api.jogruber.de/v4/<name>`, which
+  returns the calendar as JSON and allows cross-origin requests. GitHub's own
+  `/users/<name>/contributions` fragment does not, which is why the chart used
+  to need a proxy and went blank when that proxy fell over. The calendar is
+  drawn here (`ContributionCalendar`) rather than by a package, so it uses the
+  accent ramp instead of GitHub green.
 
 Both loaders swallow failure and return an empty list; a page that cannot fetch
 shows a quiet line rather than an error state.

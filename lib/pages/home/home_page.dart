@@ -4,12 +4,12 @@ import 'package:canarslan_website/data/site_models.dart';
 import 'package:canarslan_website/data/site_repository.dart';
 import 'package:canarslan_website/design/signal.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
+import 'package:canarslan_website/pages/widgets/contribution_calendar.dart';
 import 'package:canarslan_website/pages/widgets/package_grid.dart';
 import 'package:canarslan_website/pages/widgets/repo_list.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/javascript_service.dart';
 import 'package:canarslan_website/services/route_service.dart';
-import 'package:contributions_chart/contributions_chart.dart';
 import 'package:flutter/material.dart';
 
 part 'widgets/home_contributions.dart';

@@ -5,7 +5,6 @@ environment:
   sdk: ^3.5.4
 description: Personal website of Can Arslan — canarslan.me
 dependencies:
-  contributions_chart: ^1.0.0+4
   flutter:
     sdk: flutter
   get: ^4.6.6
