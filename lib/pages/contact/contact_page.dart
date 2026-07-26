@@ -27,8 +27,9 @@ class ContactPage extends StatelessWidget {
               const PageHeading(
                 eyebrow: 'Say hello',
                 stamp: 'Contact',
-                lede: 'Bir fikrin, bir sorun ya da sadece merakın varsa yaz. '
-                    'E-postaya genelde aynı gün dönüyorum.',
+                lede: 'Bir fikriniz, bir sorunuz ya da sadece merakınız varsa '
+                    'yazabilirsiniz.'
+                    '\nE-postalara genelde aynı gün içinde dönüyorum.',
                 rule: true,
               ),
               const _EmailBlock(),
@@ -45,25 +46,26 @@ class ContactPage extends StatelessWidget {
                   children: [
                     LinkRow(
                       name: 'GitHub',
-                      description: 'Kod, paketler ve bu sitenin kaynağı.',
+                      description: 'Projelerim, paketlerim ve bu sitenin '
+                          'kaynak kodu.',
                       meta: ['Open source'],
                       url: StringConstants.github,
                     ),
                     LinkRow(
                       name: 'LinkedIn',
-                      description: 'İş geçmişi ve profesyonel iletişim.',
+                      description: 'İş geçmişim ve profesyonel iletişim için.',
                       meta: ['Profile'],
                       url: StringConstants.linkedin,
                     ),
                     LinkRow(
                       name: 'X',
-                      description: 'Kısa notlar ve yaptıklarımdan parçalar.',
+                      description: 'Ara sıra neler yaptığımı yazdığım yer.',
                       meta: ['Feed'],
                       url: StringConstants.x,
                     ),
                     LinkRow(
                       name: 'pub.dev',
-                      description: 'Yayımladığım Dart ve Flutter paketleri.',
+                      description: 'Yayımladığım Flutter ve Dart paketleri.',
                       meta: ['Publisher'],
                       url: StringConstants.pubDevPublisher,
                     ),

@@ -18,7 +18,7 @@ class _Contributions extends StatelessWidget {
           const PageHeading(
             eyebrow: 'github.com/CanArslanDev',
             stamp: 'Last year',
-            lede: 'Geçen bir yılın katkı takvimi — canlı olarak '
+            lede: 'Geçen bir yılın katkı takvimi, canlı olarak '
                 "GitHub'dan çekiliyor.",
           ),
           FutureBuilder<ContributionYear>(

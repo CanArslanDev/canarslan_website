@@ -39,7 +39,7 @@ class _WorkPageState extends State<WorkPage> {
                 eyebrow: 'github.com/CanArslanDev',
                 stamp: 'Work',
                 lede: 'Açık kaynak repolarımın tamamı, yıldız sayısına göre '
-                    'sıralı. Dile göre filtreleyebilirsin.',
+                    'sıralıdır.\nYazılım diline göre filtreleyebilirsiniz.',
                 rule: true,
               ),
               FutureBuilder<List<RepoInfo>>(

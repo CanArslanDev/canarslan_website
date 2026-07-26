@@ -18,8 +18,8 @@ class _WorkPreview extends StatelessWidget {
           const PageHeading(
             eyebrow: 'Repositories',
             stamp: 'Selected work',
-            lede: 'Kart yok — her proje, hover’da içeri kayan bir wireframe '
-                'satır. En çok yıldız alan dördü burada.',
+            lede: "GitHub'da en çok yıldız alan dört projem."
+                '\nTamamına Work sayfasından ulaşabilirsiniz.',
             rule: true,
           ),
           FutureBuilder<List<RepoInfo>>(
@@ -69,7 +69,8 @@ class _PackagesPreview extends StatelessWidget {
           const PageHeading(
             eyebrow: 'pub.dev // canarslan.me',
             stamp: 'Packages',
-            lede: 'Kendim için yazdığım, işe yarayınca yayımladığım paketler.',
+            lede: "GitHub'da ve pub.dev'de paylaştığım açık kaynaklı "
+                'paketlerim.',
           ),
           FutureBuilder<List<PackageInfo>>(
             future: SiteRepository.instance.packages(),

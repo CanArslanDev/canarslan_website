@@ -104,23 +104,22 @@ class _Bio extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Yazılım geliştiriciyim, $age yaşındayım ve '
-            '${StringConstants.location} merkezliyim.',
+            'Merhaba, ben Can. $age yaşındayım ve yazılım geliştiriyorum.',
             style: SignalType.lede(palette.fg)
                 .copyWith(fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: SignalSpace.x4),
           Text(
             'Çoğunlukla ${StringConstants.framework} ve '
-            '${StringConstants.lang} ile mobil ve web ürünleri yazıyorum. '
-            'Bir işi ikinci kez yaptığımda paket hâline getirip pub.dev’de '
-            'yayımlıyorum; şu ana kadar beş paket çıktı.',
+            '${StringConstants.lang} ile çalışıyorum. Mobil ve web tarafında '
+            'ürünler yazıyorum, işime yarayan bir şey çıkınca da paketleyip '
+            "pub.dev'de paylaşıyorum.",
             style: SignalType.lede(palette.muted),
           ),
           const SizedBox(height: SignalSpace.x4),
           Text(
-            'Bu sitenin kendisi de açık kaynak — Flutter web ile yazıldı ve '
-            'tasarımı da dahil her şeyi GitHub’da.',
+            'Öğrendiklerimi açık kaynak bırakmayı seviyorum. Bu sitenin kodu '
+            "da tasarımı da GitHub'da duruyor, dilerseniz bakabilirsiniz.",
             style: SignalType.lede(palette.muted),
           ),
         ],

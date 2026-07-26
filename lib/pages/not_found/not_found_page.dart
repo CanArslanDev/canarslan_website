@@ -28,8 +28,9 @@ class NotFoundPage extends StatelessWidget {
               ),
               const SizedBox(height: SignalSpace.x6),
               const SignalLede(
-                'Aradığın sayfa burada değil. Taşınmış ya da hiç var '
-                'olmamış olabilir.',
+                'Aradığınız sayfa burada değil. Taşınmış ya da hiç var '
+                'olmamış olabilir.'
+                '\nAşağıdaki bağlantılardan devam edebilirsiniz.',
               ),
               const SizedBox(height: SignalSpace.x8),
               Wrap(

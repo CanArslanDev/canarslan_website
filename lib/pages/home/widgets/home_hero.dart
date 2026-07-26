@@ -55,8 +55,8 @@ class _Hero extends StatelessWidget {
                         .copyWith(fontWeight: FontWeight.w500),
                   ),
                   TextSpan(
-                    text: '\nYazdıklarımın çoğu açık kaynak — GitHub ve '
-                        "pub.dev'de.",
+                    text: '\nOpen source projelerimi GitHub ve '
+                        "pub.dev'de paylaşıyorum.",
                     style: SignalType.lede(palette.muted),
                   ),
                 ],

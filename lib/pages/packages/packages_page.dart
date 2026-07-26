@@ -26,8 +26,9 @@ class PackagesPage extends StatelessWidget {
               const PageHeading(
                 eyebrow: 'pub.dev // canarslan.me',
                 stamp: 'Packages',
-                lede: 'Bir işi ikinci kez yaptığımda paket hâline getiriyorum. '
-                    'Hepsi açık kaynak ve pub.dev üzerinden yayında.',
+                lede: 'Kendi kullandığım teknolojileri ve yöntemlerin '
+                    'bazılarını paket olarak paylaşıyorum.'
+                    '\nHepsi açık kaynak ve pub.dev üzerinden yayında.',
                 rule: true,
               ),
               FutureBuilder<List<PackageInfo>>(
