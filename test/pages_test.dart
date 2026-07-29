@@ -403,6 +403,36 @@ void main() {
     });
   });
 
+  group('passcode', () {
+    testWidgets('the keypad drives the code without a system keyboard',
+        (tester) async {
+      await pumpPage(tester, const PasscodePage(), size: phone);
+
+      // No TextField anywhere: on a phone the operating system's keyboard
+      // would cover the page, which is the whole reason the keys are drawn
+      // here instead.
+      expect(find.byType(EditableText), findsNothing);
+      for (final key in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']) {
+        expect(find.text(key), findsOneWidget, reason: 'key $key');
+      }
+
+      expect(find.text(PasscodeCopy.hint.en.toUpperCase()), findsOneWidget);
+
+      for (final digit in ['1', '2', '3', '4', '5', '6']) {
+        await tester.tap(find.text(digit));
+        await tester.pump(const Duration(milliseconds: 150));
+      }
+      await tester.pump(const Duration(milliseconds: 600));
+
+      // Six taps reached the door. There is no vault on the Dart VM, so it
+      // stays shut — which is exactly what a wrong code looks like, and the
+      // page cannot tell the difference on purpose.
+      expect(find.text(PasscodeCopy.wrong.en.toUpperCase()), findsOneWidget);
+
+      await teardownTree(tester);
+    });
+  });
+
   group('language', () {
     testWidgets('the site opens in English', (tester) async {
       // No stored choice: the default is a decision, not the browser's guess.

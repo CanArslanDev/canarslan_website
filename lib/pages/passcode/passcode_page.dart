@@ -20,51 +20,76 @@ class PasscodePage extends StatefulWidget {
 }
 
 class _PasscodePageState extends State<PasscodePage> {
-  /// Raise this and re-run the tool with a longer code; nothing else changes.
-  /// Six digits is a million combinations, which is the weakest part of the
-  /// whole arrangement — see [Vault].
+  /// Raise this and re-run the tool with a longer code; the readout and the
+  /// keypad both size themselves from it. Six digits is a million
+  /// combinations, which is the weakest part of the whole arrangement — see
+  /// [Vault].
   static const _length = 6;
 
-  final _controller = TextEditingController();
   final _focus = FocusNode();
 
+  String _code = '';
   bool _working = false;
   bool _wrong = false;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _focus.requestFocus());
-  }
-
-  @override
   void dispose() {
-    _controller.dispose();
     _focus.dispose();
     super.dispose();
   }
 
-  Future<void> _submit(String code) async {
-    if (_working) return;
+  Future<void> _submit() async {
     setState(() {
       _working = true;
       _wrong = false;
     });
 
-    final opened = await Vault.unlock(code);
+    final opened = await Vault.unlock(_code);
     if (!mounted) return;
 
     setState(() {
       _working = false;
       _wrong = !opened;
-      if (!opened) _controller.clear();
+      if (!opened) _code = '';
     });
-    if (!opened) _focus.requestFocus();
   }
 
-  void _onChanged(String value) {
-    setState(() => _wrong = false);
-    if (value.length == _length) _submit(value);
+  void _press(String digit) {
+    if (_working || _code.length >= _length) return;
+    setState(() {
+      _wrong = false;
+      _code += digit;
+    });
+    if (_code.length == _length) _submit();
+  }
+
+  void _backspace() {
+    if (_working || _code.isEmpty) return;
+    setState(() {
+      _wrong = false;
+      _code = _code.substring(0, _code.length - 1);
+    });
+  }
+
+  void _clear() {
+    if (_working || _code.isEmpty) return;
+    setState(() {
+      _wrong = false;
+      _code = '';
+    });
+  }
+
+  /// A physical keyboard still works, because on a desktop it is the faster
+  /// way in and there is no reason to make someone reach for the mouse.
+  void _onKey(KeyEvent event) {
+    if (event is! KeyDownEvent) return;
+    final label = event.logicalKey.keyLabel;
+    if (label.length == 1 && '0123456789'.contains(label)) {
+      _press(label);
+      return;
+    }
+    if (event.logicalKey == LogicalKeyboardKey.backspace) _backspace();
+    if (event.logicalKey == LogicalKeyboardKey.escape) _clear();
   }
 
   @override
@@ -76,13 +101,19 @@ class _PasscodePageState extends State<PasscodePage> {
           field: SignalFieldMode.scan,
           child: Vault.isOpen
               ? _VaultIndex(onClose: () => setState(Vault.close))
-              : _Gate(
-                  length: _length,
-                  controller: _controller,
-                  focus: _focus,
-                  working: _working,
-                  wrong: _wrong,
-                  onChanged: _onChanged,
+              : KeyboardListener(
+                  focusNode: _focus,
+                  autofocus: true,
+                  onKeyEvent: _onKey,
+                  child: _Gate(
+                    length: _length,
+                    code: _code,
+                    working: _working,
+                    wrong: _wrong,
+                    onDigit: _press,
+                    onBackspace: _backspace,
+                    onClear: _clear,
+                  ),
                 ),
         ).asSliver,
       ],
@@ -93,19 +124,21 @@ class _PasscodePageState extends State<PasscodePage> {
 class _Gate extends StatelessWidget {
   const _Gate({
     required this.length,
-    required this.controller,
-    required this.focus,
+    required this.code,
     required this.working,
     required this.wrong,
-    required this.onChanged,
+    required this.onDigit,
+    required this.onBackspace,
+    required this.onClear,
   });
 
   final int length;
-  final TextEditingController controller;
-  final FocusNode focus;
+  final String code;
   final bool working;
   final bool wrong;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String> onDigit;
+  final VoidCallback onBackspace;
+  final VoidCallback onClear;
 
   @override
   Widget build(BuildContext context) {
@@ -118,13 +151,7 @@ class _Gate extends StatelessWidget {
           lede: PasscodeCopy.lede.of(context),
           rule: true,
         ),
-        _CodeField(
-          length: length,
-          controller: controller,
-          focus: focus,
-          wrong: wrong,
-          onChanged: onChanged,
-        ),
+        _Readout(length: length, filled: code.length, wrong: wrong),
         const SizedBox(height: SignalSpace.x4),
         SignalMicro(
           working
@@ -133,117 +160,217 @@ class _Gate extends StatelessWidget {
                   ? PasscodeCopy.wrong.of(context)
                   : PasscodeCopy.hint.of(context),
         ),
+        const SizedBox(height: SignalSpace.x8),
+        _Keypad(
+          onDigit: onDigit,
+          onBackspace: onBackspace,
+          onClear: onClear,
+        ),
       ],
     );
   }
 }
 
-/// The cells, and the invisible field that actually holds the text.
+/// How many digits are in, drawn as cells rather than as text.
 ///
-/// A real `TextField` rather than a key listener: it is what brings up a
-/// numeric keypad on a phone, what the browser's autofill and paste go
-/// through, and what a screen reader announces. It is sized to nothing and
-/// drawn transparent, and the cells below render its value.
-class _CodeField extends StatelessWidget {
-  const _CodeField({
+/// Structural, so square: this is a readout, not a control. The cells size
+/// themselves from the width they are given, because six at a fixed 52px plus
+/// their gaps is wider than a 390px phone's column and would wrap to a second
+/// row.
+class _Readout extends StatelessWidget {
+  const _Readout({
     required this.length,
-    required this.controller,
-    required this.focus,
+    required this.filled,
     required this.wrong,
-    required this.onChanged,
   });
 
+  static const _gap = SignalSpace.x3;
+  static const _maxCell = 52.0;
+
   final int length;
-  final TextEditingController controller;
-  final FocusNode focus;
+  final int filled;
   final bool wrong;
-  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.signal;
 
-    return Stack(
-      children: [
-        SizedBox(
-          width: 1,
-          height: 1,
-          child: TextField(
-            controller: controller,
-            focusNode: focus,
-            onChanged: onChanged,
-            autofocus: true,
-            keyboardType: TextInputType.number,
-            maxLength: length,
-            showCursor: false,
-            cursorWidth: 0,
-            style: SignalType.micro(SignalPalette.transparent),
-            decoration: const InputDecoration(
-              counterText: '',
-              border: InputBorder.none,
-            ),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-        ),
-        GestureDetector(
-          onTap: focus.requestFocus,
-          child: ValueListenableBuilder<TextEditingValue>(
-            valueListenable: controller,
-            builder: (context, value, _) => Wrap(
-              spacing: SignalSpace.x3,
-              runSpacing: SignalSpace.x3,
-              children: [
-                for (var i = 0; i < length; i++)
-                  _Cell(
-                    filled: i < value.text.length,
-                    lit: !wrong && i == value.text.length && focus.hasFocus,
-                    wrong: wrong,
-                    palette: palette,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final available = constraints.hasBoundedWidth
+            ? constraints.maxWidth
+            : _maxCell * length;
+        final cell = ((available - _gap * (length - 1)) / length)
+            .clamp(0.0, _maxCell);
+
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < length; i++) ...[
+              if (i > 0) const SizedBox(width: _gap),
+              AnimatedContainer(
+                duration: SignalMotion.state,
+                curve: SignalMotion.linearish,
+                width: cell,
+                height: cell * 1.24,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: palette.surface,
+                  border: Border.all(
+                    // The one accent on this page: the cell waiting for the
+                    // next digit.
+                    color: i == filled && !wrong
+                        ? palette.accent
+                        : (wrong ? palette.fg : palette.line),
                   ),
-              ],
-            ),
-          ),
-        ),
-      ],
+                  borderRadius: SignalRadius.structural,
+                ),
+                child: AnimatedOpacity(
+                  opacity: i < filled ? 1 : 0,
+                  duration: SignalMotion.state,
+                  child: Container(width: 10, height: 10, color: palette.fg),
+                ),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }
 
-class _Cell extends StatelessWidget {
-  const _Cell({
-    required this.filled,
-    required this.lit,
-    required this.wrong,
-    required this.palette,
+/// The keypad, on the page rather than from the operating system.
+///
+/// A phone's own keyboard covers half the screen and takes a beat to appear;
+/// a passcode is the one input where the page can do better by drawing the
+/// keys itself. The keys are round because the system says interactive things
+/// are pills, and a pill at equal width and height is a circle — which is also
+/// what a keypad has always looked like.
+///
+/// Three columns, sized from the available width, so the whole thing grows to
+/// meet a thumb in portrait and stops at a sensible size on a desktop.
+class _Keypad extends StatelessWidget {
+  const _Keypad({
+    required this.onDigit,
+    required this.onBackspace,
+    required this.onClear,
   });
 
-  final bool filled;
-  final bool lit;
-  final bool wrong;
-  final SignalPalette palette;
+  static const _columns = 3;
+  static const _gap = SignalSpace.x3;
+  static const _maxKey = 92.0;
+
+  final ValueChanged<String> onDigit;
+  final VoidCallback onBackspace;
+  final VoidCallback onClear;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: SignalMotion.state,
-      curve: SignalMotion.linearish,
-      width: 52,
-      height: 64,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: palette.surface,
-        border: Border.all(
-          // The one accent on this page: the cell waiting for the next digit.
-          color: lit
-              ? palette.accent
-              : (wrong ? palette.fg : palette.line),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final available = constraints.hasBoundedWidth
+            ? constraints.maxWidth
+            : _maxKey * _columns;
+        final key = ((available - _gap * (_columns - 1)) / _columns)
+            .clamp(0.0, _maxKey);
+
+        Widget row(List<Widget> keys) => Padding(
+              padding: const EdgeInsets.only(bottom: _gap),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < keys.length; i++) ...[
+                    if (i > 0) const SizedBox(width: _gap),
+                    SizedBox(width: key, height: key, child: keys[i]),
+                  ],
+                ],
+              ),
+            );
+
+        Widget digit(String value) =>
+            _Key(label: value, onTap: () => onDigit(value));
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            row([digit('1'), digit('2'), digit('3')]),
+            row([digit('4'), digit('5'), digit('6')]),
+            row([digit('7'), digit('8'), digit('9')]),
+            row([
+              _Key(label: 'C', quiet: true, onTap: onClear),
+              digit('0'),
+              // The site writes arrows in ASCII everywhere else, so the
+              // delete key does too rather than reaching for a glyph the
+              // bundled mono face may not carry.
+              _Key(label: '<-', quiet: true, onTap: onBackspace),
+            ]),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _Key extends StatefulWidget {
+  const _Key({
+    required this.label,
+    required this.onTap,
+    this.quiet = false,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+
+  /// Clear and delete: they do something to the code rather than adding to it,
+  /// so they read a step back.
+  final bool quiet;
+
+  @override
+  State<_Key> createState() => _KeyState();
+}
+
+class _KeyState extends State<_Key> {
+  bool _hovered = false;
+  bool _down = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.signal;
+    final lit = _hovered || _down;
+
+    return Semantics(
+      button: true,
+      label: widget.label,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          onTapDown: (_) => setState(() => _down = true),
+          onTapUp: (_) => setState(() => _down = false),
+          onTapCancel: () => setState(() => _down = false),
+          child: AnimatedContainer(
+            duration: SignalMotion.state,
+            curve: SignalMotion.linearish,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _down ? palette.recess : palette.surface,
+              border: Border.all(color: lit ? palette.fg : palette.lineHi),
+              borderRadius: SignalRadius.interactive,
+            ),
+            child: Text(
+              widget.label,
+              style: SignalType.stamp(
+                context.screenWidth,
+                widget.quiet && !lit ? palette.muted : palette.fg,
+              ).copyWith(
+                fontSize: widget.label.length > 1 ? 16 : 24,
+                letterSpacing: 0,
+              ),
+            ),
+          ),
         ),
-        borderRadius: SignalRadius.structural,
-      ),
-      child: AnimatedOpacity(
-        opacity: filled ? 1 : 0,
-        duration: SignalMotion.state,
-        child: Container(width: 10, height: 10, color: palette.fg),
       ),
     );
   }
