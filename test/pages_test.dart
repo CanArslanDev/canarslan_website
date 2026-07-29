@@ -9,6 +9,7 @@ import 'package:canarslan_website/pages/contact/contact_page.dart';
 import 'package:canarslan_website/pages/home/home_page.dart';
 import 'package:canarslan_website/pages/not_found/not_found_page.dart';
 import 'package:canarslan_website/pages/packages/packages_page.dart';
+import 'package:canarslan_website/pages/passcode/passcode_page.dart';
 import 'package:canarslan_website/pages/projects/projects_page.dart';
 import 'package:canarslan_website/pages/widgets/package_grid.dart';
 import 'package:canarslan_website/routes/routes.dart';
@@ -31,6 +32,7 @@ void main() {
     'packages': PackagesPage.new,
     'about': AboutPage.new,
     'contact': ContactPage.new,
+    'passcode': PasscodePage.new,
     '404': NotFoundPage.new,
   };
 

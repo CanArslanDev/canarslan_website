@@ -215,6 +215,42 @@ Regenerate it when the hero's copy or the palette changes. Crawlers cache
 previews hard, so **change the filename too** (`og-2.png`) — re-scraping
 through their debuggers works but is slower to take.
 
+## The passcode gate
+
+`/passcode` is a door in front of a set of private pages. Like `/design` it is
+absent from `Routes.navigation`; unlike `/design` it is meant to be reached by
+someone who was told the address.
+
+**Nothing private is in this repository, and nothing private is in the
+bundle.** The pages are content, not code: they live in `private/pages.json`,
+which is gitignored, and `tool/vault.js` encrypts them into `web/vault.json`,
+which is also gitignored. The build copies that blob to the site root and the
+gate fetches it. Adding a page never touches Dart, so it never touches a
+commit.
+
+```bash
+node tool/vault.js private/pages.json <passcode>   # writes web/vault.json
+flutter build web --release                        # copies it to build/web
+```
+
+AES-256-GCM with a PBKDF2-SHA256 key at 600,000 iterations. The browser side is
+Web Crypto through `dart:js_interop`, so there is no new dependency and the
+derivation runs native; the tool side is Node's own `crypto`, so there is
+nothing to install. Node keeps the GCM tag separate and Web Crypto expects it
+appended — `tool/vault.js` concatenates it, which is the one place the two APIs
+disagree.
+
+**What this is worth.** The blob is served to anyone who asks for it, so its
+only defence is the passcode, and a six-digit code is a million guesses that an
+attacker makes offline at their own pace. The iteration count buys time and
+nothing more. This keeps the pages out of a public repository and away from
+anyone reading `main.dart.js`; it is not a place for anything that would
+genuinely hurt to lose. A longer code is worth more than any amount of tuning
+here — the length is one constant in `passcode_page.dart`.
+
+Nothing decrypted is written to storage and the passcode is never stored, so
+closing the tab locks the door again.
+
 ## Wasm
 
 `flutter build web --release --wasm` compiles, boots, and then **traps**:

@@ -321,3 +321,22 @@ abstract class CalendarCopy {
   static List<String> months(SiteLocale locale) =>
       locale == SiteLocale.tr ? _tr : _en;
 }
+
+/// The passcode gate. Says as little as it can: a door that describes what is
+/// behind it is not much of a door.
+abstract class PasscodeCopy {
+  static const eyebrow = Copy('Restricted', 'KISITLI');
+  static const stamp = Copy('Passcode', 'PAROLA');
+  static const lede = Copy(
+    'These pages are not listed anywhere. If you have the code, this is where'
+        ' it goes.',
+    'Bu sayfalar hiçbir yerde listelenmiyor. Kodunuz varsa buraya '
+        'girebilirsiniz.',
+  );
+  static const hint = Copy('Six digits', 'Altı hane');
+  static const checking = Copy('Checking', 'Kontrol ediliyor');
+  static const wrong = Copy('That did not open it', 'Açılmadı');
+  static const openEyebrow = Copy('Unlocked', 'AÇILDI');
+  static const empty = Copy('Nothing in here yet', 'Burada henüz bir şey yok');
+  static const lock = Copy('Lock again', 'TEKRAR KİLİTLE');
+}

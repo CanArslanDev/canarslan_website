@@ -4,6 +4,7 @@ import 'package:canarslan_website/pages/design_page/design_page.dart';
 import 'package:canarslan_website/pages/home/home_page.dart';
 import 'package:canarslan_website/pages/not_found/not_found_page.dart';
 import 'package:canarslan_website/pages/packages/packages_page.dart';
+import 'package:canarslan_website/pages/passcode/passcode_page.dart';
 import 'package:canarslan_website/pages/projects/projects_page.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,7 @@ abstract class Pages {
     GetPage(name: Routes.notFound, page: NotFoundPage.new),
     // Internal storybook, deliberately not in the navigation.
     GetPage(name: Routes.design, page: DesignPage.new),
+    GetPage(name: Routes.passcode, page: PasscodePage.new),
   ];
 
   static final GetPage<void> unknown =

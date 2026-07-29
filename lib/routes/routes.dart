@@ -12,6 +12,10 @@ abstract class Routes {
   /// [navigation] — it is a working tool, not part of the site.
   static const String design = '/design';
 
+  /// The door in front of the private pages. Also absent from [navigation]:
+  /// it is reached by someone who was told the address.
+  static const String passcode = '/passcode';
+
   /// The routes the navigation bar offers, in order.
   ///
   /// The label is a [Copy], not a string: the bar and the section stamp read
@@ -25,13 +29,17 @@ abstract class Routes {
     (contact, SectionCopy.contact),
   ];
 
-  static int navigationIndexOf(String path) {
-    final index = navigation.indexWhere((entry) => entry.$1 == path);
-    return index == -1 ? 0 : index;
-  }
+  /// Which nav item to light, or -1 for a route that is not one of them.
+  ///
+  /// The 404 page and the passcode gate are real routes with no place in the
+  /// bar; falling back to 0 lit "Home" on both, which told a visitor they were
+  /// somewhere they were not.
+  static int navigationIndexOf(String path) =>
+      navigation.indexWhere((entry) => entry.$1 == path);
 
   static bool isKnown(String path) =>
       path == design ||
+      path == passcode ||
       path == notFound ||
       navigation.any((entry) => entry.$1 == path);
 
