@@ -405,7 +405,7 @@ Import the barrel: `package:canarslan_website/design/signal.dart`.
 | `SignalSection` | Full-bleed band, closed by a hairline, optional ASCII field behind it |
 | `SignalColumn` | The 1280 column with its grid rules |
 | `SignalCell` | Square, hairline-bordered container. Not a card: no radius, no shadow. |
-| `SignalTileGrid` | Equal-width tiles on shared rules. Column count comes from the available width, so it collapses to one on a phone. **Use this instead of a `Wrap` of fixed-width panels.** A preview passes `maxRows` and the full list; see § Excerpts. |
+| `SignalTileGrid` | Equal-width tiles on shared rules. Column count comes from the available width, so it collapses to one on a phone. **Use this instead of a `Wrap` of fixed-width panels.** A preview passes `maxRows` and the full list; see § Excerpts. `columns` fixes the count for grids whose shape is part of what they are, like the passcode keypad. |
 | `SignalInversion` | Swaps the palette for its subtree — the museum band |
 | `SignalMuseumGrid` | The same grid in 2px ink, for the paper band |
 | `SignalNavBar` | Frosted bar, hairline underneath, links from `expanded` up. The wordmark is the flexible child — on a very narrow screen it is what gives, never the row. Below `expanded` the action becomes the menu toggle. |

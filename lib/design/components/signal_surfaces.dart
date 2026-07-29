@@ -228,6 +228,7 @@ class SignalTileGrid extends StatelessWidget {
     super.key,
     this.minTileWidth = 240,
     this.maxColumns = 4,
+    this.columns,
     this.maxRows,
     this.strokeWidth = SignalStroke.hairline,
     this.strokeColor,
@@ -240,6 +241,13 @@ class SignalTileGrid extends StatelessWidget {
   final double minTileWidth;
 
   final int maxColumns;
+
+  /// Fixes the column count instead of deriving it from the width.
+  ///
+  /// For grids whose shape is part of what they are rather than a response to
+  /// the space available — a keypad is three across on any screen, and one
+  /// that reflowed to four on a wide window would stop being a keypad.
+  final int? columns;
 
   /// Caps a preview at whole rows.
   ///
@@ -270,11 +278,11 @@ class SignalTileGrid extends StatelessWidget {
         final fit = constraints.hasBoundedWidth
             ? (constraints.maxWidth / minTileWidth).floor()
             : maxColumns;
-        final columns = fit.clamp(1, maxColumns);
+        final across = columns ?? fit.clamp(1, maxColumns);
         final rowCap = maxRows;
         final visible = rowCap == null
             ? children
-            : children.take(columns * rowCap).toList();
+            : children.take(across * rowCap).toList();
 
         Widget tile(Widget? child) => DecoratedBox(
               decoration: BoxDecoration(
@@ -287,15 +295,15 @@ class SignalTileGrid extends StatelessWidget {
             );
 
         final rows = <Widget>[];
-        for (var start = 0; start < visible.length; start += columns) {
-          final end = math.min(start + columns, visible.length);
+        for (var start = 0; start < visible.length; start += across) {
+          final end = math.min(start + across, visible.length);
           final slice = visible.sublist(start, end);
           rows.add(
             IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (var i = 0; i < columns; i++)
+                  for (var i = 0; i < across; i++)
                     Expanded(child: tile(i < slice.length ? slice[i] : null)),
                 ],
               ),

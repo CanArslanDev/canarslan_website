@@ -54,7 +54,14 @@ class _PasscodePageState extends State<PasscodePage> {
     });
   }
 
+  /// Both ways in end here, and every one of them takes the focus back.
+  ///
+  /// Tapping a drawn key moves focus off the listener, and without this the
+  /// keypad would quietly disable the keyboard the moment you used it — the
+  /// two inputs have to survive being mixed, because on a desktop you might
+  /// click three digits and type the rest.
   void _press(String digit) {
+    _focus.requestFocus();
     if (_working || _code.length >= _length) return;
     setState(() {
       _wrong = false;
@@ -64,6 +71,7 @@ class _PasscodePageState extends State<PasscodePage> {
   }
 
   void _backspace() {
+    _focus.requestFocus();
     if (_working || _code.isEmpty) return;
     setState(() {
       _wrong = false;
@@ -72,6 +80,7 @@ class _PasscodePageState extends State<PasscodePage> {
   }
 
   void _clear() {
+    _focus.requestFocus();
     if (_working || _code.isEmpty) return;
     setState(() {
       _wrong = false;
@@ -142,99 +151,115 @@ class _Gate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PageHeading(
-          eyebrow: PasscodeCopy.eyebrow.of(context),
-          stamp: PasscodeCopy.stamp.of(context),
-          lede: PasscodeCopy.lede.of(context),
-          rule: true,
-        ),
-        _Readout(length: length, filled: code.length, wrong: wrong),
-        const SizedBox(height: SignalSpace.x4),
-        SignalMicro(
-          working
-              ? PasscodeCopy.checking.of(context)
-              : wrong
-                  ? PasscodeCopy.wrong.of(context)
-                  : PasscodeCopy.hint.of(context),
-        ),
-        const SizedBox(height: SignalSpace.x8),
-        _Keypad(
-          onDigit: onDigit,
-          onBackspace: onBackspace,
-          onClear: onClear,
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // One width for the readout and the keypad, so they stack flush. The
+        // keypad's key size decides it: three across, capped, and the readout
+        // divides the same total by however many digits the code has.
+        final available = constraints.hasBoundedWidth
+            ? constraints.maxWidth
+            : _Keypad.maxKey * _Keypad.columns;
+        final key = (available / _Keypad.columns).clamp(0.0, _Keypad.maxKey);
+        final instrument = key * _Keypad.columns;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            PageHeading(
+              eyebrow: PasscodeCopy.eyebrow.of(context),
+              stamp: PasscodeCopy.stamp.of(context),
+              lede: PasscodeCopy.lede.of(context),
+              rule: true,
+            ),
+            _Readout(
+              length: length,
+              filled: code.length,
+              wrong: wrong,
+              width: instrument,
+            ),
+            const SizedBox(height: SignalSpace.x4),
+            SignalMicro(
+              working
+                  ? PasscodeCopy.checking.of(context)
+                  : wrong
+                      ? PasscodeCopy.wrong.of(context)
+                      : PasscodeCopy.hint.of(context),
+            ),
+            const SizedBox(height: SignalSpace.x6),
+            _Keypad(
+              size: key,
+              onDigit: onDigit,
+              onBackspace: onBackspace,
+              onClear: onClear,
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
 /// How many digits are in, drawn as cells rather than as text.
 ///
-/// Structural, so square: this is a readout, not a control. The cells size
-/// themselves from the width they are given, because six at a fixed 52px plus
-/// their gaps is wider than a 390px phone's column and would wrap to a second
-/// row.
+/// The same ruled block as the keypad below it and exactly as wide, so the two
+/// stack into one instrument rather than sitting near each other. Separated
+/// cells were the first attempt and looked like a different component.
+///
+/// The cursor is an accent bar inside the waiting cell rather than a border
+/// around it: the borders here belong to the grid, and lighting one cell's
+/// edge would light its neighbour's too.
 class _Readout extends StatelessWidget {
   const _Readout({
     required this.length,
     required this.filled,
     required this.wrong,
+    required this.width,
   });
-
-  static const _gap = SignalSpace.x3;
-  static const _maxCell = 52.0;
 
   final int length;
   final int filled;
   final bool wrong;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.signal;
+    final cell = width / length;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final available = constraints.hasBoundedWidth
-            ? constraints.maxWidth
-            : _maxCell * length;
-        final cell = ((available - _gap * (length - 1)) / length)
-            .clamp(0.0, _maxCell);
-
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (var i = 0; i < length; i++) ...[
-              if (i > 0) const SizedBox(width: _gap),
-              AnimatedContainer(
-                duration: SignalMotion.state,
-                curve: SignalMotion.linearish,
-                width: cell,
-                height: cell * 1.24,
+    return SizedBox(
+      width: width,
+      child: SignalTileGrid(
+        columns: length,
+        strokeColor: wrong ? palette.fg : palette.line,
+        children: [
+          for (var i = 0; i < length; i++)
+            SizedBox(
+              height: cell * 1.3,
+              child: Stack(
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: palette.surface,
-                  border: Border.all(
-                    // The one accent on this page: the cell waiting for the
-                    // next digit.
-                    color: i == filled && !wrong
-                        ? palette.accent
-                        : (wrong ? palette.fg : palette.line),
+                children: [
+                  AnimatedOpacity(
+                    opacity: i < filled ? 1 : 0,
+                    duration: SignalMotion.state,
+                    child: Container(width: 10, height: 10, color: palette.fg),
                   ),
-                  borderRadius: SignalRadius.structural,
-                ),
-                child: AnimatedOpacity(
-                  opacity: i < filled ? 1 : 0,
-                  duration: SignalMotion.state,
-                  child: Container(width: 10, height: 10, color: palette.fg),
-                ),
+                  if (i == filled && !wrong)
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: SignalSpace.x2),
+                        child: Container(
+                          width: cell * 0.34,
+                          height: 2,
+                          color: palette.accent,
+                        ),
+                      ),
+                    ),
+                ],
               ),
-            ],
-          ],
-        );
-      },
+            ),
+        ],
+      ),
     );
   }
 }
@@ -243,22 +268,32 @@ class _Readout extends StatelessWidget {
 ///
 /// A phone's own keyboard covers half the screen and takes a beat to appear;
 /// a passcode is the one input where the page can do better by drawing the
-/// keys itself. The keys are round because the system says interactive things
-/// are pills, and a pill at equal width and height is a circle — which is also
-/// what a keypad has always looked like.
+/// keys itself.
 ///
-/// Three columns, sized from the available width, so the whole thing grows to
-/// meet a thumb in portrait and stops at a sensible size on a desktop.
+/// One block of square keys sharing their hairlines, which is
+/// [SignalTileGrid] — the same contact sheet the certificates and the packages
+/// sit on. Separated keys with a radius were the wrong instinct: they made the
+/// only circles on the site, and a scatter of loose objects says nothing,
+/// where a ruled block is the architecture. Hover and press change the fill
+/// rather than the border, because the borders belong to the grid and not to
+/// any one key.
+///
+/// Three across on every screen — a keypad that reflowed to four on a wide
+/// window would stop being a keypad — and as tall as it is wide, up to a size
+/// that suits a thumb in portrait without becoming a wall on a desktop.
 class _Keypad extends StatelessWidget {
   const _Keypad({
+    required this.size,
     required this.onDigit,
     required this.onBackspace,
     required this.onClear,
   });
 
-  static const _columns = 3;
-  static const _gap = SignalSpace.x3;
-  static const _maxKey = 92.0;
+  static const columns = 3;
+  static const maxKey = 96.0;
+
+  /// Side of one key, decided by [_Gate] so the readout can match it.
+  final double size;
 
   final ValueChanged<String> onDigit;
   final VoidCallback onBackspace;
@@ -266,47 +301,24 @@ class _Keypad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final available = constraints.hasBoundedWidth
-            ? constraints.maxWidth
-            : _maxKey * _columns;
-        final key = ((available - _gap * (_columns - 1)) / _columns)
-            .clamp(0.0, _maxKey);
+    Widget digit(String value) =>
+        _Key(label: value, size: size, onTap: () => onDigit(value));
 
-        Widget row(List<Widget> keys) => Padding(
-              padding: const EdgeInsets.only(bottom: _gap),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (var i = 0; i < keys.length; i++) ...[
-                    if (i > 0) const SizedBox(width: _gap),
-                    SizedBox(width: key, height: key, child: keys[i]),
-                  ],
-                ],
-              ),
-            );
-
-        Widget digit(String value) =>
-            _Key(label: value, onTap: () => onDigit(value));
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            row([digit('1'), digit('2'), digit('3')]),
-            row([digit('4'), digit('5'), digit('6')]),
-            row([digit('7'), digit('8'), digit('9')]),
-            row([
-              _Key(label: 'C', quiet: true, onTap: onClear),
-              digit('0'),
-              // The site writes arrows in ASCII everywhere else, so the
-              // delete key does too rather than reaching for a glyph the
-              // bundled mono face may not carry.
-              _Key(label: '<-', quiet: true, onTap: onBackspace),
-            ]),
-          ],
-        );
-      },
+    return SizedBox(
+      width: size * columns,
+      child: SignalTileGrid(
+        columns: columns,
+        children: [
+          for (final value in ['1', '2', '3', '4', '5', '6', '7', '8', '9'])
+            digit(value),
+          _Key(label: 'C', size: size, quiet: true, onTap: onClear),
+          digit('0'),
+          // The site writes arrows in ASCII everywhere else, so the delete key
+          // does too rather than reaching for a glyph the bundled mono face
+          // may not carry.
+          _Key(label: '<-', size: size, quiet: true, onTap: onBackspace),
+        ],
+      ),
     );
   }
 }
@@ -314,11 +326,13 @@ class _Keypad extends StatelessWidget {
 class _Key extends StatefulWidget {
   const _Key({
     required this.label,
+    required this.size,
     required this.onTap,
     this.quiet = false,
   });
 
   final String label;
+  final double size;
   final VoidCallback onTap;
 
   /// Clear and delete: they do something to the code rather than adding to it,
@@ -353,12 +367,11 @@ class _KeyState extends State<_Key> {
           child: AnimatedContainer(
             duration: SignalMotion.state,
             curve: SignalMotion.linearish,
+            height: widget.size,
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: _down ? palette.recess : palette.surface,
-              border: Border.all(color: lit ? palette.fg : palette.lineHi),
-              borderRadius: SignalRadius.interactive,
-            ),
+            color: _down
+                ? palette.recess
+                : (lit ? palette.surface : SignalPalette.transparent),
             child: Text(
               widget.label,
               style: SignalType.stamp(

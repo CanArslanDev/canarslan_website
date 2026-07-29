@@ -15,6 +15,7 @@ import 'package:canarslan_website/pages/widgets/package_grid.dart';
 import 'package:canarslan_website/routes/routes.dart';
 import 'package:canarslan_website/services/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Every page, at every width, with assertions on.
@@ -429,6 +430,34 @@ void main() {
       // page cannot tell the difference on purpose.
       expect(find.text(PasscodeCopy.wrong.en.toUpperCase()), findsOneWidget);
 
+      await teardownTree(tester);
+    });
+
+    testWidgets('takes taps and typing in the same code', (tester) async {
+      await pumpPage(tester, const PasscodePage(), size: desktop);
+
+      // Half by hand, half by keyboard: both paths reach the same state.
+      //
+      // This does not prove the focus hand-back in `_press`, and it cannot —
+      // tapping a GestureDetector moves focus in a browser but not here, so
+      // the listener keeps it either way and the VM sees no difference. That
+      // one was checked by driving a real Chrome: three keys clicked, three
+      // typed, door open.
+      for (final digit in ['1', '2', '3']) {
+        await tester.tap(find.text(digit));
+        await tester.pump(const Duration(milliseconds: 120));
+      }
+      for (final key in [
+        LogicalKeyboardKey.digit4,
+        LogicalKeyboardKey.digit5,
+        LogicalKeyboardKey.digit6,
+      ]) {
+        await tester.sendKeyEvent(key);
+        await tester.pump(const Duration(milliseconds: 120));
+      }
+      await tester.pump(const Duration(milliseconds: 600));
+
+      expect(find.text(PasscodeCopy.wrong.en.toUpperCase()), findsOneWidget);
       await teardownTree(tester);
     });
   });
