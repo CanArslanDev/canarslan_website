@@ -339,4 +339,5 @@ abstract class PasscodeCopy {
   static const openEyebrow = Copy('Unlocked', 'AÇILDI');
   static const empty = Copy('Nothing in here yet', 'Burada henüz bir şey yok');
   static const lock = Copy('Lock again', 'TEKRAR KİLİTLE');
+  static const back = Copy('Back', 'GERİ');
 }

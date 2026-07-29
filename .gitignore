@@ -54,4 +54,6 @@ app.*.map.json
 # `web/vault.json` is the encrypted blob `tool/vault.js` produces from it and
 # the build copies to the site root. Neither belongs in a public history.
 private/
+lib/private/
+lib/main_private.dart
 web/vault.json

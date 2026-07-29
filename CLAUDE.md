@@ -230,8 +230,38 @@ commit.
 
 ```bash
 node tool/vault.js private/pages.json <passcode>   # writes web/vault.json
-flutter build web --release                        # copies it to build/web
+flutter build web --release -t lib/main_private.dart
 ```
+
+### Pages that are code, not content
+
+Text goes in the vault. A private page that needs real widgets cannot —
+code has to run, so it cannot be ciphertext. What it can be is absent from
+this repository, which is what `lib/main_private.dart` is for:
+
+```dart
+// lib/main_private.dart — gitignored, and so is lib/private/
+import 'package:canarslan_website/main.dart' as app;
+import 'package:canarslan_website/pages/passcode/private_pages.dart';
+import 'package:canarslan_website/private/some_page.dart';
+
+void main() {
+  PrivatePages.register([
+    PrivatePage(title: 'Some page', build: (_) => const SomePage()),
+  ]);
+  app.main();
+}
+```
+
+A second entrypoint rather than a stub file someone has to keep in sync, or
+a tracked file carrying local edits: `lib/main.dart` stays exactly as it is,
+still builds, still passes its tests, and registers nothing — so a fresh
+clone opens the door onto an empty room and nothing is broken. Build the
+real site with `-t lib/main_private.dart`.
+
+Such a page ships as compiled code, so the passcode is a curtain in front of
+it rather than a lock on it. Anything that must not be readable at all
+belongs in the vault, which is ciphertext until the code opens it.
 
 AES-256-GCM with a PBKDF2-SHA256 key at 600,000 iterations. The browser side is
 Web Crypto through `dart:js_interop`, so there is no new dependency and the
