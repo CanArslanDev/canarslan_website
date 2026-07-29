@@ -217,66 +217,72 @@ through their debuggers works but is slower to take.
 
 ## The passcode gate
 
-`/passcode` is a door in front of a set of private pages. Like `/design` it is
-absent from `Routes.navigation`; unlike `/design` it is meant to be reached by
-someone who was told the address.
+`/passcode` is a door. Like `/design` it is absent from `Routes.navigation`;
+unlike `/design` it is meant to be reached by someone who was told the address.
+Entering the code goes **straight to the private page** — hand someone a link
+and a code and that is all they do.
 
-**Nothing private is in this repository, and nothing private is in the
-bundle.** The pages are content, not code: they live in `private/pages.json`,
-which is gitignored, and `tool/vault.js` encrypts them into `web/vault.json`,
-which is also gitignored. The build copies that blob to the site root and the
-gate fetches it. Adding a page never touches Dart, so it never touches a
-commit.
-
-```bash
-node tool/vault.js private/pages.json <passcode>   # writes web/vault.json
-flutter build web --release -t lib/main_private.dart
-```
-
-### Pages that are code, not content
-
-Text goes in the vault. A private page that needs real widgets cannot —
-code has to run, so it cannot be ciphertext. What it can be is absent from
-this repository, which is what `lib/main_private.dart` is for:
+**Nothing private is in this repository.** The pages are real Flutter routes
+whose source lives in `lib/private/`, and they are registered by a second
+entrypoint, `lib/main_private.dart`. Both are gitignored, and so is
+`private/`, where the vault's plaintext sits.
 
 ```dart
-// lib/main_private.dart — gitignored, and so is lib/private/
+// lib/main_private.dart — not committed
 import 'package:canarslan_website/main.dart' as app;
 import 'package:canarslan_website/pages/passcode/private_pages.dart';
 import 'package:canarslan_website/private/some_page.dart';
 
 void main() {
   PrivatePages.register([
-    PrivatePage(title: 'Some page', build: (_) => const SomePage()),
+    PrivatePage(path: '/somewhere', title: 'Somewhere',
+        build: (_) => const SomePage()),
   ]);
   app.main();
 }
 ```
 
-A second entrypoint rather than a stub file someone has to keep in sync, or
-a tracked file carrying local edits: `lib/main.dart` stays exactly as it is,
-still builds, still passes its tests, and registers nothing — so a fresh
-clone opens the door onto an empty room and nothing is broken. Build the
-real site with `-t lib/main_private.dart`.
+```bash
+node tool/vault.js private/vault.json <passcode>   # writes web/vault.json
+flutter build web --release -t lib/main_private.dart
+```
 
-Such a page ships as compiled code, so the passcode is a curtain in front of
-it rather than a lock on it. Anything that must not be readable at all
-belongs in the vault, which is ciphertext until the code opens it.
+A second entrypoint rather than a committed stub someone keeps in sync, or a
+tracked file carrying local edits that git eventually picks up. `lib/main.dart`
+is untouched, still builds and still passes its tests; it registers nothing, so
+a fresh clone opens the door onto an empty room and nothing is broken.
 
-AES-256-GCM with a PBKDF2-SHA256 key at 600,000 iterations. The browser side is
-Web Crypto through `dart:js_interop`, so there is no new dependency and the
-derivation runs native; the tool side is Node's own `crypto`, so there is
-nothing to install. Node keeps the GCM tag separate and Web Crypto expects it
-appended — `tool/vault.js` concatenates it, which is the one place the two APIs
-disagree.
+Private routes are appended to the router from the registry, so no private path
+appears in `Routes` either. Each one is guarded: without an open vault it
+renders the 404 page, so typing the address gets you nothing that confirms it
+exists.
 
-**What this is worth.** The blob is served to anyone who asks for it, so its
-only defence is the passcode, and a six-digit code is a million guesses that an
-attacker makes offline at their own pace. The iteration count buys time and
-nothing more. This keeps the pages out of a public repository and away from
-anyone reading `main.dart.js`; it is not a place for anything that would
-genuinely hurt to lose. A longer code is worth more than any amount of tuning
-here — the length is one constant in `passcode_page.dart`.
+### The lock
+
+`web/vault.json` is one AES-256-GCM blob under a PBKDF2-SHA256 key at 600,000
+iterations. Unlocking *is* decryption succeeding — there is no passcode in the
+bundle to compare against, because there is nothing to compare. Whatever JSON
+you encrypt comes back as `Vault.data`, which is where a private page should
+read anything that must not ship in the clear: a name, a date, a list of URLs.
+
+The browser side is Web Crypto through `dart:js_interop`, so there is no new
+dependency and the derivation runs native; the tool side is Node's own
+`crypto`, so there is nothing to install. Node keeps the GCM tag separate and
+Web Crypto expects it appended — `tool/vault.js` concatenates it, which is the
+one place the two APIs disagree.
+
+**What this is worth.** Two different things, and they are not equally
+protected. `Vault.data` is ciphertext until the code opens it. A private
+*page* is compiled into `main.dart.js`, so the passcode is a curtain in front
+of it rather than a lock on it — someone reading the bundle can work out what
+it draws. Both are absent from this repository, which is the part that was
+asked for; only the first is genuinely unreadable.
+
+And the blob is served to anyone who asks, so they can take it away and try
+codes against it offline. Six digits is a million attempts and a short
+afternoon for a GPU; the iteration count buys time and nothing more. A longer
+code is worth more than any tuning here — the length is one constant in
+`passcode_page.dart`, and the readout and keypad size themselves from it.
 
 Nothing decrypted is written to storage and the passcode is never stored, so
 closing the tab locks the door again.

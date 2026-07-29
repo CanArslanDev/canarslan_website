@@ -4,6 +4,7 @@ import 'package:canarslan_website/i18n/site_copy.dart';
 import 'package:canarslan_website/pages/app_shell.dart';
 import 'package:canarslan_website/pages/passcode/private_pages.dart';
 import 'package:canarslan_website/routes/routes.dart';
+import 'package:canarslan_website/services/route_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -47,6 +48,14 @@ class _PasscodePageState extends State<PasscodePage> {
 
     final opened = await Vault.unlock(_code);
     if (!mounted) return;
+
+    // One page is the ordinary case — a page made for one person, whose link
+    // and code you hand over together — so the gate steps out of the way and
+    // goes straight there. It only asks which when there is a choice.
+    if (opened && PrivatePages.all.length == 1) {
+      RouteService.go(PrivatePages.all.single.path);
+      return;
+    }
 
     setState(() {
       _working = false;
@@ -390,54 +399,16 @@ class _KeyState extends State<_Key> {
   }
 }
 
-/// What is behind the door, once it is open.
-///
-/// Two kinds of thing land here and the list does not distinguish them: text
-/// that came out of the encrypted vault, and whole Flutter pages registered by
-/// an entrypoint that is not in this repository. From a visitor's side they
-/// are both just pages.
-///
-/// Opening one is in-page state rather than a route, so no private page ever
-/// appears in the route table or in the address bar.
-class _VaultIndex extends StatefulWidget {
+/// Shown only when the vault holds more than one page: the gate has to ask
+/// which, because it cannot guess. With a single page nobody reaches this.
+class _VaultIndex extends StatelessWidget {
   const _VaultIndex({required this.onClose});
 
   final VoidCallback onClose;
 
   @override
-  State<_VaultIndex> createState() => _VaultIndexState();
-}
-
-class _VaultIndexState extends State<_VaultIndex> {
-  Widget? _open;
-  String? _openTitle;
-
-  @override
   Widget build(BuildContext context) {
-    final texts = Vault.pages ?? const <VaultPage>[];
-    final coded = PrivatePages.all;
-    final open = _open;
-
-    if (open != null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          PageHeading(
-            eyebrow: PasscodeCopy.openEyebrow.of(context),
-            stamp: _openTitle ?? '',
-          ),
-          open,
-          const SizedBox(height: SignalSpace.x12),
-          SignalPillButton(
-            label: PasscodeCopy.back.of(context),
-            onPressed: () => setState(() {
-              _open = null;
-              _openTitle = null;
-            }),
-          ),
-        ],
-      );
-    }
+    final pages = PrivatePages.all;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -446,58 +417,25 @@ class _VaultIndexState extends State<_VaultIndex> {
           eyebrow: PasscodeCopy.openEyebrow.of(context),
           stamp: PasscodeCopy.stamp.of(context),
         ),
-        if (texts.isEmpty && coded.isEmpty)
+        if (pages.isEmpty)
           SignalMicro(PasscodeCopy.empty.of(context))
         else
           SignalDataRows(
             children: [
-              for (final page in coded)
+              for (final page in pages)
                 SignalDataRow(
                   name: page.title,
                   description: '',
                   meta: const [],
-                  onTap: () => setState(() {
-                    _open = Builder(builder: page.build);
-                    _openTitle = page.title;
-                  }),
-                ),
-              for (final page in texts)
-                SignalDataRow(
-                  name: page.title,
-                  description: page.body.isEmpty ? '' : page.body.first,
-                  meta: const [],
-                  onTap: () => setState(() {
-                    _open = _TextPage(page: page);
-                    _openTitle = page.title;
-                  }),
+                  onTap: () => RouteService.go(page.path),
                 ),
             ],
           ),
         const SizedBox(height: SignalSpace.x12),
         SignalPillButton(
           label: PasscodeCopy.lock.of(context),
-          onPressed: widget.onClose,
+          onPressed: onClose,
         ),
-      ],
-    );
-  }
-}
-
-/// A vault entry, which is paragraphs and nothing else.
-class _TextPage extends StatelessWidget {
-  const _TextPage({required this.page});
-
-  final VaultPage page;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (final paragraph in page.body) ...[
-          SignalLede(paragraph),
-          const SizedBox(height: SignalSpace.x3),
-        ],
       ],
     );
   }
