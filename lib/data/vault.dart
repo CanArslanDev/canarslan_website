@@ -1,9 +1,25 @@
 import 'dart:convert';
 
+import 'package:canarslan_website/design/signal.dart';
 import 'package:canarslan_website/services/vault_crypto_stub.dart'
     if (dart.library.js_interop) 'package:canarslan_website/services/vault_crypto_web.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
+/// A page that arrived encrypted: a list of blocks and how to dress them.
+///
+/// Blocks are left as maps rather than parsed into a type per kind. The
+/// vocabulary is the renderer's business and a page that names a block this
+/// build does not know simply draws nothing, which is the right failure for a
+/// file you can re-encrypt in a second.
+@immutable
+class VaultPage {
+  const VaultPage({required this.blocks, this.title = '', this.field});
+
+  final String title;
+  final SignalFieldMode? field;
+  final List<Map<String, dynamic>> blocks;
+}
 
 /// The lock on the private pages, and whatever they need that cannot ship in
 /// the open.
@@ -34,6 +50,11 @@ abstract class Vault {
   static const _timeout = Duration(seconds: 8);
 
   static Map<String, dynamic>? _data;
+  static List<VaultPage> _pages = const [];
+
+  /// The page the gate sent us to. All private pages share one neutral route,
+  /// so which one is showing is held here rather than in the address.
+  static VaultPage? showing;
 
   /// Whatever was inside, once unlocked. Null until then.
   ///
@@ -41,9 +62,15 @@ abstract class Vault {
   /// passcode is never stored at all, so closing the tab locks the door again.
   static Map<String, dynamic>? get data => _data;
 
+  static List<VaultPage> get pages => _pages;
+
   static bool get isOpen => _data != null;
 
-  static void close() => _data = null;
+  static void close() {
+    _data = null;
+    _pages = const [];
+    showing = null;
+  }
 
   /// Fetches the blob and tries [passcode] against it.
   ///
@@ -66,12 +93,32 @@ abstract class Vault {
       );
       if (plain == null) return false;
 
-      _data = jsonDecode(plain) as Map<String, dynamic>;
+      final decoded = jsonDecode(plain) as Map<String, dynamic>;
+      _data = decoded;
+      _pages = [
+        for (final page in decoded['pages'] as List? ?? const [])
+          VaultPage(
+            title: (page as Map)['title']?.toString() ?? '',
+            field: _field(page['field']?.toString()),
+            blocks: [
+              for (final block in page['blocks'] as List? ?? const [])
+                Map<String, dynamic>.from(block as Map),
+            ],
+          ),
+      ];
       return true;
     } catch (_) {
       return false;
     }
   }
+
+  static SignalFieldMode? _field(String? name) => switch (name) {
+        'vortex' => SignalFieldMode.vortex,
+        'wave' => SignalFieldMode.wave,
+        'scan' => SignalFieldMode.scan,
+        'ripple' => SignalFieldMode.ripple,
+        _ => null,
+      };
 
   static Uint8List _bytes(Object? base64Value) =>
       base64Decode(base64Value! as String);

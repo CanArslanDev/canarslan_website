@@ -16,6 +16,11 @@ abstract class Routes {
   /// it is reached by someone who was told the address.
   static const String passcode = '/passcode';
 
+  /// Where a page out of the vault is shown. One address for all of them, and
+  /// a name that says nothing: which page is showing is held in memory, so the
+  /// bundle carries no private path and the address bar gives none away.
+  static const String private = '/p';
+
   /// The routes the navigation bar offers, in order.
   ///
   /// The label is a [Copy], not a string: the bar and the section stamp read
@@ -40,6 +45,7 @@ abstract class Routes {
   static bool isKnown(String path) =>
       path == design ||
       path == passcode ||
+      path == private ||
       path == notFound ||
       navigation.any((entry) => entry.$1 == path);
 

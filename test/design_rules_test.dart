@@ -30,10 +30,17 @@ void main() {
     'lib/design/tokens/signal_typography.dart',
   ];
 
+  /// One-off pages behind the passcode, which are not in this repository and
+  /// are not the site. A scene drawn in its own palette has no business being
+  /// held to the site's, and holding it there would only teach whoever wrote
+  /// it that the escape hatch is routine.
+  const outsideTheSystem = 'lib/private/';
+
   final files = Directory('lib')
       .listSync(recursive: true)
       .whereType<File>()
       .where((f) => f.path.endsWith('.dart'))
+      .where((f) => !f.path.startsWith(outsideTheSystem))
       .toList()
     ..sort((a, b) => a.path.compareTo(b.path));
 

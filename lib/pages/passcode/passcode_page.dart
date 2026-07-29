@@ -52,9 +52,18 @@ class _PasscodePageState extends State<PasscodePage> {
     // One page is the ordinary case — a page made for one person, whose link
     // and code you hand over together — so the gate steps out of the way and
     // goes straight there. It only asks which when there is a choice.
-    if (opened && PrivatePages.all.length == 1) {
-      RouteService.go(PrivatePages.all.single.path);
-      return;
+    if (opened) {
+      final vault = Vault.pages;
+      final coded = PrivatePages.all;
+      if (vault.length == 1 && coded.isEmpty) {
+        Vault.showing = vault.single;
+        RouteService.go(Routes.private);
+        return;
+      }
+      if (coded.length == 1 && vault.isEmpty) {
+        RouteService.go(coded.single.path);
+        return;
+      }
     }
 
     setState(() {
@@ -408,7 +417,8 @@ class _VaultIndex extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pages = PrivatePages.all;
+    final vault = Vault.pages;
+    final coded = PrivatePages.all;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,12 +427,22 @@ class _VaultIndex extends StatelessWidget {
           eyebrow: PasscodeCopy.openEyebrow.of(context),
           stamp: PasscodeCopy.stamp.of(context),
         ),
-        if (pages.isEmpty)
+        if (vault.isEmpty && coded.isEmpty)
           SignalMicro(PasscodeCopy.empty.of(context))
         else
           SignalDataRows(
             children: [
-              for (final page in pages)
+              for (final page in vault)
+                SignalDataRow(
+                  name: page.title,
+                  description: '',
+                  meta: const [],
+                  onTap: () {
+                    Vault.showing = page;
+                    RouteService.go(Routes.private);
+                  },
+                ),
+              for (final page in coded)
                 SignalDataRow(
                   name: page.title,
                   description: '',

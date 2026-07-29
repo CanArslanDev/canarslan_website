@@ -6,7 +6,25 @@
 // The input is a file you keep locally and never commit; `private/` is in
 // .gitignore. It looks like this:
 //
-//   { "pages": [ { "title": "…", "body": ["paragraph", "paragraph"] } ] }
+//   {
+//     "pages": [{
+//       "title": "…",              // only shown if there are several pages
+//       "field": "ripple",         // vortex | wave | scan | ripple | omit
+//       "blocks": [
+//         { "type": "eyebrow", "text": "…" },
+//         { "type": "heading", "text": "…", "weight": "mass" },
+//         { "type": "text",    "text": "…" },
+//         { "type": "rule" },
+//         { "type": "spec",    "entries": [["label", "value"]] },
+//         { "type": "image",   "file": "photo.jpg" },
+//         { "type": "gallery", "files": ["a.jpg", "b.jpg"] },
+//         { "type": "gap",     "size": 48 }
+//       ]
+//     }]
+//   }
+//
+// Image paths are relative to the source file and get read in and encrypted
+// with everything else.
 //
 // The output is a single AES-256-GCM blob with a PBKDF2 salt beside it, which
 // the build copies to the site root and the passcode page fetches. Node's own
@@ -33,8 +51,36 @@ if (!input || !passcode) {
   process.exit(1);
 }
 
-const plaintext = fs.readFileSync(input, 'utf8');
-JSON.parse(plaintext); // fail here rather than in the browser
+const source = JSON.parse(fs.readFileSync(input, 'utf8'));
+
+// Photographs are named by path in the source and carried as base64 in the
+// blob, so they are encrypted alongside the words. A file in web/ would be
+// served to anyone who guessed its name, which is the one thing this is for.
+let embedded = 0;
+const inline = (file) => {
+  const bytes = fs.readFileSync(path.resolve(path.dirname(input), file));
+  embedded += bytes.length;
+  return bytes.toString('base64');
+};
+
+// Anywhere in the document: { "file": "x.png" } becomes { "data": "<b64>" },
+// and { "files": [...] } becomes { "images": [...] }.
+const walk = (node) => {
+  if (Array.isArray(node)) return node.forEach(walk);
+  if (!node || typeof node !== 'object') return;
+  if (typeof node.file === 'string') {
+    node.data = inline(node.file);
+    delete node.file;
+  }
+  if (Array.isArray(node.files)) {
+    node.images = node.files.map(inline);
+    delete node.files;
+  }
+  Object.values(node).forEach(walk);
+};
+walk(source);
+
+const plaintext = JSON.stringify(source);
 
 const salt = crypto.randomBytes(16);
 const iv = crypto.randomBytes(12);
@@ -58,5 +104,9 @@ fs.writeFileSync(
   }),
 );
 
-const pages = JSON.parse(plaintext).pages?.length ?? 0;
-console.log(`${out}  ${pages} page(s)  ${data.length} bytes of ciphertext`);
+const pages = source.pages?.length ?? 0;
+const kb = (n) => `${(n / 1024).toFixed(0)} KB`;
+console.log(
+  `${out}  ${pages} page(s)  ${kb(data.length)} of ciphertext` +
+    (embedded ? `  (${kb(embedded)} of it photographs)` : ''),
+);
