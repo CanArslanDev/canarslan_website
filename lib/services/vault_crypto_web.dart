@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:typed_data';
 
+import 'package:canarslan_website/services/vault_compartment.dart';
 import 'package:web/web.dart' as web;
 
 /// PBKDF2 parameters, as an object literal for `deriveKey`.
@@ -22,7 +23,8 @@ extension type _AesGcmParams._(JSObject _) implements JSObject {
   external factory _AesGcmParams({String name, JSUint8Array iv});
 }
 
-/// Decrypts the vault with a passcode, using the browser's own crypto.
+/// Opens whichever compartment [passcode] belongs to, using the browser's own
+/// crypto.
 ///
 /// Web Crypto rather than a package: PBKDF2 and AES-GCM are both native here,
 /// the derivation runs at native speed — which matters, because the whole
@@ -30,15 +32,20 @@ extension type _AesGcmParams._(JSObject _) implements JSObject {
 /// for the one person who knows the code — and the site keeps its three
 /// dependencies.
 ///
+/// The expensive step runs once and the compartments are then tried against
+/// the derived key, which costs almost nothing each. There is no index saying
+/// which compartment a code belongs to, and there could not be one without
+/// naming the codes in the file: the answer is simply whichever one's tag
+/// checks out.
+///
 /// Returns null on any failure. A wrong passcode is indistinguishable from a
 /// corrupt file on purpose: GCM's tag check fails either way, and the gate has
 /// nothing useful to say about which.
 Future<String?> decryptVaultImpl({
   required String passcode,
   required Uint8List salt,
-  required Uint8List iv,
-  required Uint8List payload,
   required int iterations,
+  required List<VaultCompartment> compartments,
 }) async {
   try {
     final subtle = web.window.crypto.subtle;
@@ -68,16 +75,26 @@ Future<String?> decryptVaultImpl({
         )
         .toDart;
 
-    final plain = await subtle
-        .decrypt(
-          _AesGcmParams(name: 'AES-GCM', iv: iv.toJS),
-          key! as web.CryptoKey,
-          payload.toJS,
-        )
-        .toDart;
+    for (final compartment in compartments) {
+      try {
+        final plain = await subtle
+            .decrypt(
+              _AesGcmParams(name: 'AES-GCM', iv: compartment.iv.toJS),
+              key! as web.CryptoKey,
+              compartment.payload.toJS,
+            )
+            .toDart;
 
-    final bytes = (plain! as JSArrayBuffer).toDart.asUint8List();
-    return utf8.decode(bytes);
+        final bytes = (plain! as JSArrayBuffer).toDart.asUint8List();
+        return utf8.decode(bytes);
+      } catch (_) {
+        // Not this one. A tag that does not check out is the normal answer
+        // for every compartment but at most one, so it is not a failure —
+        // only running out of compartments is.
+        continue;
+      }
+    }
+    return null;
   } catch (_) {
     return null;
   }

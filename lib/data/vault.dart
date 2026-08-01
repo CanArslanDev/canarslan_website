@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:canarslan_website/design/signal.dart';
+import 'package:canarslan_website/services/vault_compartment.dart';
 import 'package:canarslan_website/services/vault_crypto_stub.dart'
     if (dart.library.js_interop) 'package:canarslan_website/services/vault_crypto_web.dart';
 import 'package:flutter/foundation.dart';
@@ -24,12 +25,16 @@ class VaultPage {
 /// The lock on the private pages, and whatever they need that cannot ship in
 /// the open.
 ///
-/// `web/vault.json` is one AES-GCM blob built by `tool/vault.js` from a file
-/// you keep locally. Both are gitignored, so neither the data nor the code
-/// that reads it leaves a trace in a public repository. Unlocking is simply
-/// decryption succeeding: there is no passcode anywhere in the bundle to
-/// compare against, because there is nothing to compare — the code either
-/// opens the blob or it does not.
+/// `web/vault.json` holds one AES-GCM compartment per passcode, built by
+/// `tool/vault.js` from files you keep locally. Both are gitignored, so
+/// neither the data nor the code that reads it leaves a trace in a public
+/// repository. Unlocking is simply decryption succeeding: there is no passcode
+/// anywhere in the bundle to compare against, because there is nothing to
+/// compare — a code either opens one of the compartments or it opens none.
+///
+/// Which compartment a code belongs to is not written down. Every compartment
+/// is tried and at most one can pass GCM's tag check, so the file says how
+/// many pages there are and nothing whatever about who each one is for.
 ///
 /// [data] is whatever JSON you put in. A private page can read a name, a date,
 /// a list of photographs to fetch, without any of it being in the bundle in
@@ -87,9 +92,14 @@ abstract class Vault {
       final plain = await decryptVaultImpl(
         passcode: passcode,
         salt: _bytes(envelope['salt']),
-        iv: _bytes(envelope['iv']),
-        payload: _bytes(envelope['data']),
         iterations: (envelope['iterations'] as num).toInt(),
+        compartments: [
+          for (final compartment in envelope['vaults'] as List? ?? const [])
+            VaultCompartment(
+              iv: _bytes((compartment as Map)['iv']),
+              payload: _bytes(compartment['data']),
+            ),
+        ],
       );
       if (plain == null) return false;
 

@@ -2,6 +2,13 @@
 // Encrypts the private pages into web/vault.json.
 //
 //   node tool/vault.js private/pages.json <passcode>
+//   node tool/vault.js private/a.json <code> private/b.json <other code>
+//
+// Arguments come in pairs: a document, and the passcode that opens it. Each
+// pair becomes a compartment, and the gate opens whichever one the code
+// belongs to. **Every pair has to be on the one command line** — the file is
+// written whole each time, so a run that names one document leaves the site
+// with one page.
 //
 // The input is a file you keep locally and never commit; `private/` is in
 // .gitignore. It looks like this:
@@ -26,9 +33,14 @@
 // Image paths are relative to the source file and get read in and encrypted
 // with everything else.
 //
-// The output is a single AES-256-GCM blob with a PBKDF2 salt beside it, which
-// the build copies to the site root and the passcode page fetches. Node's own
-// crypto module does all of it, so there is nothing to install.
+// The output is one AES-256-GCM blob per pair, sharing a single PBKDF2 salt,
+// which the build copies to the site root and the passcode page fetches. Node's
+// own crypto module does all of it, so there is nothing to install.
+//
+// One salt for the file rather than one per compartment, so the gate derives a
+// key once however many pages there are. Two passcodes over one salt derive two
+// unrelated keys, and the salt still does its real job of making this file's
+// work useless against any other.
 //
 // What this protects, and what it does not: the blob is served to anyone who
 // asks for it, so the only thing standing between a reader and the contents is
@@ -45,68 +57,100 @@ const path = require('path');
 // so unlocking stays well under a second for the person who knows the code.
 const ITERATIONS = 600000;
 
-const [input, passcode] = process.argv.slice(2);
-if (!input || !passcode) {
-  console.error('usage: node tool/vault.js <pages.json> <passcode>');
+const args = process.argv.slice(2);
+if (args.length === 0 || args.length % 2 !== 0) {
+  console.error(
+    'usage: node tool/vault.js <pages.json> <passcode> [<pages.json> <passcode> ...]',
+  );
   process.exit(1);
 }
 
-const source = JSON.parse(fs.readFileSync(input, 'utf8'));
+const pairs = [];
+for (let i = 0; i < args.length; i += 2) {
+  pairs.push({ input: args[i], passcode: args[i + 1] });
+}
 
-// Photographs are named by path in the source and carried as base64 in the
-// blob, so they are encrypted alongside the words. A file in web/ would be
-// served to anyone who guessed its name, which is the one thing this is for.
-let embedded = 0;
-const inline = (file) => {
-  const bytes = fs.readFileSync(path.resolve(path.dirname(input), file));
-  embedded += bytes.length;
-  return bytes.toString('base64');
-};
+// Two documents behind one passcode would mean the gate could open either and
+// no way to say which, so the codes have to be distinct. Catching it here
+// beats finding out when the wrong page opens.
+const codes = new Set(pairs.map((p) => p.passcode));
+if (codes.size !== pairs.length) {
+  console.error('two compartments share a passcode; each one needs its own');
+  process.exit(1);
+}
 
-// Anywhere in the document: { "file": "x.png" } becomes { "data": "<b64>" },
-// and { "files": [...] } becomes { "images": [...] }.
-const walk = (node) => {
-  if (Array.isArray(node)) return node.forEach(walk);
-  if (!node || typeof node !== 'object') return;
-  if (typeof node.file === 'string') {
-    node.data = inline(node.file);
-    delete node.file;
-  }
-  if (Array.isArray(node.files)) {
-    node.images = node.files.map(inline);
-    delete node.files;
-  }
-  Object.values(node).forEach(walk);
-};
-walk(source);
-
-const plaintext = JSON.stringify(source);
-
+// One salt for the whole file: the gate derives its key once and then tries
+// each compartment, so adding a page costs the person entering a code nothing.
 const salt = crypto.randomBytes(16);
-const iv = crypto.randomBytes(12);
-const key = crypto.pbkdf2Sync(passcode, salt, ITERATIONS, 32, 'sha256');
 
-const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-const body = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
+const kb = (n) => `${(n / 1024).toFixed(0)} KB`;
 
-// Web Crypto expects the tag appended to the ciphertext; Node keeps it apart.
-const data = Buffer.concat([body, cipher.getAuthTag()]);
+const seal = ({ input, passcode }) => {
+  const source = JSON.parse(fs.readFileSync(input, 'utf8'));
+
+  // Files are named by path in the source and carried as base64 in the blob,
+  // so they are encrypted alongside the words. A file in web/ would be served
+  // to anyone who guessed its name, which is the one thing this is for.
+  let embedded = 0;
+  const inline = (file) => {
+    const bytes = fs.readFileSync(path.resolve(path.dirname(input), file));
+    embedded += bytes.length;
+    return bytes.toString('base64');
+  };
+
+  // Anywhere in the document: { "file": "x.png" } becomes { "data": "<b64>" },
+  // and { "files": [...] } becomes { "images": [...] }.
+  const walk = (node) => {
+    if (Array.isArray(node)) return node.forEach(walk);
+    if (!node || typeof node !== 'object') return;
+    if (typeof node.file === 'string') {
+      node.data = inline(node.file);
+      delete node.file;
+    }
+    if (Array.isArray(node.files)) {
+      node.images = node.files.map(inline);
+      delete node.files;
+    }
+    Object.values(node).forEach(walk);
+  };
+  walk(source);
+
+  const iv = crypto.randomBytes(12);
+  const key = crypto.pbkdf2Sync(passcode, salt, ITERATIONS, 32, 'sha256');
+
+  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+  const body = Buffer.concat([
+    cipher.update(JSON.stringify(source), 'utf8'),
+    cipher.final(),
+  ]);
+
+  // Web Crypto expects the tag appended to the ciphertext; Node keeps it apart.
+  const data = Buffer.concat([body, cipher.getAuthTag()]);
+
+  return { iv, data, embedded, pages: source.pages?.length ?? 0 };
+};
+
+const compartments = pairs.map(seal);
 
 const out = path.join(__dirname, '..', 'web', 'vault.json');
 fs.writeFileSync(
   out,
   JSON.stringify({
-    v: 1,
+    v: 2,
     iterations: ITERATIONS,
     salt: salt.toString('base64'),
-    iv: iv.toString('base64'),
-    data: data.toString('base64'),
+    vaults: compartments.map((c) => ({
+      iv: c.iv.toString('base64'),
+      data: c.data.toString('base64'),
+    })),
   }),
 );
 
-const pages = source.pages?.length ?? 0;
-const kb = (n) => `${(n / 1024).toFixed(0)} KB`;
-console.log(
-  `${out}  ${pages} page(s)  ${kb(data.length)} of ciphertext` +
-    (embedded ? `  (${kb(embedded)} of it photographs)` : ''),
-);
+const total = compartments.reduce((sum, c) => sum + c.data.length, 0);
+console.log(`${out}  ${compartments.length} compartment(s)  ${kb(total)}`);
+compartments.forEach((c, i) => {
+  console.log(
+    `  ${i + 1}. ${pairs[i].input}  ${kb(c.data.length)}` +
+      (c.embedded ? `  (${kb(c.embedded)} embedded)` : ''),
+  );
+});

@@ -247,6 +247,10 @@ node tool/vault.js private/vault.json <passcode>   # writes web/vault.json
 flutter build web --release -t lib/main_private.dart
 ```
 
+The tool takes as many document/passcode pairs as you give it, and **writes the
+file whole every time** — a run that names one document leaves the site with
+one page, however many it had before. Every pair goes on the one command line.
+
 A second entrypoint rather than a committed stub someone keeps in sync, or a
 tracked file carrying local edits that git eventually picks up. `lib/main.dart`
 is untouched, still builds and still passes its tests; it registers nothing, so
@@ -259,11 +263,24 @@ exists.
 
 ### The lock
 
-`web/vault.json` is one AES-256-GCM blob under a PBKDF2-SHA256 key at 600,000
-iterations. Unlocking *is* decryption succeeding — there is no passcode in the
-bundle to compare against, because there is nothing to compare. Whatever JSON
-you encrypt comes back as `Vault.data`, which is where a private page should
-read anything that must not ship in the clear: a name, a date, a list of URLs.
+`web/vault.json` holds one AES-256-GCM compartment per passcode, all under
+PBKDF2-SHA256 at 600,000 iterations. Unlocking *is* decryption succeeding —
+there is no passcode in the bundle to compare against, because there is nothing
+to compare. Whatever JSON you encrypt comes back as `Vault.data`, which is
+where a private page should read anything that must not ship in the clear: a
+name, a date, a list of URLs.
+
+**The salt belongs to the file, not to the compartment.** The key is derived
+once and then tried against each compartment in turn, so a fifth page costs the
+person typing a code nothing — a salt per compartment would have made the gate
+slower every time a page was added. Two passcodes over one salt still derive
+two unrelated keys, and the salt still does its real job of making work spent
+on this file useless against any other.
+
+Nothing records which compartment a code belongs to; the answer is whichever
+one's GCM tag checks out. So the file discloses **how many** pages there are
+and how big each is, and nothing at all about who any of them is for. If the
+count itself matters, that is what would have to change.
 
 The browser side is Web Crypto through `dart:js_interop`, so there is no new
 dependency and the derivation runs native; the tool side is Node's own
