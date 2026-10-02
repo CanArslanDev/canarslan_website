@@ -55,9 +55,10 @@
 // What this protects, and what it does not: the blob is served to anyone who
 // asks for it, so the only thing standing between a reader and the contents is
 // the passcode. The iteration count below makes each guess cost real time, but
-// the length of the code is what turns that into protection. Six digits fell
-// to a laptop in about an hour, which is why LENGTH is twelve. Keep nothing
-// here that would genuinely hurt to lose.
+// the length of the code is what turns that into protection, and six digits
+// fell to a laptop in about an hour. LENGTH stays at six so codes already
+// handed out keep working. Keep nothing here that would genuinely hurt to
+// lose.
 
 const crypto = require('crypto');
 const fs = require('fs');
@@ -69,7 +70,7 @@ const ITERATIONS = 600000;
 
 // Digits only, because the gate is a keypad. Must match `PasscodePage.length`;
 // test/vault_tool_test.dart reads this line to make sure it does.
-const LENGTH = 12;
+const LENGTH = 6;
 
 const inputs = process.argv.slice(2);
 if (inputs.length === 0) {

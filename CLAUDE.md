@@ -313,11 +313,12 @@ it draws. Both are absent from this repository, which is the part that was
 asked for; only the first is genuinely unreadable.
 
 And the blob is served to anyone who asks, so they can take it away and try
-codes against it offline. Six digits was a million attempts and fell to a
-laptop in about an hour of plain PBKDF2, which is why the code is twelve; the
-iteration count buys time and nothing more. The length is
-`PasscodePage.length`, and `tool/vault.js` refuses any other — a test holds the
-two to the same number.
+codes against it offline. Six digits is a million attempts and fell to a
+laptop in about an hour of plain PBKDF2; the iteration count buys time and
+nothing more. It stays at six because codes already handed out are six digits,
+and raising it means re-issuing every one of them — that was tried once and
+broke links people had been given. The length is `PasscodePage.length`, and
+`tool/vault.js` refuses any other — a test holds the two to the same number.
 
 The embedded document runs in an iframe sandboxed to `allow-scripts
 allow-downloads`, with `allow="web-share"`, and never `allow-same-origin` — so

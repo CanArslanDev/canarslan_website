@@ -21,10 +21,12 @@ class PasscodePage extends StatefulWidget {
   /// themselves from it, and `tool/vault.js` refuses a code of any other
   /// length — `test/vault_tool_test.dart` holds the two to the same number.
   ///
-  /// Twelve because the blob is public and can be attacked offline with no
-  /// rate limit. Six digits fell to a laptop in about an hour of plain
-  /// PBKDF2; twelve is a million times that. See [Vault].
-  static const length = 12;
+  /// Six, because codes already handed out are six digits and a link
+  /// someone was given should keep working. It is the weakest part of the
+  /// arrangement: the blob is public, and six digits fell to a laptop in
+  /// about an hour of plain PBKDF2. Raising it means re-issuing every code.
+  /// See [Vault].
+  static const length = 6;
 
   @override
   State<PasscodePage> createState() => _PasscodePageState();

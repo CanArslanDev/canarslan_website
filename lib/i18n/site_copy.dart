@@ -333,7 +333,7 @@ abstract class PasscodeCopy {
     'Bu sayfalar hiçbir yerde listelenmiyor. Kodunuz varsa buraya '
         'girebilirsiniz.',
   );
-  static const hint = Copy('Twelve digits', 'On iki hane');
+  static const hint = Copy('Six digits', 'Altı hane');
   static const checking = Copy('Checking', 'Kontrol ediliyor');
   static const wrong = Copy('That did not open it', 'Açılmadı');
   static const openEyebrow = Copy('Unlocked', 'AÇILDI');
