@@ -143,8 +143,12 @@ const askCode = async (input) => {
 
 const readCodes = async () => {
   if (!process.stdin.isTTY) {
-    const lines = fs
-      .readFileSync(0, 'utf8')
+    // Read as a stream: readFileSync(0) fails with EAGAIN on a pipe whose
+    // writer has not written yet.
+    const chunks = [];
+    for await (const chunk of process.stdin) chunks.push(chunk);
+    const lines = Buffer.concat(chunks)
+      .toString('utf8')
       .split(/\r?\n/)
       .filter((line) => line !== '');
     if (lines.length !== inputs.length) {
