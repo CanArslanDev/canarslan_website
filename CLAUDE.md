@@ -243,13 +243,21 @@ void main() {
 ```
 
 ```bash
-node tool/vault.js private/vault.json <passcode>   # writes web/vault.json
-flutter build web --release -t lib/main_private.dart
+node tool/vault.js private/a.json private/b.json   # writes web/vault.json
+tool/deploy.sh "what changed"                     # builds and publishes
 ```
 
-The tool takes as many document/passcode pairs as you give it, and **writes the
-file whole every time** — a run that names one document leaves the site with
-one page, however many it had before. Every pair goes on the one command line.
+The tool takes one argument per document and **asks** for each code with the
+typing hidden — Enter on an empty prompt draws a random one and shows it once.
+Codes are never arguments: an argument lands in shell history and in any
+transcript of the terminal, so run it in a terminal of your own. It **writes
+the file whole every time** — a run that names one document leaves the site
+with one page, however many it had before.
+
+`tool/deploy.sh` builds from `lib/main_private.dart` and publishes the build as
+the deploy repository's **only** commit, force-pushed. That repository is
+public, and a vault replaced in an ordinary commit stays downloadable in the
+one before it, under its old codes — rotating a code would change nothing.
 
 A second entrypoint rather than a committed stub someone keeps in sync, or a
 tracked file carrying local edits that git eventually picks up. `lib/main.dart`
@@ -296,10 +304,15 @@ it draws. Both are absent from this repository, which is the part that was
 asked for; only the first is genuinely unreadable.
 
 And the blob is served to anyone who asks, so they can take it away and try
-codes against it offline. Six digits is a million attempts and a short
-afternoon for a GPU; the iteration count buys time and nothing more. A longer
-code is worth more than any tuning here — the length is one constant in
-`passcode_page.dart`, and the readout and keypad size themselves from it.
+codes against it offline. Six digits was a million attempts and fell to a
+laptop in about an hour of plain PBKDF2, which is why the code is twelve; the
+iteration count buys time and nothing more. The length is
+`PasscodePage.length`, and `tool/vault.js` refuses any other — a test holds the
+two to the same number.
+
+The embedded document runs in an iframe sandboxed to `allow-scripts` alone, so
+it gets an opaque origin: no reach into the parent frame, the site's storage or
+the unlocked vault.
 
 Nothing decrypted is written to storage and the passcode is never stored, so
 closing the tab locks the door again.
