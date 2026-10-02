@@ -222,6 +222,15 @@ unlike `/design` it is meant to be reached by someone who was told the address.
 Entering the code goes **straight to the private page** — hand someone a link
 and a code and that is all they do.
 
+The code can ride in the link: `/passcode#<code>` tries it on arrival and a
+right one opens the page with no typing. **After the `#`, never in the path** —
+the fragment is the one part of a URL the browser does not send, so it stays
+out of the host's logs and out of crawlers fetching the link for a preview.
+Flutter reads the fragment as a route the moment it boots, so an inline script
+in `web/index.html` takes it out of the address first and leaves it on
+`window` for the gate; nothing in history keeps it. The link *is* the code,
+though: whoever sees it can open the page.
+
 **Nothing private is in this repository.** The pages are real Flutter routes
 whose source lives in `lib/private/`, and they are registered by a second
 entrypoint, `lib/main_private.dart`. Both are gitignored, and so is
@@ -310,9 +319,13 @@ iteration count buys time and nothing more. The length is
 `PasscodePage.length`, and `tool/vault.js` refuses any other — a test holds the
 two to the same number.
 
-The embedded document runs in an iframe sandboxed to `allow-scripts` alone, so
+The embedded document runs in an iframe sandboxed to `allow-scripts
+allow-downloads`, with `allow="web-share"`, and never `allow-same-origin` — so
 it gets an opaque origin: no reach into the parent frame, the site's storage or
-the unlocked vault.
+the unlocked vault. Downloads and sharing are there because a page may hand its
+visitor something to keep, and without them a save button is silently dead.
+The price is that the document has no storage of its own either: anything it
+means to remember between visits, it forgets.
 
 Nothing decrypted is written to storage and the passcode is never stored, so
 closing the tab locks the door again.

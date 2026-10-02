@@ -12,6 +12,10 @@ abstract class RouteService {
   /// The path the browser was opened at.
   static String get currentPath => currentBrowserPath();
 
+  /// What followed the `#` the site was opened with, taken out of the address
+  /// bar as it is read — so it can be read once. Empty when there was none.
+  static String takeFragment() => takeBrowserFragment();
+
   /// Where the app should start. Unknown paths land on the 404 page rather
   /// than silently redirecting, so a broken link stays visible.
   static String get initialRoute {

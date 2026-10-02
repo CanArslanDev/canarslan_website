@@ -37,6 +37,25 @@ class _PasscodePageState extends State<PasscodePage> {
   bool _working = false;
   bool _wrong = false;
 
+  /// A link can carry the code: `/passcode#<code>` tries it on arrival, and
+  /// a right one goes straight through to the page — hand someone one link
+  /// instead of a link and a code.
+  ///
+  /// After the `#` rather than in the path, because the fragment never leaves
+  /// the browser: a path would land in the host's access logs and in every
+  /// crawler that fetches the link to build a preview. Anything that is not a
+  /// full code is ignored, and a wrong one reads exactly like a wrong code
+  /// typed by hand.
+  @override
+  void initState() {
+    super.initState();
+    final carried = RouteService.takeFragment();
+    if (RegExp('^[0-9]{${PasscodePage.length}}\$').hasMatch(carried)) {
+      _code = carried;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _submit());
+    }
+  }
+
   @override
   void dispose() {
     _focus.dispose();

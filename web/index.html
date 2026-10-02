@@ -77,6 +77,21 @@
   <link rel="preconnect" href="https://api.github.com" crossorigin>
   <link rel="preconnect" href="https://github-contributions-api.jogruber.de" crossorigin>
 
+  <!-- A link to the passcode gate can carry its code after the "#", which the
+       browser never sends anywhere. Flutter reads the fragment as a route the
+       moment it boots, so the code has to be taken out before that: it is
+       kept in memory for the gate to read and removed from the address bar,
+       the back button and anything copied from it. Flutter's own routes
+       start with "/" and are left alone. -->
+  <script>
+    (function () {
+      var fragment = location.hash.slice(1);
+      if (!fragment || fragment.charAt(0) === '/') return;
+      window.siteFragment = fragment;
+      history.replaceState(history.state, '', location.pathname + location.search);
+    })();
+  </script>
+
   <title>Can Arslan</title>
   <link rel="manifest" href="manifest.json">
 </head>
