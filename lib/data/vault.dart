@@ -42,8 +42,9 @@ class VaultPage {
 ///
 /// **What this does not do.** The blob is served to anyone who asks, so they
 /// can take it away and try passcodes against it offline, as fast as their
-/// hardware allows. A high PBKDF2 count makes each attempt cost real time, but
-/// six digits is a million attempts and that is a short afternoon for a GPU.
+/// hardware allows. A high PBKDF2 count makes each attempt cost real time, and
+/// the code's length is what turns that into protection: six digits fell to a
+/// laptop in about an hour, which is why the gate takes twelve.
 /// It keeps things out of the repository and away from anyone reading the
 /// bundle. It is not a place for anything that would actually hurt to lose.
 abstract class Vault {

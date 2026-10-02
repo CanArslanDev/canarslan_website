@@ -17,17 +17,20 @@ import 'package:flutter/services.dart';
 class PasscodePage extends StatefulWidget {
   const PasscodePage({super.key});
 
+  /// How many digits a code has. The readout and the keypad both size
+  /// themselves from it, and `tool/vault.js` refuses a code of any other
+  /// length — `test/vault_tool_test.dart` holds the two to the same number.
+  ///
+  /// Twelve because the blob is public and can be attacked offline with no
+  /// rate limit. Six digits fell to a laptop in about an hour of plain
+  /// PBKDF2; twelve is a million times that. See [Vault].
+  static const length = 12;
+
   @override
   State<PasscodePage> createState() => _PasscodePageState();
 }
 
 class _PasscodePageState extends State<PasscodePage> {
-  /// Raise this and re-run the tool with a longer code; the readout and the
-  /// keypad both size themselves from it. Six digits is a million
-  /// combinations, which is the weakest part of the whole arrangement — see
-  /// [Vault].
-  static const _length = 6;
-
   final _focus = FocusNode();
 
   String _code = '';
@@ -81,12 +84,12 @@ class _PasscodePageState extends State<PasscodePage> {
   /// click three digits and type the rest.
   void _press(String digit) {
     _focus.requestFocus();
-    if (_working || _code.length >= _length) return;
+    if (_working || _code.length >= PasscodePage.length) return;
     setState(() {
       _wrong = false;
       _code += digit;
     });
-    if (_code.length == _length) _submit();
+    if (_code.length == PasscodePage.length) _submit();
   }
 
   void _backspace() {
@@ -134,7 +137,7 @@ class _PasscodePageState extends State<PasscodePage> {
                   autofocus: true,
                   onKeyEvent: _onKey,
                   child: _Gate(
-                    length: _length,
+                    length: PasscodePage.length,
                     code: _code,
                     working: _working,
                     wrong: _wrong,

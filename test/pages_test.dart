@@ -419,15 +419,15 @@ void main() {
 
       expect(find.text(PasscodeCopy.hint.en.toUpperCase()), findsOneWidget);
 
-      for (final digit in ['1', '2', '3', '4', '5', '6']) {
-        await tester.tap(find.text(digit));
+      for (var i = 0; i < PasscodePage.length; i++) {
+        await tester.tap(find.text('${i % 10}'));
         await tester.pump(const Duration(milliseconds: 150));
       }
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Six taps reached the door. There is no vault on the Dart VM, so it
-      // stays shut — which is exactly what a wrong code looks like, and the
-      // page cannot tell the difference on purpose.
+      // A full code of taps reached the door. There is no vault on the Dart
+      // VM, so it stays shut — which is exactly what a wrong code looks like,
+      // and the page cannot tell the difference on purpose.
       expect(find.text(PasscodeCopy.wrong.en.toUpperCase()), findsOneWidget);
 
       await teardownTree(tester);
@@ -443,16 +443,13 @@ void main() {
       // the listener keeps it either way and the VM sees no difference. That
       // one was checked by driving a real Chrome: three keys clicked, three
       // typed, door open.
-      for (final digit in ['1', '2', '3']) {
-        await tester.tap(find.text(digit));
+      const half = PasscodePage.length ~/ 2;
+      for (var i = 0; i < half; i++) {
+        await tester.tap(find.text('${i % 10}'));
         await tester.pump(const Duration(milliseconds: 120));
       }
-      for (final key in [
-        LogicalKeyboardKey.digit4,
-        LogicalKeyboardKey.digit5,
-        LogicalKeyboardKey.digit6,
-      ]) {
-        await tester.sendKeyEvent(key);
+      for (var i = half; i < PasscodePage.length; i++) {
+        await tester.sendKeyEvent(_digitKeys[i % 10]);
         await tester.pump(const Duration(milliseconds: 120));
       }
       await tester.pump(const Duration(milliseconds: 600));
@@ -532,3 +529,16 @@ void main() {
     });
   });
 }
+
+const _digitKeys = [
+  LogicalKeyboardKey.digit0,
+  LogicalKeyboardKey.digit1,
+  LogicalKeyboardKey.digit2,
+  LogicalKeyboardKey.digit3,
+  LogicalKeyboardKey.digit4,
+  LogicalKeyboardKey.digit5,
+  LogicalKeyboardKey.digit6,
+  LogicalKeyboardKey.digit7,
+  LogicalKeyboardKey.digit8,
+  LogicalKeyboardKey.digit9,
+];
